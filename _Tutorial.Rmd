@@ -1,0 +1,371 @@
+---
+title: "Introducation to R for SNA"
+author: "by: Daphne Janssen"
+date: "7-9-2022
+bibliography: references.bib
+
+ 
+---
+
+```{r, install remotely, globalsettings, echo=FALSE, warning=FALSE, results='hide', eval=FALSE}
+#install.packages("remotes")
+#remotes::install_github("rlesur/klippy")
+``` 
+
+```{r, globalsettings, echo=FALSE, warning=FALSE, results='hide'}
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE)
+opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE, warning = FALSE, message = FALSE,comment = "#>", cache=TRUE, class.source=c("test"), class.output=c("test2"))
+options(width = 100)
+rgl::setupKnitr()
+
+
+
+colorize <- function(x, color) {sprintf("<span style='color: %s;'>%s</span>", color, x) }
+
+```
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(position = c('top', 'right'))
+#klippy::klippy(color = 'darkred')
+#klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
+```
+
+
+start with clean workspace
+```{r}
+rm(list = ls())
+```
+
+
+```{r}
+# install.packages I will need later here
+install.packages("installr")  #you  first install packages
+require(installr)  #then you will need to load them. This package is used to simply update R
+install.packages("foreign")
+```
+
+
+```{r}
+install.packages("foreign")
+```
+```{r}
+install.packages("tidyverse")
+
+require(foreign)  #used to read in spss data files
+require(tidyverse)
+# update if necessarry. Best to run this command in RGui, not in RStudio.
+updateR()
+```
+
+
+```{r}
+# define workdirectory, note the double backslashes
+setwd("C:\\SNA-4-Social-Scientists\\")  #change to your own workdirectory
+```
+
+```{r}
+getwd()
+```
+# ignore the warnings ?read.spss note that I have saved the data files in a folder called
+# 'addfiles'.
+cv08 <- foreign::read.spss("Cultural_Changes_2008.sav", use.value.labels = T, to.data.frame = T)
+cv10 <- foreign::read.spss("Cultural_Changes_2010.sav", use.value.labels = T, to.data.frame = T)
+
+
+
+# normally I think setting use.value.labels=F is more convenient. Thus lets load the data again but
+# now without labels
+cv08_nolab <- foreign::read.spss("Cultural_Changes_2008.sav", use.value.labels = F, to.data.frame = T)
+cv10_nolab <- foreign::read.spss("Cultural_Changes_2010.sav", use.value.labels = F, to.data.frame = T)
+
+
+
+# finally, import the data using haven
+cv08_haven <- haven::read_spss("Cultural_Changes_2008.sav")
+cv10_haven <- haven::read_spss("Cultural_Changes_2010.sav")
+
+str(cv08)
+
+str(cv08_haven$lftop)
+summary(cv08_haven$lftop)
+attr(cv08_haven$lftop, "labels")
+table(cv08_haven$lftop, useNA = "always")
+
+cv08$lftop_new <- cv08$lftop
+
+cv08$lftop_new[cv08$lftop_new == "Onbekend"] <- NA
+
+table(cv08$lftop_new, useNA = "always")
+
+levels(cv08$var006n)
+
+table(cv08$var006n, useNA = "always")
+
+# lets make it a numeric var first
+cv08$educn <- as.numeric(cv08$var006n)
+
+# check
+table(cv08$educn, useNA = "always")
+
+# start with an empty variable
+cv08$educ3 <- NA
+
+# fill category by category
+cv08$educ3[cv08$educn == 2 | cv08$educn == 3] <- 1
+cv08$educ3[cv08$educn > 3 & cv08$educn < 8] <- 2
+cv08$educ3[cv08$educn > 7 & cv08$educn < 11] <- 3
+
+# check
+table(cv08$educ3, useNA = "always")
+
+prop.table(table(cv08$educ3, useNA = "always"))
+
+# now educ3 is a numeric variable, we want it as factor
+cv08$educ3 <- as.factor(cv08$educ3)
+table(cv08$educ3, useNA = "always")
+
+levels(cv08$educ3) <- c("primary", "secondary", "tertiary")
+table(cv08$educ3, useNA = "always")
+
+install.packages('labelled')
+require(labelled)  #to be able to use the recode function on haven labelled variables
+
+# inspect variable
+str(cv08_haven$var006n)
+
+attr(cv08_haven$var006n, "labels")
+
+table(cv08_haven$var006n, useNA = "always")
+
+
+# recode values, all missings as one value
+cv08_haven <- mutate(cv08_haven, educ3 = recode(var006n, `-3` = -9, `-1` = 1, `1` = 1, `2` = 2, `3` = 2,
+    `4` = 2, `5` = 2, `6` = 3, `7` = 3, `8` = 3, `10` = -9), .keep_value_labels = FALSE)
+
+# replace missing values with NA.
+cv08_haven <- mutate(cv08_haven, educ3 = na_if(educ3, -9))
+
+# make educ3 a factor
+cv08_haven <- mutate(cv08_haven, educ3 = factor(educ3, levels = c(1, 2, 3), labels = c("primary", "secondary",
+    "tertiary")))
+
+# check
+table(cv08_haven$educ3, useNA = "always")
+
+
+cv08_haven <- cv08_haven %>%
+    mutate(educ3 = recode(var006n, `-3` = -9, `-1` = 1, `1` = 1, `2` = 2, `3` = 2, `4` = 2, `5` = 2,
+        `6` = 3, `7` = 3, `8` = 3, `10` = -9, .keep_value_labels = FALSE), educ3 = na_if(educ3, -9),
+        educ3 = factor(educ3, levels = c(1, 2, 3), labels = c("primary", "secondary", "tertiary")))
+
+#A.9 Means and counting specific values
+
+summary(cv08$int055)
+summary(cv08$int056)
+summary(cv08$int057)
+
+cv08$int055n <- as.numeric(cv08$int055)
+table(cv08$int055n, useNA = "always")
+cv08$int056n <- as.numeric(cv08$int056)
+table(cv08$int056n, useNA = "always")
+cv08$int057n <- as.numeric(cv08$int057)
+table(cv08$int057n, useNA = "always")
+
+cv08$int055n[cv08$int055n < 5] <- NA
+cv08$int055n <- cv08$int055n - 4
+cv08$int056n[cv08$int056n < 5] <- NA
+cv08$int056n <- cv08$int056n - 4
+cv08$int057n[cv08$int057n < 5] <- NA
+cv08$int057n <- cv08$int057n - 4
+
+# How does the function mean work in R?
+mean(cv08$int055n)  #whoops
+mean(cv08$int055n, na.rm = TRUE)  #works.  but not what we want. 
+mean(c(cv08$int055n, cv08$int056n, cv08$int057n), na.rm = T)  #works but not what we want.
+
+testmeans <- rowMeans(cbind(cv08$int055n, cv08$int056n, cv08$int057n), na.rm = T)
+head(testmeans)  #yes!
+
+# lets first count how many missings we have for each respondent
+nmis <- rowSums(is.na(cbind(cv08$int055n, cv08$int056n, cv08$int057n)))
+
+# ?is.na ?rowSums
+
+testmeans <- ifelse(nmis < 2, testmeans, NA)
+
+# add the calculated means to our dataset
+cv08$int_mean <- testmeans
+
+# Step 1: have a look at the vars
+str(cv08_haven$int055)
+attr(cv08_haven$int055, "labels")
+summary(cv08_haven$int055)
+summary(cv08_haven$int056)
+summary(cv08_haven$int057)
+
+table(cv08_haven$int055n, useNA = "always")
+table(cv08_haven$int056, useNA = "always")
+table(cv08_haven$int057, useNA = "always")
+
+# Step 2: define missings and recode
+cv08_haven <- mutate(cv08_haven, int055n = recode(int055, `-6` = -9, `-5` = -9, `-3` = -9, `-2` = -9,
+    `1` = 4, `2` = 3, `3` = 2, `4` = 1), .keep_value_labels = FALSE) %>%
+    mutate(int055n = na_if(int055n, -9)) %>%
+    mutate(int055n = labelled(int055n, c(`Helemaal geen tegenstelling` = 1, `Niet zo groot` = 2, Groot = 3,
+        `Zeer groot` = 4)))
+
+cv08_haven <- mutate(cv08_haven, int056n = recode(int056, `-6` = -9, `-5` = -9, `-3` = -9, `-2` = -9,
+    `1` = 4, `2` = 3, `3` = 2, `4` = 1), .keep_value_labels = FALSE) %>%
+    mutate(int056n = na_if(int056n, -9)) %>%
+    mutate(int056n = labelled(int056n, c(`Helemaal geen tegenstelling` = 1, `Niet zo groot` = 2, Groot = 3,
+        `Zeer groot` = 4)))
+
+cv08_haven <- mutate(cv08_haven, int057n = recode(int057, `-6` = -9, `-5` = -9, `-3` = -9, `-2` = -9,
+    `1` = 4, `2` = 3, `3` = 2, `4` = 1), .keep_value_labels = FALSE) %>%
+    mutate(int057n = na_if(int057n, -9)) %>%
+    mutate(int057n = labelled(int057n, c(`Helemaal geen tegenstelling` = 1, `Niet zo groot` = 2, Groot = 3,
+        `Zeer groot` = 4)))
+
+
+# Step 3: calculate means.  option 1
+cv08_haven <- cv08_haven %>%
+    rowwise() %>%
+    mutate(int_mean = mean(c(int055n, int056n, int057n), na.rm = TRUE))
+
+
+## option 2
+cv08_haven <- cv08_haven %>%
+    mutate(int_mean = rowMeans(cbind(int055n, int056n, int057n), na.rm = TRUE))
+
+# what we really want is a mean but only if there is a maximum of 1 NA in the three variables
+
+cv08_haven <- cv08_haven %>%
+    mutate(int_mean_temp = rowMeans(cbind(int055n, int056n, int057n), na.rm = TRUE), nmis = rowSums(is.na(cbind(int055n,
+        int056n, int057n))), int_mean = ifelse(nmis < 2, int_mean_temp, NA)) %>%
+    select(-int_mean_temp, -nmis)
+    
+    
+#A.10.1 RBase
+
+# step 1: selecting the variables you want to keep. for this tutorial only 6 variables: id, age,
+# sex, educ, health, region (not that R is case sensitive)
+cv08_sel <- cv08[, c("we_id", "lftop", "geslacht", "var006n", "v401", "landd")]
+cv10_sel <- cv10[, c("Sleutel", "var002", "var001", "Vltoplop", "V401", "Landd")]
+    
+
+# step 2: making the variables similar across individual datasets step 2a: making names the same
+names(cv08_sel) <- names(cv10_sel) <- c("id", "age", "sex", "educ", "health", "region")
+
+# step 2b: making levels and labels consistent
+summary(cv08_sel)
+summary(cv10_sel)
+# they look very consistent already. but check carefully.
+
+# we don't want id to be a factor but numeric. Note that we don't want the factor level values as
+# numbers but the actual labels as numbers.
+
+# id
+cv08_sel$id <- as.numeric(as.character(cv08_sel$id))
+cv10_sel$id <- as.numeric(as.character(cv10_sel$id))
+
+# age
+cv08_sel$age <- as.numeric(as.character(cv08_sel$age))
+cv10_sel$age <- as.numeric(as.character(cv10_sel$age))
+
+# sex men
+levels(cv08_sel$sex)
+levels(cv10_sel$sex)
+table(cv08_sel$sex, useNA = "always")
+table(cv10_sel$sex, useNA = "always")
+# lets make it a numeric var first
+cv08_sel$sexn <- as.numeric(cv08_sel$sex)
+table(cv08_sel$sexn)
+# recode into dummy
+cv08_sel$men <- ifelse(cv08_sel$sexn == 2, 1, 0)
+cv08_sel$men <- ifelse(cv08_sel$sexn == 1, NA, cv08_sel$men)
+# check
+table(cv08_sel$men, useNA = "always")
+# lets make it a numeric var first
+cv10_sel$sexn <- as.numeric(cv10_sel$sex)
+table(cv10_sel$sexn)
+# recode into dummy
+cv10_sel$men <- ifelse(cv10_sel$sexn == 2, 1, 0)
+# check
+table(cv10_sel$men, useNA = "always")
+
+# educ educ3
+levels(cv08_sel$educ)
+levels(cv10_sel$educ)
+table(cv08_sel$educ, useNA = "always")
+table(cv10_sel$educ, useNA = "always")
+# lets make it a numeric var first
+cv08_sel$educn <- as.numeric(cv08_sel$educ)
+table(cv08_sel$educn)
+# recode into 3cats: 1 primair, 2 secundair, 3 is tertiair
+cv08_sel$educ3 <- NA
+cv08_sel$educ3[cv08_sel$educn == 2 | cv08_sel$educn == 3] <- 1
+cv08_sel$educ3[cv08_sel$educn > 3 & cv08_sel$educn < 8] <- 2
+cv08_sel$educ3[cv08_sel$educn > 7 & cv08_sel$educn < 11] <- 3
+# check
+table(cv08_sel$educ3, useNA = "always")
+prop.table(table(cv08_sel$educ3, useNA = "always"))
+
+# lets make it a numeric var first
+cv10_sel$educn <- as.numeric(cv10_sel$educ)
+table(cv10_sel$educn)
+# recode into 3cats: 1 primair, 2 secundari, 3 is tertiair
+cv10_sel$educ3 <- NA
+cv10_sel$educ3[cv10_sel$educn < 3] <- 1  #correct?
+cv10_sel$educ3[cv10_sel$educn > 2 & cv10_sel$educn < 6] <- 2
+cv10_sel$educ3[cv10_sel$educn == 6] <- 3
+# check
+table(cv10_sel$educ3, useNA = "always")
+prop.table(table(cv10_sel$educ3, useNA = "always"))  
+
+
+
+# lets add a wave variable
+cv08_sel$wave <- 2008
+cv10_sel$wave <- 2010
+
+# let make a fake ID, we will use this later when we pretend CV is panel data.
+cv08_sel$id2 <- rank(cv08_sel$id)
+cv10_sel$id2 <- rank(cv10_sel$id)
+
+# simply place one dataset under the other thus row bind (rbind) check first if same vars in both
+# datasets. perhaps clean up first.
+
+cv08_sel <- cv08_sel[, c("id", "id2", "age", "men", "educ3", "health", "region", "wave")]
+cv10_sel <- cv10_sel[, c("id", "id2", "age", "men", "educ3", "health", "region", "wave")]
+
+summary(cv08_sel)
+
+summary(cv10_sel)
+
+cv_tot <- rbind(cv08_sel, cv10_sel)
+
+summary(cv_tot)
+
+head(cv_tot)
+
+# lets make a panel dataset in wide format
+cv_tot_panel <- merge(cv08_sel, cv10_sel, all = TRUE, by = "id2")
+head(cv_tot_panel)
+
+# rename variables. and when necessary merge again with third wave. not very efficient but it
+# works.
+
+# many people prefer the reshape function. (i like doing it myself but here it goes)
+cv_tot_panel <- reshape(cv_tot, timevar = "wave", idvar = "id2", direction = "wide")
+head(cv_tot_panel)
+
+
+----
+
+# References
+
+
+
+
