@@ -9,12 +9,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="by: Your Name" />
+<meta name="author" content="by: Daphne Janssen" />
 
 
 <title>Lab journal</title>
 
-<script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -181,11 +181,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -407,7 +411,7 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">Lab journal</h1>
-<h4 class="author">by: Your Name</h4>
+<h4 class="author">by: Daphne Janssen</h4>
 
 </div>
 
@@ -421,7 +425,7 @@ div.tocify {
 <div class="column" style="width:50%;">
 <div id="my-lab-journal" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> My Lab Journal</h1>
-<p>Last compiled on augustus, 2022</p>
+<p>Last compiled on september, 2022</p>
 <p><em>Describe lab journal here.</em> <br></p>
 <hr />
 <div id="section" class="section level2" number="1.1">
@@ -462,7 +466,7 @@ href="https://jtolsma.nl/SNASS/">https://jtolsma.nl/SNASS/</a>.
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkxhYiBqb3VybmFsIg0KYXV0aG9yOiAiYnk6IFlvdXIgTmFtZSINCmJpYmxpb2dyYXBoeTogcmVmZXJlbmNlcy5iaWINCg0KIA0KLS0tDQoNCmBgYHtyLCBpbnN0YWxsIHJlbW90ZWx5LCBnbG9iYWxzZXR0aW5ncywgZWNobz1GQUxTRSwgd2FybmluZz1GQUxTRSwgcmVzdWx0cz0naGlkZSd9DQojIGluc3RhbGwucGFja2FnZXMoInJlbW90ZXMiKQ0KI3JlbW90ZXM6Omluc3RhbGxfZ2l0aHViKCJybGVzdXIva2xpcHB5IikNCmBgYCANCg0KYGBge3IsIGdsb2JhbHNldHRpbmdzLCBlY2hvPUZBTFNFLCB3YXJuaW5nPUZBTFNFLCByZXN1bHRzPSdoaWRlJ30NCmxpYnJhcnkoa25pdHIpDQoNCmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkNCm9wdHNfY2h1bmskc2V0KHRpZHkub3B0cz1saXN0KHdpZHRoLmN1dG9mZj0xMDApLHRpZHk9VFJVRSwgd2FybmluZyA9IEZBTFNFLCBtZXNzYWdlID0gRkFMU0UsY29tbWVudCA9ICIjPiIsIGNhY2hlPVRSVUUsIGNsYXNzLnNvdXJjZT1jKCJ0ZXN0IiksIGNsYXNzLm91dHB1dD1jKCJ0ZXN0MiIpKQ0Kb3B0aW9ucyh3aWR0aCA9IDEwMCkNCnJnbDo6c2V0dXBLbml0cigpDQoNCg0KDQpjb2xvcml6ZSA8LSBmdW5jdGlvbih4LCBjb2xvcikge3NwcmludGYoIjxzcGFuIHN0eWxlPSdjb2xvcjogJXM7Jz4lczwvc3Bhbj4iLCBjb2xvciwgeCkgfQ0KDQpgYGANCg0KYGBge3Iga2xpcHB5LCBlY2hvPUZBTFNFLCBpbmNsdWRlPVRSVUV9DQprbGlwcHk6OmtsaXBweShwb3NpdGlvbiA9IGMoJ3RvcCcsICdyaWdodCcpKQ0KI2tsaXBweTo6a2xpcHB5KGNvbG9yID0gJ2RhcmtyZWQnKQ0KI2tsaXBweTo6a2xpcHB5KHRvb2x0aXBfbWVzc2FnZSA9ICdDbGljayB0byBjb3B5JywgdG9vbHRpcF9zdWNjZXNzID0gJ0RvbmUnKQ0KYGBgDQoNCg0KDQoNCi0tLS0NCg0KOjo6Ojo6Ojo6Ojo6Ojogey5jb2x1bW5zfQ0KOjo6IHsuY29sdW1uIHdpZHRoPSI1MCUifQ0KDQojIE15IExhYiBKb3VybmFsDQpMYXN0IGNvbXBpbGVkIG9uIGByIGZvcm1hdChTeXMudGltZSgpLCAnJUIsICVZJylgICANCg0KKkRlc2NyaWJlIGxhYiBqb3VybmFsIGhlcmUuKg0KPGJyPg0KDQotLS0tDQoNCiMjICAgDQoNCkV2ZXJ5b25lIGNhbiBmb3JrIHRoaXMgcmVwb3NpdG9yeS4gVXNlIHRoaXMgZXhhbXBsZSB0byBqb3VybmFsIHlvdXIgbGFiIHdvcmsgYW5kIGFzc2lnbm1lbnRzLiANCg0KV2UsIEpvY2hlbSBUb2xzbWEgYW5kIEJhcyBIb2ZzdHJhLCB1c2UgdGhpcyByZXBvc2l0b3J5IGZvciBvdXIgU29jaWFsIE5ldHdvcmsgQW5hbHlzaXMgRm9yIFNvY2lhbCBTY2llbnRpc3RzIGNvdXJzZSBbQFNOQVNTXS4gDQoNCg0KOjo6DQo6Ojogey5jb2x1bW4gd2lkdGg9IjUwJSJ9DQoNCg0KDQoNCiFbXShpbWFnZXMvY292ZXIuanBnKQ0KDQoNCjo6Og0KOjo6Ojo6Ojo6Ojo6OjoNCg0KDQojIyBIb3cgdG8gdXNlDQoNCjEuIEZvcmsgdGhlIHJlcG9zaXRvcnkgZm9yIHRoaXMgd2Vic2l0ZSBhbmQgZm9sbG93IGluc3RydWN0aW9ucyBvbiBgUkVBRE1FYCB0byBnZXQgc3RhcnRlZCBbaGVyZV0oaHR0cHM6Ly9naXRodWIuY29tL0pvY2hlbVRvbHNtYS9sYWJqb3VybmFsKS4gIA0KDQoyLiBKb3VybmFsIHlvdXIgd29yaywgYnkgZWRpdGluZyB0aGUgLlJtZC1maWxlcw0KDQozLiAuLi4NCg0KNC4gQ2hhbmdlIGV2ZXJ5dGhpbmcgdG8gbWFrZSBpdCB5b3VyIG93biENCg0KDQo8YnI+DQoNClVzZSB0aGUgdG9wIG1lbnUgdG8gbmF2aWdhdGUgdGhyb3VnaCB0aGUgam91cm5hbC4NCg0KDQotLS0tDQoNCiMgUmVmZXJlbmNlcw0KDQoNCg0KDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkxhYiBqb3VybmFsIg0KYXV0aG9yOiAiYnk6IERhcGhuZSBKYW5zc2VuIg0KYmlibGlvZ3JhcGh5OiByZWZlcmVuY2VzLmJpYg0KDQogDQotLS0NCg0KDQpgYGB7ciwgaW5zdGFsbCByZW1vdGVseSwgZ2xvYmFsc2V0dGluZ3MsIGVjaG89RkFMU0UsIHdhcm5pbmc9RkFMU0UsIHJlc3VsdHM9J2hpZGUnLCBldmFsPUZBTFNFfQ0KI2luc3RhbGwucGFja2FnZXMoInJlbW90ZXMiKQ0KI3JlbW90ZXM6Omluc3RhbGxfZ2l0aHViKCJybGVzdXIva2xpcHB5IikNCmBgYCANCg0KYGBge3IsIGdsb2JhbHNldHRpbmdzLCBlY2hvPUZBTFNFLCB3YXJuaW5nPUZBTFNFLCByZXN1bHRzPSdoaWRlJ30NCmxpYnJhcnkoa25pdHIpDQoNCmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkNCm9wdHNfY2h1bmskc2V0KHRpZHkub3B0cz1saXN0KHdpZHRoLmN1dG9mZj0xMDApLHRpZHk9VFJVRSwgd2FybmluZyA9IEZBTFNFLCBtZXNzYWdlID0gRkFMU0UsY29tbWVudCA9ICIjPiIsIGNhY2hlPVRSVUUsIGNsYXNzLnNvdXJjZT1jKCJ0ZXN0IiksIGNsYXNzLm91dHB1dD1jKCJ0ZXN0MiIpKQ0Kb3B0aW9ucyh3aWR0aCA9IDEwMCkNCnJnbDo6c2V0dXBLbml0cigpDQoNCg0KDQpjb2xvcml6ZSA8LSBmdW5jdGlvbih4LCBjb2xvcikge3NwcmludGYoIjxzcGFuIHN0eWxlPSdjb2xvcjogJXM7Jz4lczwvc3Bhbj4iLCBjb2xvciwgeCkgfQ0KDQpgYGANCg0KYGBge3Iga2xpcHB5LCBlY2hvPUZBTFNFLCBpbmNsdWRlPVRSVUV9DQprbGlwcHk6OmtsaXBweShwb3NpdGlvbiA9IGMoJ3RvcCcsICdyaWdodCcpKQ0KI2tsaXBweTo6a2xpcHB5KGNvbG9yID0gJ2RhcmtyZWQnKQ0KI2tsaXBweTo6a2xpcHB5KHRvb2x0aXBfbWVzc2FnZSA9ICdDbGljayB0byBjb3B5JywgdG9vbHRpcF9zdWNjZXNzID0gJ0RvbmUnKQ0KYGBgDQoNCg0KDQoNCi0tLS0NCg0KOjo6Ojo6Ojo6Ojo6Ojogey5jb2x1bW5zfQ0KOjo6IHsuY29sdW1uIHdpZHRoPSI1MCUifQ0KDQojIE15IExhYiBKb3VybmFsDQpMYXN0IGNvbXBpbGVkIG9uIGByIGZvcm1hdChTeXMudGltZSgpLCAnJUIsICVZJylgICANCg0KKkRlc2NyaWJlIGxhYiBqb3VybmFsIGhlcmUuKg0KPGJyPg0KDQotLS0tDQoNCiMjICAgDQoNCkV2ZXJ5b25lIGNhbiBmb3JrIHRoaXMgcmVwb3NpdG9yeS4gVXNlIHRoaXMgZXhhbXBsZSB0byBqb3VybmFsIHlvdXIgbGFiIHdvcmsgYW5kIGFzc2lnbm1lbnRzLiANCg0KV2UsIEpvY2hlbSBUb2xzbWEgYW5kIEJhcyBIb2ZzdHJhLCB1c2UgdGhpcyByZXBvc2l0b3J5IGZvciBvdXIgU29jaWFsIE5ldHdvcmsgQW5hbHlzaXMgRm9yIFNvY2lhbCBTY2llbnRpc3RzIGNvdXJzZSBbQFNOQVNTXS4gDQoNCg0KOjo6DQo6Ojogey5jb2x1bW4gd2lkdGg9IjUwJSJ9DQoNCg0KDQoNCiFbXShpbWFnZXMvY292ZXIuanBnKQ0KDQoNCjo6Og0KOjo6Ojo6Ojo6Ojo6OjoNCg0KDQojIyBIb3cgdG8gdXNlDQoNCjEuIEZvcmsgdGhlIHJlcG9zaXRvcnkgZm9yIHRoaXMgd2Vic2l0ZSBhbmQgZm9sbG93IGluc3RydWN0aW9ucyBvbiBgUkVBRE1FYCB0byBnZXQgc3RhcnRlZCBbaGVyZV0oaHR0cHM6Ly9naXRodWIuY29tL0pvY2hlbVRvbHNtYS9sYWJqb3VybmFsKS4gIA0KDQoyLiBKb3VybmFsIHlvdXIgd29yaywgYnkgZWRpdGluZyB0aGUgLlJtZC1maWxlcw0KDQozLiAuLi4NCg0KNC4gQ2hhbmdlIGV2ZXJ5dGhpbmcgdG8gbWFrZSBpdCB5b3VyIG93biENCg0KDQo8YnI+DQoNClVzZSB0aGUgdG9wIG1lbnUgdG8gbmF2aWdhdGUgdGhyb3VnaCB0aGUgam91cm5hbC4NCg0KDQotLS0tDQoNCiMgUmVmZXJlbmNlcw0KDQoNCg0KDQo=</div>
 
 
 </div>
