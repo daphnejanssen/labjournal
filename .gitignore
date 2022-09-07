@@ -1,3 +1,6 @@
+#Do not forget to also change your _site.yml file to make shure we exclude same stuff here
+
+
 # History files
 .Rhistory
 .Rapp.history
