@@ -1,7 +1,7 @@
 ---
 title: "Journal 2"
 #bibliography: references.bib
-author: "Your Name"
+author: "Daphne Janssen"
 ---
 
 
@@ -37,7 +37,7 @@ Last compiled on `r format(Sys.time(), '%B, %Y')`
 
 ----
 
-voorbeeld
+#Homework week 2
 ----
 
 
