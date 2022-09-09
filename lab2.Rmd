@@ -26,7 +26,12 @@ klippy::klippy(position = c('top', 'right'))
 #klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
 ```
 
+Last compiled on `r Sys.time()`
+
+<!---
 Last compiled on `r format(Sys.time(), '%B, %Y')`
+--->
+
 
 <br>
 
