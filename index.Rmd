@@ -89,9 +89,15 @@ Use the top menu to navigate through the journal.
 
 ## Homework week 1
 
-Research Question:
+Research Question: To what extent is there a difference between men and women within Sociology and Physics in (1) who they work with and (2) which topics they study compared to three universities (within the Netherlands)? 
 
-Articles: To what extent is there a difference between men and women within Sociology and Physics in (1) who they work and (2) which topics they study compared to three universities (within the Netherlands)? 
+Articles: 
+
+Collins, R., & Steffen-Fluhr, N. (2019). Hidden patterns: Using social network analysis to track career trajectories of women STEM faculty. *Equality, Diversity and Inclusion: An International Journal.* 
+
+Jadidi, M., Karimi, F., Lietz, H., & Wagner, C. (2018). Gender disparities in science? Dropout, productivity, collaborations and success of male and female computer scientists. *Advances in Complex Systems, 21*(3-4), 1750011. https://doi.org/10.1142/S0219525917500114
+
+Ghiasi, G., Larivière, V., & Sugimoto, C. R. (2015). On the compliance of women engineers with a gendered scientific system. *PloS one, 10*(12), e0145931. https://doi.org/10.1371/journal.pone.0145931
 
 ----
 
