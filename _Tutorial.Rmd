@@ -68,6 +68,10 @@ setwd("C:\\SNA-4-Social-Scientists\\")  #change to your own workdirectory
 ```{r}
 getwd()
 ```
+-------------------------------
+------------------------------
+#A.6 Reading in data files
+
 # ignore the warnings ?read.spss note that I have saved the data files in a folder called
 # 'addfiles'.
 cv08 <- foreign::read.spss("Cultural_Changes_2008.sav", use.value.labels = T, to.data.frame = T)
@@ -88,6 +92,13 @@ cv10_haven <- haven::read_spss("Cultural_Changes_2010.sav")
 
 str(cv08)
 
+
+
+-------------------------------
+------------------------------
+#A.7 Define missings 
+
+#A.7.1 R Base
 str(cv08_haven$lftop)
 summary(cv08_haven$lftop)
 attr(cv08_haven$lftop, "labels")
@@ -98,6 +109,34 @@ cv08$lftop_new <- cv08$lftop
 cv08$lftop_new[cv08$lftop_new == "Onbekend"] <- NA
 
 table(cv08$lftop_new, useNA = "always")
+
+levels(cv08$lftop_new)
+
+str(cv08$lftop_new)
+
+cv08$agen <- as.numeric(as.character(cv08$lftop_new))  #how clumsy. we first convert the factor to a string and then to a numeric variable. 
+table(cv08$agen, useNA = "always")
+
+str(cv08$agen)
+
+
+-------------
+#A.7.2 Tidy
+cv08_haven <- mutate(cv08_haven, lftop_new = lftop)
+
+cv08_haven$lftop_new <- na_if(cv08_haven$lftop_new, 99)
+
+cv08_haven <- mutate(cv08_haven, lftop_new = na_if(lftop, 99))
+
+table(cv08_haven$lftop_new, useNA = "always")
+
+
+
+-------------------------
+------------------------
+#A.8 Recoding variables
+
+#A.8.1 R Base
 
 levels(cv08$var006n)
 
@@ -129,6 +168,9 @@ table(cv08$educ3, useNA = "always")
 levels(cv08$educ3) <- c("primary", "secondary", "tertiary")
 table(cv08$educ3, useNA = "always")
 
+
+-------------------
+#A.8.2 Tidy
 install.packages('labelled')
 require(labelled)  #to be able to use the recode function on haven labelled variables
 
@@ -160,8 +202,13 @@ cv08_haven <- cv08_haven %>%
         `6` = 3, `7` = 3, `8` = 3, `10` = -9, .keep_value_labels = FALSE), educ3 = na_if(educ3, -9),
         educ3 = factor(educ3, levels = c(1, 2, 3), labels = c("primary", "secondary", "tertiary")))
 
+
+
+----------------------------------------------
+----------------------------------------------
 #A.9 Means and counting specific values
 
+#A.9.1 Base
 summary(cv08$int055)
 summary(cv08$int056)
 summary(cv08$int057)
@@ -198,6 +245,9 @@ testmeans <- ifelse(nmis < 2, testmeans, NA)
 # add the calculated means to our dataset
 cv08$int_mean <- testmeans
 
+
+--------------
+#A.9.1 Tidy
 # Step 1: have a look at the vars
 str(cv08_haven$int055)
 attr(cv08_haven$int055, "labels")
@@ -245,8 +295,13 @@ cv08_haven <- cv08_haven %>%
     mutate(int_mean_temp = rowMeans(cbind(int055n, int056n, int057n), na.rm = TRUE), nmis = rowSums(is.na(cbind(int055n,
         int056n, int057n))), int_mean = ifelse(nmis < 2, int_mean_temp, NA)) %>%
     select(-int_mean_temp, -nmis)
-    
-    
+
+
+
+------------------------
+------------------------
+#A.10 Merging data files
+
 #A.10.1 RBase
 
 # step 1: selecting the variables you want to keep. for this tutorial only 6 variables: id, age,
@@ -362,10 +417,303 @@ cv_tot_panel <- reshape(cv_tot, timevar = "wave", idvar = "id2", direction = "wi
 head(cv_tot_panel)
 
 
-----
+------------
+#A.10.2 Tidy
 
-# References
+# step 1: selecting the variables you want to keep. for this tutorial only 6 variables: id, age,
+# sex, educ, health, region (not that R is case sensitive)
+cv08_sel <- cv08_haven %>%
+    select(c("we_id", "lftop", "geslacht", "var006n", "v401", "landd"))
+
+cv10_sel <- cv10_haven %>%
+    select(c("Sleutel", "var002", "var001", "Vltoplop", "V401", "Landd"))
+
+# step 2: making the variables similar across individual datasets step 2a: making names the same
+names(cv08_sel) <- names(cv10_sel) <- c("id", "age", "sex", "educ", "health", "region")
+
+
+# step 2b: making levels and labels consistent
+str(cv08_sel)
+str(cv10_sel)
+
+# summary(cv08_sel) summary(cv10_sel)
+
+# they look very consistent already. but check carefully.  id is okay
+
+# age: replace 'onbekend'
+cv08_sel <- cv08_sel %>%
+    mutate(age = na_if(age, 99))
+cv10_sel <- cv10_sel %>%
+    mutate(age = na_if(age, 99))
+
+# sex: men
+cv08_sel <- cv08_sel %>%
+    mutate(men = recode(sex, `9` = -9, M = 1, V = 0, .keep_value_labels = FALSE), men = na_if(men, -9),
+        men = labelled(men, c(man = 1, vrouw = 0)))
+cv10_sel <- cv10_sel %>%
+    mutate(men = recode(sex, `2` = 0, .keep_value_labels = FALSE), men = labelled(men, c(man = 1, vrouw = 0)))
+
+# educ educ3
+attr(cv08_sel$educ, "labels")
+attr(cv10_sel$educ, "labels")
+
+cv08_sel <- cv08_sel %>%
+    mutate(educ3 = recode(educ, `-3` = -9, `-1` = 1, `1` = 1, `2` = 2, `3` = 2, `4` = 2, `5` = 2, `6` = 3,
+        `7` = 3, `8` = 3, `10` = -9, .keep_value_labels = FALSE), educ3 = na_if(educ3, -9), educ3 = factor(educ3,
+        levels = c(1, 2, 3), labels = c("primary", "secondary", "tertiary")))
+
+cv10_sel <- cv10_sel %>%
+    mutate(educ3 = recode(educ, `-1` = 1, `1` = 1, `2` = 2, `3` = 2, `4` = 2, `5` = 3, `10` = -9, .keep_value_labels = FALSE),
+        educ3 = na_if(educ3, -9), educ3 = factor(educ3, levels = c(1, 2, 3), labels = c("primary", "secondary",
+            "tertiary")))
+
+
+# lets add a wave variable
+cv08_sel$wave <- 2008
+cv10_sel$wave <- 2010
+
+# let make a fake ID, we will use this later when we pretend CV is panel data.
+cv08_sel$id2 <- rank(cv08_sel$id)
+cv10_sel$id2 <- rank(cv10_sel$id)
+
+# simply place one dataset under the other thus row bind (rbind) check first if same vars in both
+# datasets. perhaps clean up first.
+
+cv08_sel <- cv08_sel %>%
+    select(c("id", "id2", "age", "men", "educ3", "health", "region", "wave"))
+
+cv10_sel <- cv10_sel %>%
+    select(c("id", "id2", "age", "men", "educ3", "health", "region", "wave"))
+
+cv_tot_tidy <- cv08_sel %>%
+    add_row(cv10_sel)
+
+summary(cv_tot_tidy)
+
+head(cv_tot_tidy)
+
+# lets make a panel dataset in wide format
+cv_tot_panel_tidy <- full_join(cv08_sel, cv10_sel, by = "id2", suffix = c(".2008", ".2010"))
+
+
+
+-------------------------------------
+-------------------------------------
+#A.11 Aggregate data
+
+#A.11.1 R Base
+# step 1. construct dataset with aggregate info
+age_region <- aggregate(cv_tot$age, by = list(cv_tot$region), FUN = mean)
+head(age_region)
+
+# step 1. construct dataset with aggregate info
+age_region <- aggregate(cv_tot$age, by = list(cv_tot$region), FUN = mean, na.rm = TRUE)
+head(age_region)
+# lets correct variable names
+names(age_region) <- c("region", "age_region")
+age_region
+
+# step 2. match to dataset
+cv_total <- merge(cv_tot, age_region, by = "region", all.x = TRUE)
+head(cv_total)
+tail(cv_total)
+
+# You can also define your own functions and use these.
+
+fmean_narm <- function(x) {
+    mean(x, na.rm = T)
+}
+
+age_region_test <- aggregate(cv_tot$age, by = list(cv_tot$region), FUN = fmean_narm)
+head(age_region_test)
+
+
+------------
+#A.11.2 Tidy
+# step 1. convert the dataset to an aggregate/grouped version using the 'group_by' function from
+# the Dplyr package (part of the tidyverse), which will enable you to perform aggregate-level, or
+# 'by group,' operations.
+age_region <- group_by(cv_tot_tidy, region)
+
+# step 2. use mutate to create and append the mean age by region to the original data frame (don't
+# forget to remove NA values).
+age_region <- mutate(age_region, mean = mean(age, na.rm = TRUE))
+
+# step 3. you can link both commands using the pipe operator %>% to keep your code concise (and
+# readable if you're writing a script).
+cv_total_tidy <- cv_tot_tidy %>%
+    group_by(region) %>%
+    mutate(age_region = mean(age, na.rm = TRUE)) %>%
+    ungroup()  
+#because group_by() returns a grouped tibble (a tibble specific class with a group attribute), it's good practice to close the pipe-chain with ungroup() to avoid an errors down the line. 
+
+
+
+--------------------------------
+--------------------------------
+#A.12 Missing values
+
+#A.12.1 R Base
+model1 <- lm(as.numeric(health) ~ men + age + as.factor(educ3) + as.factor(region), data = cv_total)
+summary(model1)
+
+cv_total$health[cv_total$health == "Weigert"] <- NA
+cv_total$healthn <- as.numeric(cv_total$health) - 4
+table(cv_total$health, useNA = "always")
+table(cv_total$healthn, useNA = "always")
+
+#A.12.1.1 Listwise
+# step 1. define all missings
+summary(cv_total)
+
+model2 <- lm(as.numeric(healthn) ~ men + age + as.factor(educ3) + as.factor(region), data = cv_total)
+summary(model2)
+
+
+----------------------------------
+#A.12.1.2 Replacing missing values
+
+cv_total$men2 <- ifelse(is.na(cv_total$men), 2, cv_total$men)
+summary(cv_total$men2)
+
+cv_total$educ3b <- ifelse(is.na(cv_total$educ3), 4, cv_total$educ3)
+summary(cv_total$educ3b)
+
+cv_total$age2 <- ifelse(is.na(cv_total$age), mean(cv_total$age, na.rm = TRUE), cv_total$age)
+# And lets make a dummy that indicates for whom we replaced missing values.
+cv_total$age_mis <- ifelse(is.na(cv_total$age), 1, 0)
+summary(cv_total$age2)
+table(cv_total$age_mis)
+
+# pay attention, now use categorical variable men2
+model3 <- lm(healthn ~ as.factor(men2) + age2 + age_mis + as.factor(educ3b) + as.factor(region), data = cv_total)
+summary(model3)
+
+
+-------------------------------
+#A.12.1.3 Impute missing values
+
+install.packages("mice")
+require(mice)
+
+# lets start with the original dataset, that is without replacement of the missings
+cv_total <- cv_total[, c("id", "id2", "age", "men", "educ3", "health", "region", "wave")]
+# define all missings only for health needs to be redefined
+cv_total$health[cv_total$health == "Weigert"] <- NA
+cv_total$health <- as.numeric(cv_total$health) - 4
+
+# multiple imputation take into account measurement level of variables
+cv_total$men <- as.factor(cv_total$men)
+cv_total$educ3 <- as.factor(cv_total$educ3)
+
+# check pattern
+md.pattern(cv_total)
+
+# we do not have real patterns. thus MCAR. This is only seldom the case!!
+
+# lets impute
+names(cv_total)
+
+# We do not want to use id id2 and wave to predict the other variables thus we need to tell mice in
+# the predictorMatrix argument. Easiest way is to first estimate and then correct.
+
+imp <- mice(data = cv_total, method = c("", "", "cart", "logreg", "polr", "cart", "", ""))
+attributes(imp)
+pred <- imp$pred
+pred[, "id"] <- 0
+pred[, "id2"] <- 0
+pred[, "wave"] <- 0
+pred
+
+# let us also use a seed, so we have the same data in class.
+imp <- mice(data = cv_total, method = c("", "", "cart", "logreg", "polr", "cart", "", ""), pred = pred,
+    seed = 45622)
+
+summary(cv_total)
+summary(complete(imp))
+
+plot(imp)
+
+# in real life: check convergence, check plausible values. see vignette 2 of mice package
+
+# and fit model on imputed dataset
+model_imp <- with(imp, lm(as.numeric(health) ~ men + age + educ3 + region))
+pool_model_imp <- pool(model_imp)
+summary(pool_model_imp)
+
+
+-----------------------------------
+#A.12.2 Tidy
+
+model1 <- cv_total_tidy %>%
+    mutate(healthn = as.numeric(health), across(c(educ3, region), as.factor)) %>%
+    lm(formula = healthn ~ men + age + educ3 + region) 
+    summary(model1)
+    
+# the across function from the Dplyr package is similar to the apply function (if MARGIN = 2) from
+# base R. it performs the same operation on multiple columns (or, if you have groups, for each
+# combination of columns and groups).
+
+# lm is not a 'pipe friendly' function because the data is provided in the second argument, while
+# the pipe operator reads the data from the first unnamed(!) argument that follows the %>%. by
+# naming the first argument, the pipe will take data from the second argument, which is (in this
+# case) the correct data argument.
 
 
 
 
+# step 1. define all missings
+
+cv_total_tidy <- cv_total_tidy %>%
+    mutate(health = na_if(health, -2), healthn = as.numeric(health) - 4)
+
+
+------------------
+#A.12.2.1 Listwise    
+model2 <- cv_total_tidy %>%
+    mutate(across(c(educ3, region), as.factor)) %>%
+    lm(formula = healthn ~ men + age + educ3 + region)
+    summary(model2)
+    
+    
+---------------------------------
+#A.12.2.2 Replacing missing values
+# with the first mutate argument you avoid repeating as.numeric() for each variable.
+cv_total_tidy2 <- cv_total_tidy %>%
+    mutate(across(everything(), as.numeric), men2 = replace_na(men, 2), educ3b = replace_na(educ3, 4),
+        age2 = replace_na(age, mean(age, na.rm = TRUE)), age_mis = ifelse(is.na(age), 1, 0))
+
+# note: the following two commands are equivalent: mutate(across(everything(), as.numeric))
+# mutate_all(as.numeric) the next two as well: mutate_at(c('men2', 'educ3b', 'region'), as.factor)
+# mutate(across(c(men2, educ3b, region), as.factor))
+
+# pay attention, now use categorical variable men2.
+model3 <- cv_total_tidy2 %>%
+    mutate_at(c("men2", "educ3b", "region"), as.factor) %>%
+    lm(formula = healthn ~ men2 + age2 + age_mis + educ3b + region) 
+    summary(model3)
+
+-------------------------------
+#A.12.2.3 Impute missing values
+  pred <- cv_total_tidy  %>%
+  select(c("id", "id2", "age", "men", "educ3", "health", "region", "wave")) %>% #start with the original variables.
+  mutate_all(as.numeric)  %>%
+  mutate_at(c("men", "educ3"), as.factor) %>%
+  mice(method = c("", "", "cart", "logreg", "polr", "cart", "", "")) %>%
+  unclass() %>% #The object returned from the mice function is of class 'mids,' which dplyr's functions cannot handle. The unclass() function from base R solve this issue as it removes the class attribute and, in this case, returns a list that dplyr can handle.
+  pluck("predictorMatrix") %>% #the pluck() function from the Purrr package (part of the tidyverse) is the user-friendly equivalent of `[[` in base R: `[[`("predictorMatrix"), which enables you to extract a single element from the list we just created using unclass().
+  as.data.frame() %>% #Because the mutate function (and its variations) are not build for lists, we need to coerce into a data frame (or Tibble)
+  mutate_at(c("id", "id2", "age"), funs(recode(1, 0))) %>% #To 'remove' the columns id id2 and wave as predictors, we recode all their 1s to 0s using mutate_at() and recode().
+  as.matrix()
+
+
+#impute missings (again but now on correct predictors) and fit model on imputed dataset
+model_imp <- cv_total_tidy %>%
+  select(c("id","id2","age","men","educ3","health","region","wave")) %>%
+  mutate_all(as.numeric)  %>%
+  mutate_at(c("men", "educ3"), as.factor) %>%
+  mice(method = c("", "", "cart", "logreg", "polr", "cart", "", ""), pred = pred, seed = 45622) %>%
+  with(lm(as.numeric(health) ~ men + age + educ3 + region)) %>%
+  pool()
+
+summary(model_imp)
