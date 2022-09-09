@@ -43,7 +43,8 @@ klippy::klippy(position = c('top', 'right'))
 # My Lab Journal
 Last compiled on `r format(Sys.time(), '%B, %Y')`  
 
-*Describe lab journal here.*
+This is the Lab Journal I use during the course Social Networks. 
+
 <br>
 
 ----
@@ -61,7 +62,8 @@ We, Jochem Tolsma and Bas Hofstra, use this repository for our Social Network An
 
 
 
-![](images/cover.jpg)
+![](images/STEM Image.png)
+
 
 
 :::
@@ -83,6 +85,13 @@ We, Jochem Tolsma and Bas Hofstra, use this repository for our Social Network An
 
 Use the top menu to navigate through the journal.
 
+----
+
+## Homework week 1
+
+Research Question:
+
+Articles: To what extent is there a difference between men and women within Sociology and Physics in (1) who they work and (2) which topics they study compared to three universities (within the Netherlands)? 
 
 ----
 
