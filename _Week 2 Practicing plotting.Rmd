@@ -1,0 +1,329 @@
+
+---
+title: "Practicing plotting"
+#bibliography: references.bib
+author: "Daphne Janssen"
+---
+
+
+
+```{r, globalsettings, echo=FALSE, warning=FALSE, results='hide'}
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE)
+opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE, warning = FALSE, message = FALSE,comment = "#>", cache=TRUE, class.source=c("test"), class.output=c("test2"))
+options(width = 100)
+rgl::setupKnitr()
+
+
+
+colorize <- function(x, color) {sprintf("<span style='color: %s;'>%s</span>", color, x) }
+
+```
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(position = c('top', 'right'))
+#klippy::klippy(color = 'darkred')
+#klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
+```
+
+Last compiled on `r Sys.time()`
+
+<!---
+Last compiled on `r format(Sys.time(), '%B, %Y')`
+--->
+
+
+<br>
+
+----
+
+#Zachary’s karate club
+
+```{r}
+require(igraph)
+
+g <- make_graph("Zachary")
+plot(g)
+```
+
+```{r}
+gmat <- as_adjacency_matrix(g, type = "both", sparse = FALSE)
+gmat
+```
+
+```{r}
+ncol(gmat)
+```
+```{r}
+# number of nodes
+vcount(g)
+# number of edges
+ecount(g)
+```
+
+```{r}
+degree(g)
+hist(table(degree(g)), xlab='indegree', main= 'Histogram of indegree')
+```
+```{r}
+# be aware that directed graphs are considered as undirected. but g is undirected.
+transitivity(g, type = c("localundirected"), isolates = c("NaN", "zero"))
+```
+```{r}
+igraph::betweenness(g, directed = FALSE)
+```
+
+```{r}
+dyad.census(g)
+```
+
+```{r}
+34*33
+1122/2
+78+483
+```
+
+
+```{r}
+#install.packages("sna")
+
+require('sna')
+
+igraph::triad.census(g)
+# I will use sna because it shows the names of the triads as well.
+
+sna::triad.census(gmat)
+
+```
+```{r}
+igraph::transitivity(g, type = "global")
+sna::gtrans(gmat)
+
+triad_g <- data.frame(sna::triad.census(gmat))
+
+transitivity_g <- (3 * triad_g$X300)/(triad_g$X201 + 3 * triad_g$X300)
+transitivity_g
+```
+
+```{r}
+(34*33*32)/3
+```
+
+```{r}
+# changing V
+V(g)$size = betweenness(g, normalized = T, directed = FALSE) * 60 + 10  #after some trial and error
+plot(g, mode = "undirected")
+```
+
+
+```{r}
+g
+
+summary(g)
+
+head(g)
+```
+
+```{r}
+set.seed(2345)
+l <- layout_with_mds(g)  #https://igraph.org/r/doc/layout_with_mds.html
+plot(g, layout = l)
+```
+
+```{r}
+l  #let us take a look at the coordinates
+l[1, 1] <- 4
+l[34, 1] <- -3.5
+plot(g, layout = l)
+```
+
+```{r}
+plot(g, layout = l, margin = c(0, 0, 0, 0))
+legend(x = -2, y = -1.5, c("Note: the position of nodes 1 and 34 have been set by Jochem Tolsma \n for visualisation purposes only and do not reflect network properties"),
+    bty = "n", cex = 0.8)
+```
+
+
+
+
+
+```{r}
+detach("package:sna") 
+```
+
+
+
+#Co-author networks
+```{r}
+# load the necessary datasets
+load("Data/soc_df.RData")
+load("Data/soc_collabs1.RData")
+load("Data/soc_collabs2.RData")
+```
+
+```{r}
+# We first want to get all the unique collaborators of sociology staff at the RU.
+soc_collabs_unique <- unique(soc_collabs[, 4])  
+# There are 229 unique collaborators for RU staff.
+
+# Then we add the soc staff themselves from google scholar. 
+soc_collabs_unique <- c(soc_collabs_unique, soc_df$gs_id)  
+
+#Then we turn this into a dataframe with value 1 on the first variable.
+soc_collabs_unique <- data.frame(soc_collabs_unique)
+soc_collabs_unique$v1 <- 1  # convenient to select on after the merge
+soc_collabs_unique <- unique(soc_collabs_unique)
+```
+
+
+```{r}
+# so this is a very important step, we join the unique soc collaborators to the collaborators of
+# collaborators by making a new dataset called 'onefivedegree' with the variables coauthor,      # coauthorid and gsid.
+require(tidyverse)
+onefivedegree <- left_join(collabs_1deep, soc_collabs_unique, by = c(coauth_id = "soc_collabs_unique"))
+```
+
+
+```{r}
+# Then, we drop those that are not among sociology collaborators and who don't lsit coauthors
+# regardless in the columns v1 and coauth.
+onefivedegree <- onefivedegree[!is.na(onefivedegree$v1), ]
+onefivedegree <- onefivedegree[!is.na(onefivedegree$coauth), ]
+```
+
+
+```{r}
+# we pick the columns 'name' and 'coauth' and have an edgelist of soc collaborators and whether they    # collaborate with those same collaborators the 1.5 degree network. We change the names of the columns  # to from and to. 
+onefivedegree <- onefivedegree[, c("name", "coauth")]
+names(onefivedegree) <- c("from", "to")
+```
+
+
+```{r}
+# we get soc collaborators and add those to the data above and end up with a nice edgelist!
+socc <- soc_collabs[!is.na(soc_collabs$coauth), ]
+
+#We only keep the columns name and coauth.
+socc <- socc[, c("name", "coauth")]
+
+#We change the names of the coauthors to from and to. 
+names(socc) <- c("from", "to")
+
+#We compute the dataset onefivedegree by adding the dataset socc. 
+onefivedegree <- rbind(socc, onefivedegree)
+
+#We save onefivedegree. 
+save(onefivedegree, file = "Data/soc_onefivedegree.RData")
+```
+
+
+```{r}
+# matrix because igraph wants that
+onefivedegree <- as.matrix(onefivedegree)  
+
+# Notice that we call igraph here, in anticipation of the viz tutorial.
+library(igraph)  
+
+# We use the igraph function 'graph_from_edgelist' to make a graph from onefivedegree. 
+net1 <- graph_from_edgelist(onefivedegree, directed = TRUE)  
+
+plot(net1)  
+```
+```{r}
+#Making the graph prettier than it was already.
+plot(net1 ,
+     vertex.color = "gold", # nice color for the vertices
+     vertex.size = 4,  # we'll vertices a bit smaller
+     vertex.frame.color = "gray",  # we'll put a gray frame around vertices
+     vertex.label.color = "black",  # not that ugly blue color for the labels (names)
+     vertex.label.family = "Calibri", # not a fan of times new roman in figures
+     vertex.label.cex = 0.4,  # make the label a bit smaller too
+     vertex.label.dist = 0.5,  # we'll pull the labels a bit away from the vertices
+     edge.curved = 0.2, # curved edges is always a nice touch
+     edge.arrow.size = 0.1) # make arrow size (direction of edge) smaller
+```
+```{r}
+#Gathering the vertices in the network object as data frame through the function 'as_ids(V(net1))'.
+in_network <- data.frame(as_ids(V(net1)))
+
+#The column with names is now called 'name'.
+names(in_network)[1] <- "name"
+
+#soc_df$total_cites <- soc_df$total_cites.x
+
+#The Radboud sociology nodes are collected from the soc_df data frame.
+ru_nodes <- soc_df[, c("name", "total_cites")]
+
+#The Radboud sociology nodes are included in the 'in_network' dataset.
+in_network <- left_join(in_network, ru_nodes, by = c("name" = "name"))
+
+#The nodes who where in the soc_df and those who were not get a different color label. 
+in_network$vcol <- ifelse(is.na(in_network$total_cites), "#E69F00", "#56B4E9")
+
+plot(net1,
+     vertex.color = in_network$vcol, #THIS WAS WHAT WE DID THE LAST CODEBLOCK FOR!
+     vertex.size = 4,  # we'll make them a bit smaller
+     vertex.frame.color = "gray",  # we'll put a frame around it
+     vertex.label.color = "black",  # not that ugly blue color for the names
+     vertex.label.family = "Helvetica", # not a fan of times in figures
+     vertex.label.cex = 0.4,  # a bit smaller too
+     vertex.label.dist = 0.5,  # we'll pull the labels a bit away from the vertices
+     edge.curved = 0.2,  # curved edges is always a nice tough
+     edge.arrow.size = 0.1) # arrow size smaller
+```
+```{r}
+#This plot only shows the labels of RU sociology staff.
+plot(net1,
+     vertex.color = in_network$vcol, 
+#NOTICE THESE CONDITIONAL STATEMENTS BELOW
+     vertex.label = ifelse(!is.na(in_network$total_cites), in_network$name, NA),
+     vertex.size = 4,  # we'll make them a bit smaller
+     vertex.frame.color = "gray",  # we'll put a frame around it
+     vertex.label.color = "black",  # not that ugly blue color for the names
+     vertex.label.family = "Helvetica", # not a fan of times in figures
+     vertex.label.cex = 0.65,  # a bit smaller too
+     vertex.label.dist = 0.5,  # we'll pull the labels a bit away from the vertices
+     edge.curved = 0.2, # curved edges is always a nice tough
+     edge.arrow.size = 0.1) # arrow size smaller
+
+```
+
+
+```{r}
+#In this plot the vertex size is adjusted for citation.
+plot(net1,
+     vertex.color = in_network$vcol, 
+     vertex.label = ifelse(!is.na(in_network$total_cites), in_network$name, NA),
+# SAME HERE, TRY TO SMOOTH THE TOTAL_CITES A BIT WITH LOGSCALE
+     vertex.size = ifelse(!is.na(in_network$total_cites), log(in_network$total_cites), 2),
+     vertex.frame.color = "gray",  # we'll put a frame around it
+     vertex.label.color = "black",  # not that ugly blue color for the names
+     vertex.label.family = "Helvetica", # not a fan of times in figures
+     vertex.label.cex = 0.65,  # a bit smaller too
+     vertex.label.dist = 0.5,  # we'll pull the labels a bit away from the vertices
+     edge.curved = 0.2, # curved edges is always a nice tough
+     edge.arrow.size = 0.1) # arrow size smaller
+```
+
+```{r}
+#My own plot: 
+
+#The nodes of the soc_df get the color label'coral1' and the nodes who where not get the color #label 'aquamarine1'
+in_network$vcol <- ifelse(is.na(in_network$total_cites), "aquamarine1", "coral1")
+
+plot(net1,
+     vertex.color = in_network$vcol, 
+     vertex.label = ifelse(!is.na(in_network$total_cites), in_network$name, NA),
+     vertex.size = ifelse(!is.na(in_network$total_cites), log(in_network$total_cites), 5),
+     vertex.shape="square",
+     vertex.frame.color = "gray",  #color of the frame is grey
+     vertex.label.color = "black",  #color of the names is black
+     vertex.label.family = "Calibri", #lettertype is calibri
+     vertex.label.cex = 0.7,  #size of the label
+     vertex.label.dist = 1,  #distance between labels and vertices
+     edge.curved = 0.1, #the curvyness of the edges
+     edge.arrow.size = 0.6) #size of the arrows 
+     
+```
+
