@@ -1,5 +1,5 @@
 ---
-title: "Homework week 2"
+title: "Introduction and Research Question"
 #bibliography: references.bib
 author: "Daphne Janssen"
 ---
@@ -36,7 +36,7 @@ Last compiled on `r format(Sys.time(), '%B, %Y')`
 
 ----
 
-# Homework week 2
+# Introduction and Research question
 
 For a long time, up to the present day, women have been underrepresented in STEM (science, technology, engineering and mathematics) studies and professions. According to the website *stemwomen.com*, the gap between men and women taking STEM courses is widest in computer sciences and engingeering & technology: 19 percent of students are women, compared to 81 percent who are men. Moreover, research shows that men account for 80 percent of the total amount of scientific production within engineering. Although women publish their papers in higher impact journals, they get less citated by the scientific engineering community compared to men (Ghiasi, Larivière & Sugimoto,2015).
 

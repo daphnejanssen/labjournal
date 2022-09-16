@@ -1,6 +1,5 @@
-
 ---
-title: "Practicing making Loops"
+title: "Data"
 #bibliography: references.bib
 author: "Daphne Janssen"
 ---
@@ -33,55 +32,8 @@ Last compiled on `r Sys.time()`
 Last compiled on `r format(Sys.time(), '%B, %Y')`
 --->
 
-
 <br>
 
 ----
 
-#Creation variables new dataset
-```{r}
-id <- c(1, 2, 3, 4, 5, 6, 7, 8, 9)
-ego <- c(1, 3, 4, 7, 1, 3, 3, 7 , 6)
-alter <- c(2, 2, 2, 2, 3, 6, 7, 7, 7)
-tie <- c(1, 1, 1, 1, 1, 1, 1, 1, 1)
-
-
-
-df <- data.frame(id, ego, alter, tie)
-```
-
-#Make a matrix
-```{r}
-sn_m <- matrix(data=0, nrow = 9, ncol = 9)
-
-```
-
-#basic structure of a loop
-```{r}
-for (ego in 1:10) {
-   print(paste("ego:",ego))
-  for(alter in 1:10) {
-    print(paste("j", j))
-    print(paste("i+j:", i+j))
-    }
-}
-```
-
-```{r}
-for (i in 1:9) {
-  ego <- df$ego[i]
-  alter <- df$alter[i]
-  sn_m[ego, alter] <- 1 
-}
-
-sn_m
-
-diag(sn_m) <- NA
-
-df$ego[4]
-sn_m[4,4]
-df[4, 4]
-df[4,]
-
-```
-
+# Data

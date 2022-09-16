@@ -1,5 +1,6 @@
+
 ---
-title: "Journal 2"
+title: "Practicing plotting"
 #bibliography: references.bib
 author: "Daphne Janssen"
 ---
@@ -37,13 +38,7 @@ Last compiled on `r format(Sys.time(), '%B, %Y')`
 
 ----
 
----
-
-# Practicing plotting
-
-<br>
-
-## Zachary’s karate club
+#Zachary’s karate club
 
 ```{r}
 require(igraph)
@@ -151,9 +146,9 @@ legend(x = -2, y = -1.5, c("Note: the position of nodes 1 and 34 have been set b
 ```
 
 
-<br>
 
-## Co-author networks
+
+#Co-author networks
 ```{r}
 # load the necessary datasets
 load("Data/soc_df.RData")
@@ -203,16 +198,16 @@ names(onefivedegree) <- c("from", "to")
 # we get soc collaborators and add those to the data above and end up with a nice edgelist!
 socc <- soc_collabs[!is.na(soc_collabs$coauth), ]
 
-# We only keep the columns name and coauth.
+#We only keep the columns name and coauth.
 socc <- socc[, c("name", "coauth")]
 
-# We change the names of the coauthors to from and to. 
+#We change the names of the coauthors to from and to. 
 names(socc) <- c("from", "to")
 
-# We compute the dataset onefivedegree by adding the dataset socc. 
+#We compute the dataset onefivedegree by adding the dataset socc. 
 onefivedegree <- rbind(socc, onefivedegree)
 
-# We save onefivedegree. 
+#We save onefivedegree. 
 save(onefivedegree, file = "Data/soc_onefivedegree.RData")
 ```
 
@@ -230,7 +225,7 @@ net1 <- graph_from_edgelist(onefivedegree, directed = TRUE)
 plot(net1)  
 ```
 ```{r}
-# Making the graph prettier than it was already.
+#Making the graph prettier than it was already.
 plot(net1 ,
      vertex.color = "gold", # nice color for the vertices
      vertex.size = 4,  # we'll vertices a bit smaller
@@ -243,21 +238,21 @@ plot(net1 ,
      edge.arrow.size = 0.1) # make arrow size (direction of edge) smaller
 ```
 ```{r}
-# Gathering the vertices in the network object as data frame through the function 'as_ids(V(net1))'.
+#Gathering the vertices in the network object as data frame through the function 'as_ids(V(net1))'.
 in_network <- data.frame(as_ids(V(net1)))
 
-# The column with names is now called 'name'.
+#The column with names is now called 'name'.
 names(in_network)[1] <- "name"
- 
+
 #soc_df$total_cites <- soc_df$total_cites.x
 
-# The Radboud sociology nodes are collected from the soc_df data frame.
+#The Radboud sociology nodes are collected from the soc_df data frame.
 ru_nodes <- soc_df[, c("name", "total_cites")]
 
-# The Radboud sociology nodes are included in the 'in_network' dataset.
+#The Radboud sociology nodes are included in the 'in_network' dataset.
 in_network <- left_join(in_network, ru_nodes, by = c("name" = "name"))
 
-# The nodes who where in the soc_df and those who were not get a different color label. 
+#The nodes who where in the soc_df and those who were not get a different color label. 
 in_network$vcol <- ifelse(is.na(in_network$total_cites), "#E69F00", "#56B4E9")
 
 plot(net1,
@@ -272,10 +267,10 @@ plot(net1,
      edge.arrow.size = 0.1) # arrow size smaller
 ```
 ```{r}
-# This plot only shows the labels of RU sociology staff.
+#This plot only shows the labels of RU sociology staff.
 plot(net1,
      vertex.color = in_network$vcol, 
-# NOTICE THESE CONDITIONAL STATEMENTS BELOW
+#NOTICE THESE CONDITIONAL STATEMENTS BELOW
      vertex.label = ifelse(!is.na(in_network$total_cites), in_network$name, NA),
      vertex.size = 4,  # we'll make them a bit smaller
      vertex.frame.color = "gray",  # we'll put a frame around it
@@ -290,7 +285,7 @@ plot(net1,
 
 
 ```{r}
-# In this plot the vertex size is adjusted for citation.
+#In this plot the vertex size is adjusted for citation.
 plot(net1,
      vertex.color = in_network$vcol, 
      vertex.label = ifelse(!is.na(in_network$total_cites), in_network$name, NA),
@@ -306,16 +301,16 @@ plot(net1,
 ```
 
 ```{r}
-# My own plot
+#My own plot: 
 
-# The nodes of the people who are part of the RU social science department get the color label'coral1' and the nodes who are not get the color #label 'aquamarine1'
-# Also, the font is changed to calibri, the distance of the labels is bigger, and the size of the edge if the arrows is smaller
+#The nodes of the soc_df get the color label'coral1' and the nodes who where not get the color #label 'aquamarine1'
 in_network$vcol <- ifelse(is.na(in_network$total_cites), "aquamarine1", "coral1")
 
 plot(net1,
      vertex.color = in_network$vcol, 
      vertex.label = ifelse(!is.na(in_network$total_cites), in_network$name, NA),
      vertex.size = ifelse(!is.na(in_network$total_cites), log(in_network$total_cites), 5),
+     vertex.shape="square",
      vertex.frame.color = "gray",  #color of the frame is grey
      vertex.label.color = "black",  #color of the names is black
      vertex.label.family = "Calibri", #lettertype is calibri
@@ -325,122 +320,4 @@ plot(net1,
      edge.arrow.size = 0.6) #size of the arrows 
      
 ```
-
-
-```{r}
-# Making a new dataset based on the variables 'name' and 'gender' from the dataset 'soc_df'
-rugender <- soc_df[, c("name", "gender")]
-
-# Merging the dataset 'rugender' with 'in_network' based on the variable 'name'
-
-in_network <- left_join(in_network, rugender, by = c("name" = "name"))
-```
-
-```{r}
-# Turning the variable 'gender' in the dataset 'in_network' into a numerical variable named 'gendernum'
-
-in_network$gendernum <- as.integer(as.factor(in_network$gender))
-```
-
-
-```{r}
-# Creating a plot with rectangles representing the men within the sociology department and circles representing the women within the sociology department. By means of these different shapes, you can more easily detect whether men are more often connected to other men and whether women are more often connected to other women. 
-
-wc1 <- which(V(net1)$gendernum==1) 
-wc2 <- which(V(net1)$gendernum==2) 
-V(net1)$shape[wc1] <- "rectangle"
-V(net1)$shape[wc2] <- "circle"
-
-plot(net1, 
-     vertex.color = in_network$vcol, 
-     vertex.label = ifelse(!is.na(in_network$total_cites), in_network$name, NA),
-     vertex.size = ifelse(!is.na(in_network$total_cites), log(in_network$total_cites), 5),
-     vertex.frame.color = "gray",  #color of the frame is grey
-     vertex.label.color = "black",  #color of the names is black
-     vertex.label.family = "Calibri", #lettertype is calibri
-     vertex.label.cex = 0.7,  #size of the label
-     vertex.label.dist = 1,  #distance between labels and vertices
-     edge.curved = 0.1, #the curvyness of the edges
-     edge.arrow.size = 0.6) #size of the arrows  
-```
-
-
-```{r}
-
-# Creating a plot which shows which members of the sociology department at Radboud University have 500 or more citations. In this way you can more easily see what is the ratio between men and women within the sociology department with 500 or more citations (an indicator of the degree to which they are well-known scientists within the field of social science). 
-
-wc1 <- which(V(net1)$gendernum==1) 
-wc2 <- which(V(net1)$gendernum==2) 
-V(net1)$shape[wc1] <- "rectangle"
-V(net1)$shape[wc2] <- "circle"
-
-plot(net1, 
-     vertex.color = in_network$vcol, 
-     vertex.label = ifelse(in_network$total_cites>=500, in_network$name, NA),
-     vertex.size = ifelse(!is.na(in_network$total_cites), log(in_network$total_cites), 5),
-     vertex.frame.color = "gray", #color of the frame is grey
-     vertex.label.color = "black",  #color of the names is black
-     vertex.label.family = "Calibri", #lettertype is calibri
-     vertex.label.cex = 0.7,  #size of the label
-     vertex.label.dist = 1, #distance between labels and vertices
-     edge.curved = 0.1, #the curvyness of the edges
-     edge.arrow.size = 0.6) #size of the arrows  
-```
-
-
-----
-
-# Practicing making loops
-
-
-```{r}
-# Creation variables new dataset
-id <- c(1, 2, 3, 4, 5, 6, 7, 8, 9)
-ego <- c(1, 3, 4, 7, 1, 3, 3, 7 , 6)
-alter <- c(2, 2, 2, 2, 3, 6, 7, 7, 7)
-tie <- c(1, 1, 1, 1, 1, 1, 1, 1, 1)
-
-
-
-df <- data.frame(id, ego, alter, tie)
-```
-
-
-```{r}
-# Make a matrix
-sn_m <- matrix(data=0, nrow = 9, ncol = 9)
-
-```
-
-
-```{r}
-# basic structure of a loop
-for (ego in 1:10) {
-  for(alter in 1:10) {
-    print(paste("ego:",ego))
-    print(paste("alter", alter))
-    print(paste("ego+alter:", ego+alter))
-    }
-}
-```
-
-```{r}
-for (i in 1:9) {
-  ego <- df$ego[i]
-  alter <- df$alter[i]
-  sn_m[ego, alter] <- 1 
-}
-
-sn_m
-
-diag(sn_m) <- NA
-
-df$ego[4]
-sn_m[4,4]
-df[4, 4]
-df[4,]
-
-```
-
-
 

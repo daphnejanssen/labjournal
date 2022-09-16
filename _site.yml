@@ -15,17 +15,19 @@ navbar:
       - text: "Week 1"
         href: lab1.html
       - text: "Week 2"
-        href: 
+        href: lab2.html
     - text: "Research Question"
       menu:
       - text: "Week 1"
         href: RQWeek1.html
+      - text: "Week 2"
+        href: RQWeek2.html
     - text: "Final report"
       menu: 
-      - text: "Research Question"
-        href: lab1.html
-      - text: "Introduction and data"
-        href: Homeworkw2.html
+      - text: "Introduction and Research Question"
+        href: Homeworkw2INTRO.html
+      - text: "Data"
+        href: Homeworkw2DATA.html
       
         
         # here, other .Rmds can be added

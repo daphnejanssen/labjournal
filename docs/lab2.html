@@ -359,7 +359,9 @@ div.tocify {
     <li>
       <a href="lab1.html">Week 1</a>
     </li>
-    <li class="dropdown-header">Week 2</li>
+    <li>
+      <a href="lab2.html">Week 2</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -372,6 +374,9 @@ div.tocify {
     <li>
       <a href="RQWeek1.html">Week 1</a>
     </li>
+    <li>
+      <a href="RQWeek2.html">Week 2</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -382,10 +387,10 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="lab1.html">Research Question</a>
+      <a href="Homeworkw2INTRO.html">Introduction and Research Question</a>
     </li>
     <li>
-      <a href="Homeworkw2.html">Introduction and data</a>
+      <a href="Homeworkw2DATA.html">Data</a>
     </li>
   </ul>
 </li>
@@ -426,20 +431,814 @@ div.tocify {
   addClassKlippyTo("pre.r, pre.markdown");
   addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
 </script>
-<p>Last compiled on 2022-09-16 11:22:49</p>
+<p>Last compiled on 2022-09-16 16:42:53</p>
 <!---
 Last compiled on september, 2022
 --->
 <p><br></p>
 <hr />
-<div id="homework-week-2" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Homework week 2</h1>
 <hr />
-<pre class="r test"><code>print(&quot;Hello Lab Journal&quot;)</code></pre>
-<pre class="test2"><code>#&gt; [1] &quot;Hello Lab Journal&quot;</code></pre>
+<div id="practicing-plotting" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Practicing
+plotting</h1>
+<p><br></p>
+<div id="zacharys-karate-club" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Zachary’s karate
+club</h2>
+<pre class="r test"><code>require(igraph)
+
+g &lt;- make_graph(&quot;Zachary&quot;)
+plot(g)</code></pre>
+<p><img src="lab2_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<pre class="r test"><code>gmat &lt;- as_adjacency_matrix(g, type = &quot;both&quot;, sparse = FALSE)
+gmat</code></pre>
+<pre class="test2"><code>#&gt;       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14] [,15] [,16] [,17]
+#&gt;  [1,]    0    1    1    1    1    1    1    1    1     0     1     1     1     1     0     0     0
+#&gt;  [2,]    1    0    1    1    0    0    0    1    0     0     0     0     0     1     0     0     0
+#&gt;  [3,]    1    1    0    1    0    0    0    1    1     1     0     0     0     1     0     0     0
+#&gt;  [4,]    1    1    1    0    0    0    0    1    0     0     0     0     1     1     0     0     0
+#&gt;  [5,]    1    0    0    0    0    0    1    0    0     0     1     0     0     0     0     0     0
+#&gt;  [6,]    1    0    0    0    0    0    1    0    0     0     1     0     0     0     0     0     1
+#&gt;  [7,]    1    0    0    0    1    1    0    0    0     0     0     0     0     0     0     0     1
+#&gt;  [8,]    1    1    1    1    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt;  [9,]    1    0    1    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [10,]    0    0    1    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [11,]    1    0    0    0    1    1    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [12,]    1    0    0    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [13,]    1    0    0    1    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [14,]    1    1    1    1    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [15,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [16,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [17,]    0    0    0    0    0    1    1    0    0     0     0     0     0     0     0     0     0
+#&gt; [18,]    1    1    0    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [19,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [20,]    1    1    0    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [21,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [22,]    1    1    0    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [23,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [24,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [25,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [26,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [27,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [28,]    0    0    1    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [29,]    0    0    1    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [30,]    0    0    0    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [31,]    0    1    0    0    0    0    0    0    1     0     0     0     0     0     0     0     0
+#&gt; [32,]    1    0    0    0    0    0    0    0    0     0     0     0     0     0     0     0     0
+#&gt; [33,]    0    0    1    0    0    0    0    0    1     0     0     0     0     0     1     1     0
+#&gt; [34,]    0    0    0    0    0    0    0    0    1     1     0     0     0     1     1     1     0
+#&gt;       [,18] [,19] [,20] [,21] [,22] [,23] [,24] [,25] [,26] [,27] [,28] [,29] [,30] [,31] [,32]
+#&gt;  [1,]     1     0     1     0     1     0     0     0     0     0     0     0     0     0     1
+#&gt;  [2,]     1     0     1     0     1     0     0     0     0     0     0     0     0     1     0
+#&gt;  [3,]     0     0     0     0     0     0     0     0     0     0     1     1     0     0     0
+#&gt;  [4,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt;  [5,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt;  [6,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt;  [7,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt;  [8,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt;  [9,]     0     0     0     0     0     0     0     0     0     0     0     0     0     1     0
+#&gt; [10,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt; [11,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt; [12,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt; [13,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt; [14,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt; [15,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt; [16,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt; [17,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt; [18,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt; [19,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt; [20,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt; [21,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt; [22,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt; [23,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt; [24,]     0     0     0     0     0     0     0     0     1     0     1     0     1     0     0
+#&gt; [25,]     0     0     0     0     0     0     0     0     1     0     1     0     0     0     1
+#&gt; [26,]     0     0     0     0     0     0     1     1     0     0     0     0     0     0     1
+#&gt; [27,]     0     0     0     0     0     0     0     0     0     0     0     0     1     0     0
+#&gt; [28,]     0     0     0     0     0     0     1     1     0     0     0     0     0     0     0
+#&gt; [29,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     1
+#&gt; [30,]     0     0     0     0     0     0     1     0     0     1     0     0     0     0     0
+#&gt; [31,]     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+#&gt; [32,]     0     0     0     0     0     0     0     1     1     0     0     1     0     0     0
+#&gt; [33,]     0     1     0     1     0     1     1     0     0     0     0     0     1     1     1
+#&gt; [34,]     0     1     1     1     0     1     1     0     0     1     1     1     1     1     1
+#&gt;       [,33] [,34]
+#&gt;  [1,]     0     0
+#&gt;  [2,]     0     0
+#&gt;  [3,]     1     0
+#&gt;  [4,]     0     0
+#&gt;  [5,]     0     0
+#&gt;  [6,]     0     0
+#&gt;  [7,]     0     0
+#&gt;  [8,]     0     0
+#&gt;  [9,]     1     1
+#&gt; [10,]     0     1
+#&gt; [11,]     0     0
+#&gt; [12,]     0     0
+#&gt; [13,]     0     0
+#&gt; [14,]     0     1
+#&gt; [15,]     1     1
+#&gt; [16,]     1     1
+#&gt; [17,]     0     0
+#&gt; [18,]     0     0
+#&gt; [19,]     1     1
+#&gt; [20,]     0     1
+#&gt; [21,]     1     1
+#&gt; [22,]     0     0
+#&gt; [23,]     1     1
+#&gt; [24,]     1     1
+#&gt; [25,]     0     0
+#&gt; [26,]     0     0
+#&gt; [27,]     0     1
+#&gt; [28,]     0     1
+#&gt; [29,]     0     1
+#&gt; [30,]     1     1
+#&gt; [31,]     1     1
+#&gt; [32,]     1     1
+#&gt; [33,]     0     1
+#&gt; [34,]     1     0</code></pre>
+<pre class="r test"><code>ncol(gmat)</code></pre>
+<pre class="test2"><code>#&gt; [1] 34</code></pre>
+<pre class="r test"><code># number of nodes
+vcount(g)</code></pre>
+<pre class="test2"><code>#&gt; [1] 34</code></pre>
+<pre class="r test"><code># number of edges
+ecount(g)</code></pre>
+<pre class="test2"><code>#&gt; [1] 78</code></pre>
+<pre class="r test"><code>igraph::degree(g)</code></pre>
+<pre class="test2"><code>#&gt;  [1] 16  9 10  6  3  4  4  4  5  2  3  1  2  5  2  2  2  2  2  3  2  2  2  5  3  3  2  4  3  4  4  6
+#&gt; [33] 12 17</code></pre>
+<pre class="r test"><code>hist(table(igraph::degree(g)), xlab=&#39;indegree&#39;, main= &#39;Histogram of indegree&#39;)</code></pre>
+<p><img src="lab2_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r test"><code># be aware that directed graphs are considered as undirected. but g is undirected.
+transitivity(g, type = c(&quot;localundirected&quot;), isolates = c(&quot;NaN&quot;, &quot;zero&quot;))</code></pre>
+<pre class="test2"><code>#&gt;  [1] 0.1500000 0.3333333 0.2444444 0.6666667 0.6666667 0.5000000 0.5000000 1.0000000 0.5000000
+#&gt; [10] 0.0000000 0.6666667       NaN 1.0000000 0.6000000 1.0000000 1.0000000 1.0000000 1.0000000
+#&gt; [19] 1.0000000 0.3333333 1.0000000 1.0000000 1.0000000 0.4000000 0.3333333 0.3333333 1.0000000
+#&gt; [28] 0.1666667 0.3333333 0.6666667 0.5000000 0.2000000 0.1969697 0.1102941</code></pre>
+<pre class="r test"><code>igraph::betweenness(g, directed = FALSE)</code></pre>
+<pre class="test2"><code>#&gt;  [1] 231.0714286  28.4785714  75.8507937   6.2880952   0.3333333  15.8333333  15.8333333   0.0000000
+#&gt;  [9]  29.5293651   0.4476190   0.3333333   0.0000000   0.0000000  24.2158730   0.0000000   0.0000000
+#&gt; [17]   0.0000000   0.0000000   0.0000000  17.1468254   0.0000000   0.0000000   0.0000000   9.3000000
+#&gt; [25]   1.1666667   2.0277778   0.0000000  11.7920635   0.9476190   1.5428571   7.6095238  73.0095238
+#&gt; [33]  76.6904762 160.5515873</code></pre>
+<pre class="r test"><code>dyad.census(g)</code></pre>
+<pre class="test2"><code>#&gt; $mut
+#&gt; [1] 78
+#&gt; 
+#&gt; $asym
+#&gt; [1] 0
+#&gt; 
+#&gt; $null
+#&gt; [1] 483</code></pre>
+<pre class="r test"><code>34*33</code></pre>
+<pre class="test2"><code>#&gt; [1] 1122</code></pre>
+<pre class="r test"><code>1122/2</code></pre>
+<pre class="test2"><code>#&gt; [1] 561</code></pre>
+<pre class="r test"><code>78+483</code></pre>
+<pre class="test2"><code>#&gt; [1] 561</code></pre>
+<pre class="r test"><code>#install.packages(&quot;sna&quot;)
+
+require(&#39;sna&#39;)
+
+igraph::triad.census(g)</code></pre>
+<pre class="test2"><code>#&gt;  [1] 3971    0 1575    0    0    0    0    0    0    0  393    0    0    0    0   45</code></pre>
+<pre class="r test"><code># I will use sna because it shows the names of the triads as well.
+
+sna::triad.census(gmat)</code></pre>
+<pre class="test2"><code>#&gt;       003 012  102 021D 021U 021C 111D 111U 030T 030C 201 120D 120U 120C 210 300
+#&gt; [1,] 3971   0 1575    0    0    0    0    0    0    0 393    0    0    0   0  45</code></pre>
+<pre class="r test"><code>detach(&quot;package:sna&quot;) </code></pre>
+<pre class="r test"><code>igraph::transitivity(g, type = &quot;global&quot;)</code></pre>
+<pre class="test2"><code>#&gt; [1] 0.2556818</code></pre>
+<pre class="r test"><code>sna::gtrans(gmat)</code></pre>
+<pre class="test2"><code>#&gt; [1] 0.2556818</code></pre>
+<pre class="r test"><code>triad_g &lt;- data.frame(sna::triad.census(gmat))
+
+transitivity_g &lt;- (3 * triad_g$X300)/(triad_g$X201 + 3 * triad_g$X300)
+transitivity_g</code></pre>
+<pre class="test2"><code>#&gt; [1] 0.2556818</code></pre>
+<pre class="r test"><code>(34*33*32)/3</code></pre>
+<pre class="test2"><code>#&gt; [1] 11968</code></pre>
+<pre class="r test"><code># changing V
+V(g)$size = betweenness(g, normalized = T, directed = FALSE) * 60 + 10  #after some trial and error
+plot(g, mode = &quot;undirected&quot;)</code></pre>
+<p><img src="lab2_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<pre class="r test"><code>g</code></pre>
+<pre class="test2"><code>#&gt; IGRAPH 307661e U--- 34 78 -- Zachary
+#&gt; + attr: name (g/c), size (v/n)
+#&gt; + edges from 307661e:
+#&gt;  [1]  1-- 2  1-- 3  1-- 4  1-- 5  1-- 6  1-- 7  1-- 8  1-- 9  1--11  1--12  1--13  1--14  1--18
+#&gt; [14]  1--20  1--22  1--32  2-- 3  2-- 4  2-- 8  2--14  2--18  2--20  2--22  2--31  3-- 4  3-- 8
+#&gt; [27]  3--28  3--29  3--33  3--10  3-- 9  3--14  4-- 8  4--13  4--14  5-- 7  5--11  6-- 7  6--11
+#&gt; [40]  6--17  7--17  9--31  9--33  9--34 10--34 14--34 15--33 15--34 16--33 16--34 19--33 19--34
+#&gt; [53] 20--34 21--33 21--34 23--33 23--34 24--26 24--28 24--33 24--34 24--30 25--26 25--28 25--32
+#&gt; [66] 26--32 27--30 27--34 28--34 29--32 29--34 30--33 30--34 31--33 31--34 32--33 32--34 33--34</code></pre>
+<pre class="r test"><code>summary(g)</code></pre>
+<pre class="test2"><code>#&gt; IGRAPH 307661e U--- 34 78 -- Zachary
+#&gt; + attr: name (g/c), size (v/n)</code></pre>
+<pre class="r test"><code>head(g)</code></pre>
+<pre class="test2"><code>#&gt; 6 x 34 sparse Matrix of class &quot;dgCMatrix&quot;
+#&gt;                                                                         
+#&gt; [1,] . 1 1 1 1 1 1 1 1 . 1 1 1 1 . . . 1 . 1 . 1 . . . . . . . . . 1 . .
+#&gt; [2,] 1 . 1 1 . . . 1 . . . . . 1 . . . 1 . 1 . 1 . . . . . . . . 1 . . .
+#&gt; [3,] 1 1 . 1 . . . 1 1 1 . . . 1 . . . . . . . . . . . . . 1 1 . . . 1 .
+#&gt; [4,] 1 1 1 . . . . 1 . . . . 1 1 . . . . . . . . . . . . . . . . . . . .
+#&gt; [5,] 1 . . . . . 1 . . . 1 . . . . . . . . . . . . . . . . . . . . . . .
+#&gt; [6,] 1 . . . . . 1 . . . 1 . . . . . 1 . . . . . . . . . . . . . . . . .</code></pre>
+<pre class="r test"><code>set.seed(2345)
+l &lt;- layout_with_mds(g)  #https://igraph.org/r/doc/layout_with_mds.html
+plot(g, layout = l)</code></pre>
+<p><img src="lab2_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<pre class="r test"><code>l  #let us take a look at the coordinates</code></pre>
+<pre class="test2"><code>#&gt;               [,1]         [,2]
+#&gt;  [1,]  1.070931935 -0.172458113
+#&gt;  [2,]  0.732844464  0.754023309
+#&gt;  [3,]  0.100582299  0.397693607
+#&gt;  [4,]  0.708246655  0.570205545
+#&gt;  [5,]  1.816293170 -0.120778206
+#&gt;  [6,]  1.881329566 -0.135518854
+#&gt;  [7,]  1.881329566 -0.135518854
+#&gt;  [8,]  0.812606714  0.472619437
+#&gt;  [9,] -0.003769996  0.615513628
+#&gt; [10,] -0.685680315  0.621065149
+#&gt; [11,]  1.816293170 -0.120778206
+#&gt; [12,]  1.621247830 -0.065820692
+#&gt; [13,]  1.637845123  0.001789972
+#&gt; [14,]  0.067317230  0.681421148
+#&gt; [15,] -1.796316404  0.351417630
+#&gt; [16,] -1.796316404  0.351417630
+#&gt; [17,]  2.775260452 -0.124317652
+#&gt; [18,]  1.616210024  0.182510197
+#&gt; [19,] -1.796316404  0.351417630
+#&gt; [20,]  0.048362858  0.566654982
+#&gt; [21,] -1.796316404  0.351417630
+#&gt; [22,]  1.616210024  0.182510197
+#&gt; [23,] -1.796316404  0.351417630
+#&gt; [24,] -1.891240567 -0.799574907
+#&gt; [25,] -0.258345165 -2.006346563
+#&gt; [26,] -0.360530857 -2.131642875
+#&gt; [27,] -1.865177401  0.128596564
+#&gt; [28,] -0.760226022 -0.529392331
+#&gt; [29,] -0.710979936 -0.299960128
+#&gt; [30,] -1.898426916 -0.149398746
+#&gt; [31,] -0.568691923  0.804189411
+#&gt; [32,] -0.048136037 -0.870967614
+#&gt; [33,] -1.023681000 -0.035802363
+#&gt; [34,] -1.146442924 -0.037605192</code></pre>
+<pre class="r test"><code>l[1, 1] &lt;- 4
+l[34, 1] &lt;- -3.5
+plot(g, layout = l)</code></pre>
+<p><img src="lab2_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<pre class="r test"><code>plot(g, layout = l, margin = c(0, 0, 0, 0))
+legend(x = -2, y = -1.5, c(&quot;Note: the position of nodes 1 and 34 have been set by Jochem Tolsma \n for visualisation purposes only and do not reflect network properties&quot;),
+    bty = &quot;n&quot;, cex = 0.8)</code></pre>
+<p><img src="lab2_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><br></p>
+</div>
+<div id="co-author-networks" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Co-author
+networks</h2>
+<pre class="r test"><code># load the necessary datasets
+load(&quot;Data/soc_df.RData&quot;)
+load(&quot;Data/soc_collabs1.RData&quot;)
+load(&quot;Data/soc_collabs2.RData&quot;)</code></pre>
+<pre class="r test"><code># We first want to get all the unique collaborators of sociology staff at the RU.
+soc_collabs_unique &lt;- unique(soc_collabs[, 4])  
+# There are 229 unique collaborators for RU staff.
+
+# Then we add the soc staff themselves from google scholar. 
+soc_collabs_unique &lt;- c(soc_collabs_unique, soc_df$gs_id)  
+
+#Then we turn this into a dataframe with value 1 on the first variable.
+soc_collabs_unique &lt;- data.frame(soc_collabs_unique)
+soc_collabs_unique$v1 &lt;- 1  # convenient to select on after the merge
+soc_collabs_unique &lt;- unique(soc_collabs_unique)</code></pre>
+<pre class="r test"><code># so this is a very important step, we join the unique soc collaborators to the collaborators of
+# collaborators by making a new dataset called &#39;onefivedegree&#39; with the variables coauthor,      # coauthorid and gsid.
+require(tidyverse)
+onefivedegree &lt;- left_join(collabs_1deep, soc_collabs_unique, by = c(coauth_id = &quot;soc_collabs_unique&quot;))</code></pre>
+<pre class="r test"><code># Then, we drop those that are not among sociology collaborators and who don&#39;t lsit coauthors
+# regardless in the columns v1 and coauth.
+onefivedegree &lt;- onefivedegree[!is.na(onefivedegree$v1), ]
+onefivedegree &lt;- onefivedegree[!is.na(onefivedegree$coauth), ]</code></pre>
+<pre class="r test"><code># we pick the columns &#39;name&#39; and &#39;coauth&#39; and have an edgelist of soc collaborators and whether they    # collaborate with those same collaborators the 1.5 degree network. We change the names of the columns  # to from and to. 
+onefivedegree &lt;- onefivedegree[, c(&quot;name&quot;, &quot;coauth&quot;)]
+names(onefivedegree) &lt;- c(&quot;from&quot;, &quot;to&quot;)</code></pre>
+<pre class="r test"><code># we get soc collaborators and add those to the data above and end up with a nice edgelist!
+socc &lt;- soc_collabs[!is.na(soc_collabs$coauth), ]
+
+# We only keep the columns name and coauth.
+socc &lt;- socc[, c(&quot;name&quot;, &quot;coauth&quot;)]
+
+# We change the names of the coauthors to from and to. 
+names(socc) &lt;- c(&quot;from&quot;, &quot;to&quot;)
+
+# We compute the dataset onefivedegree by adding the dataset socc. 
+onefivedegree &lt;- rbind(socc, onefivedegree)
+
+# We save onefivedegree. 
+save(onefivedegree, file = &quot;Data/soc_onefivedegree.RData&quot;)</code></pre>
+<pre class="r test"><code># matrix because igraph wants that
+onefivedegree &lt;- as.matrix(onefivedegree)  
+
+# Notice that we call igraph here, in anticipation of the viz tutorial.
+library(igraph)  
+
+# We use the igraph function &#39;graph_from_edgelist&#39; to make a graph from onefivedegree. 
+net1 &lt;- graph_from_edgelist(onefivedegree, directed = TRUE)  
+
+plot(net1)  </code></pre>
+<p><img src="lab2_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<pre class="r test"><code># Making the graph prettier than it was already.
+plot(net1 ,
+     vertex.color = &quot;gold&quot;, # nice color for the vertices
+     vertex.size = 4,  # we&#39;ll vertices a bit smaller
+     vertex.frame.color = &quot;gray&quot;,  # we&#39;ll put a gray frame around vertices
+     vertex.label.color = &quot;black&quot;,  # not that ugly blue color for the labels (names)
+     vertex.label.family = &quot;Calibri&quot;, # not a fan of times new roman in figures
+     vertex.label.cex = 0.4,  # make the label a bit smaller too
+     vertex.label.dist = 0.5,  # we&#39;ll pull the labels a bit away from the vertices
+     edge.curved = 0.2, # curved edges is always a nice touch
+     edge.arrow.size = 0.1) # make arrow size (direction of edge) smaller</code></pre>
+<p><img src="lab2_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<pre class="r test"><code># Gathering the vertices in the network object as data frame through the function &#39;as_ids(V(net1))&#39;.
+in_network &lt;- data.frame(as_ids(V(net1)))
+
+# The column with names is now called &#39;name&#39;.
+names(in_network)[1] &lt;- &quot;name&quot;
+ 
+#soc_df$total_cites &lt;- soc_df$total_cites.x
+
+# The Radboud sociology nodes are collected from the soc_df data frame.
+ru_nodes &lt;- soc_df[, c(&quot;name&quot;, &quot;total_cites&quot;)]
+
+# The Radboud sociology nodes are included in the &#39;in_network&#39; dataset.
+in_network &lt;- left_join(in_network, ru_nodes, by = c(&quot;name&quot; = &quot;name&quot;))
+
+# The nodes who where in the soc_df and those who were not get a different color label. 
+in_network$vcol &lt;- ifelse(is.na(in_network$total_cites), &quot;#E69F00&quot;, &quot;#56B4E9&quot;)
+
+plot(net1,
+     vertex.color = in_network$vcol, #THIS WAS WHAT WE DID THE LAST CODEBLOCK FOR!
+     vertex.size = 4,  # we&#39;ll make them a bit smaller
+     vertex.frame.color = &quot;gray&quot;,  # we&#39;ll put a frame around it
+     vertex.label.color = &quot;black&quot;,  # not that ugly blue color for the names
+     vertex.label.family = &quot;Helvetica&quot;, # not a fan of times in figures
+     vertex.label.cex = 0.4,  # a bit smaller too
+     vertex.label.dist = 0.5,  # we&#39;ll pull the labels a bit away from the vertices
+     edge.curved = 0.2,  # curved edges is always a nice tough
+     edge.arrow.size = 0.1) # arrow size smaller</code></pre>
+<p><img src="lab2_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<pre class="r test"><code># This plot only shows the labels of RU sociology staff.
+plot(net1,
+     vertex.color = in_network$vcol, 
+# NOTICE THESE CONDITIONAL STATEMENTS BELOW
+     vertex.label = ifelse(!is.na(in_network$total_cites), in_network$name, NA),
+     vertex.size = 4,  # we&#39;ll make them a bit smaller
+     vertex.frame.color = &quot;gray&quot;,  # we&#39;ll put a frame around it
+     vertex.label.color = &quot;black&quot;,  # not that ugly blue color for the names
+     vertex.label.family = &quot;Helvetica&quot;, # not a fan of times in figures
+     vertex.label.cex = 0.65,  # a bit smaller too
+     vertex.label.dist = 0.5,  # we&#39;ll pull the labels a bit away from the vertices
+     edge.curved = 0.2, # curved edges is always a nice tough
+     edge.arrow.size = 0.1) # arrow size smaller</code></pre>
+<p><img src="lab2_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<pre class="r test"><code># In this plot the vertex size is adjusted for citation.
+plot(net1,
+     vertex.color = in_network$vcol, 
+     vertex.label = ifelse(!is.na(in_network$total_cites), in_network$name, NA),
+# SAME HERE, TRY TO SMOOTH THE TOTAL_CITES A BIT WITH LOGSCALE
+     vertex.size = ifelse(!is.na(in_network$total_cites), log(in_network$total_cites), 2),
+     vertex.frame.color = &quot;gray&quot;,  # we&#39;ll put a frame around it
+     vertex.label.color = &quot;black&quot;,  # not that ugly blue color for the names
+     vertex.label.family = &quot;Helvetica&quot;, # not a fan of times in figures
+     vertex.label.cex = 0.65,  # a bit smaller too
+     vertex.label.dist = 0.5,  # we&#39;ll pull the labels a bit away from the vertices
+     edge.curved = 0.2, # curved edges is always a nice tough
+     edge.arrow.size = 0.1) # arrow size smaller</code></pre>
+<p><img src="lab2_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<pre class="r test"><code># My own plot
+
+# The nodes of the people who are part of the RU social science department get the color label&#39;coral1&#39; and the nodes who are not get the color #label &#39;aquamarine1&#39;
+# Also, the font is changed to calibri, the distance of the labels is bigger, and the size of the edge if the arrows is smaller
+in_network$vcol &lt;- ifelse(is.na(in_network$total_cites), &quot;aquamarine1&quot;, &quot;coral1&quot;)
+
+plot(net1,
+     vertex.color = in_network$vcol, 
+     vertex.label = ifelse(!is.na(in_network$total_cites), in_network$name, NA),
+     vertex.size = ifelse(!is.na(in_network$total_cites), log(in_network$total_cites), 5),
+     vertex.frame.color = &quot;gray&quot;,  #color of the frame is grey
+     vertex.label.color = &quot;black&quot;,  #color of the names is black
+     vertex.label.family = &quot;Calibri&quot;, #lettertype is calibri
+     vertex.label.cex = 0.7,  #size of the label
+     vertex.label.dist = 1,  #distance between labels and vertices
+     edge.curved = 0.1, #the curvyness of the edges
+     edge.arrow.size = 0.6) #size of the arrows </code></pre>
+<p><img src="lab2_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<pre class="r test"><code># Making a new dataset based on the variables &#39;name&#39; and &#39;gender&#39; from the dataset &#39;soc_df&#39;
+rugender &lt;- soc_df[, c(&quot;name&quot;, &quot;gender&quot;)]
+
+# Merging the dataset &#39;rugender&#39; with &#39;in_network&#39; based on the variable &#39;name&#39;
+
+in_network &lt;- left_join(in_network, rugender, by = c(&quot;name&quot; = &quot;name&quot;))</code></pre>
+<pre class="r test"><code># Turning the variable &#39;gender&#39; in the dataset &#39;in_network&#39; into a numerical variable named &#39;gendernum&#39;
+
+in_network$gendernum &lt;- as.integer(as.factor(in_network$gender))</code></pre>
+<pre class="r test"><code># Creating a plot with rectangles representing the men within the sociology department and circles representing the women within the sociology department. By means of these different shapes, you can more easily detect whether men are more often connected to other men and whether women are more often connected to other women. 
+
+wc1 &lt;- which(V(net1)$gendernum==1) 
+wc2 &lt;- which(V(net1)$gendernum==2) 
+V(net1)$shape[wc1] &lt;- &quot;rectangle&quot;
+V(net1)$shape[wc2] &lt;- &quot;circle&quot;
+
+plot(net1, 
+     vertex.color = in_network$vcol, 
+     vertex.label = ifelse(!is.na(in_network$total_cites), in_network$name, NA),
+     vertex.size = ifelse(!is.na(in_network$total_cites), log(in_network$total_cites), 5),
+     vertex.frame.color = &quot;gray&quot;,  #color of the frame is grey
+     vertex.label.color = &quot;black&quot;,  #color of the names is black
+     vertex.label.family = &quot;Calibri&quot;, #lettertype is calibri
+     vertex.label.cex = 0.7,  #size of the label
+     vertex.label.dist = 1,  #distance between labels and vertices
+     edge.curved = 0.1, #the curvyness of the edges
+     edge.arrow.size = 0.6) #size of the arrows  </code></pre>
+<p><img src="lab2_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<pre class="r test"><code># Creating a plot which shows which members of the sociology department at Radboud University have 500 or more citations. In this way you can more easily see what is the ratio between men and women within the sociology department with 500 or more citations (an indicator of the degree to which they are well-known scientists within the field of social science). 
+
+wc1 &lt;- which(V(net1)$gendernum==1) 
+wc2 &lt;- which(V(net1)$gendernum==2) 
+V(net1)$shape[wc1] &lt;- &quot;rectangle&quot;
+V(net1)$shape[wc2] &lt;- &quot;circle&quot;
+
+plot(net1, 
+     vertex.color = in_network$vcol, 
+     vertex.label = ifelse(in_network$total_cites&gt;=500, in_network$name, NA),
+     vertex.size = ifelse(!is.na(in_network$total_cites), log(in_network$total_cites), 5),
+     vertex.frame.color = &quot;gray&quot;, #color of the frame is grey
+     vertex.label.color = &quot;black&quot;,  #color of the names is black
+     vertex.label.family = &quot;Calibri&quot;, #lettertype is calibri
+     vertex.label.cex = 0.7,  #size of the label
+     vertex.label.dist = 1, #distance between labels and vertices
+     edge.curved = 0.1, #the curvyness of the edges
+     edge.arrow.size = 0.6) #size of the arrows  </code></pre>
+<p><img src="lab2_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<hr />
+</div>
+</div>
+<div id="practicing-making-loops" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Practicing making
+loops</h1>
+<pre class="r test"><code># Creation variables new dataset
+id &lt;- c(1, 2, 3, 4, 5, 6, 7, 8, 9)
+ego &lt;- c(1, 3, 4, 7, 1, 3, 3, 7 , 6)
+alter &lt;- c(2, 2, 2, 2, 3, 6, 7, 7, 7)
+tie &lt;- c(1, 1, 1, 1, 1, 1, 1, 1, 1)
+
+
+
+df &lt;- data.frame(id, ego, alter, tie)</code></pre>
+<pre class="r test"><code># Make a matrix
+sn_m &lt;- matrix(data=0, nrow = 9, ncol = 9)</code></pre>
+<pre class="r test"><code># basic structure of a loop
+for (ego in 1:10) {
+  for(alter in 1:10) {
+    print(paste(&quot;ego:&quot;,ego))
+    print(paste(&quot;alter&quot;, alter))
+    print(paste(&quot;ego+alter:&quot;, ego+alter))
+    }
+}</code></pre>
+<pre class="test2"><code>#&gt; [1] &quot;ego: 1&quot;
+#&gt; [1] &quot;alter 1&quot;
+#&gt; [1] &quot;ego+alter: 2&quot;
+#&gt; [1] &quot;ego: 1&quot;
+#&gt; [1] &quot;alter 2&quot;
+#&gt; [1] &quot;ego+alter: 3&quot;
+#&gt; [1] &quot;ego: 1&quot;
+#&gt; [1] &quot;alter 3&quot;
+#&gt; [1] &quot;ego+alter: 4&quot;
+#&gt; [1] &quot;ego: 1&quot;
+#&gt; [1] &quot;alter 4&quot;
+#&gt; [1] &quot;ego+alter: 5&quot;
+#&gt; [1] &quot;ego: 1&quot;
+#&gt; [1] &quot;alter 5&quot;
+#&gt; [1] &quot;ego+alter: 6&quot;
+#&gt; [1] &quot;ego: 1&quot;
+#&gt; [1] &quot;alter 6&quot;
+#&gt; [1] &quot;ego+alter: 7&quot;
+#&gt; [1] &quot;ego: 1&quot;
+#&gt; [1] &quot;alter 7&quot;
+#&gt; [1] &quot;ego+alter: 8&quot;
+#&gt; [1] &quot;ego: 1&quot;
+#&gt; [1] &quot;alter 8&quot;
+#&gt; [1] &quot;ego+alter: 9&quot;
+#&gt; [1] &quot;ego: 1&quot;
+#&gt; [1] &quot;alter 9&quot;
+#&gt; [1] &quot;ego+alter: 10&quot;
+#&gt; [1] &quot;ego: 1&quot;
+#&gt; [1] &quot;alter 10&quot;
+#&gt; [1] &quot;ego+alter: 11&quot;
+#&gt; [1] &quot;ego: 2&quot;
+#&gt; [1] &quot;alter 1&quot;
+#&gt; [1] &quot;ego+alter: 3&quot;
+#&gt; [1] &quot;ego: 2&quot;
+#&gt; [1] &quot;alter 2&quot;
+#&gt; [1] &quot;ego+alter: 4&quot;
+#&gt; [1] &quot;ego: 2&quot;
+#&gt; [1] &quot;alter 3&quot;
+#&gt; [1] &quot;ego+alter: 5&quot;
+#&gt; [1] &quot;ego: 2&quot;
+#&gt; [1] &quot;alter 4&quot;
+#&gt; [1] &quot;ego+alter: 6&quot;
+#&gt; [1] &quot;ego: 2&quot;
+#&gt; [1] &quot;alter 5&quot;
+#&gt; [1] &quot;ego+alter: 7&quot;
+#&gt; [1] &quot;ego: 2&quot;
+#&gt; [1] &quot;alter 6&quot;
+#&gt; [1] &quot;ego+alter: 8&quot;
+#&gt; [1] &quot;ego: 2&quot;
+#&gt; [1] &quot;alter 7&quot;
+#&gt; [1] &quot;ego+alter: 9&quot;
+#&gt; [1] &quot;ego: 2&quot;
+#&gt; [1] &quot;alter 8&quot;
+#&gt; [1] &quot;ego+alter: 10&quot;
+#&gt; [1] &quot;ego: 2&quot;
+#&gt; [1] &quot;alter 9&quot;
+#&gt; [1] &quot;ego+alter: 11&quot;
+#&gt; [1] &quot;ego: 2&quot;
+#&gt; [1] &quot;alter 10&quot;
+#&gt; [1] &quot;ego+alter: 12&quot;
+#&gt; [1] &quot;ego: 3&quot;
+#&gt; [1] &quot;alter 1&quot;
+#&gt; [1] &quot;ego+alter: 4&quot;
+#&gt; [1] &quot;ego: 3&quot;
+#&gt; [1] &quot;alter 2&quot;
+#&gt; [1] &quot;ego+alter: 5&quot;
+#&gt; [1] &quot;ego: 3&quot;
+#&gt; [1] &quot;alter 3&quot;
+#&gt; [1] &quot;ego+alter: 6&quot;
+#&gt; [1] &quot;ego: 3&quot;
+#&gt; [1] &quot;alter 4&quot;
+#&gt; [1] &quot;ego+alter: 7&quot;
+#&gt; [1] &quot;ego: 3&quot;
+#&gt; [1] &quot;alter 5&quot;
+#&gt; [1] &quot;ego+alter: 8&quot;
+#&gt; [1] &quot;ego: 3&quot;
+#&gt; [1] &quot;alter 6&quot;
+#&gt; [1] &quot;ego+alter: 9&quot;
+#&gt; [1] &quot;ego: 3&quot;
+#&gt; [1] &quot;alter 7&quot;
+#&gt; [1] &quot;ego+alter: 10&quot;
+#&gt; [1] &quot;ego: 3&quot;
+#&gt; [1] &quot;alter 8&quot;
+#&gt; [1] &quot;ego+alter: 11&quot;
+#&gt; [1] &quot;ego: 3&quot;
+#&gt; [1] &quot;alter 9&quot;
+#&gt; [1] &quot;ego+alter: 12&quot;
+#&gt; [1] &quot;ego: 3&quot;
+#&gt; [1] &quot;alter 10&quot;
+#&gt; [1] &quot;ego+alter: 13&quot;
+#&gt; [1] &quot;ego: 4&quot;
+#&gt; [1] &quot;alter 1&quot;
+#&gt; [1] &quot;ego+alter: 5&quot;
+#&gt; [1] &quot;ego: 4&quot;
+#&gt; [1] &quot;alter 2&quot;
+#&gt; [1] &quot;ego+alter: 6&quot;
+#&gt; [1] &quot;ego: 4&quot;
+#&gt; [1] &quot;alter 3&quot;
+#&gt; [1] &quot;ego+alter: 7&quot;
+#&gt; [1] &quot;ego: 4&quot;
+#&gt; [1] &quot;alter 4&quot;
+#&gt; [1] &quot;ego+alter: 8&quot;
+#&gt; [1] &quot;ego: 4&quot;
+#&gt; [1] &quot;alter 5&quot;
+#&gt; [1] &quot;ego+alter: 9&quot;
+#&gt; [1] &quot;ego: 4&quot;
+#&gt; [1] &quot;alter 6&quot;
+#&gt; [1] &quot;ego+alter: 10&quot;
+#&gt; [1] &quot;ego: 4&quot;
+#&gt; [1] &quot;alter 7&quot;
+#&gt; [1] &quot;ego+alter: 11&quot;
+#&gt; [1] &quot;ego: 4&quot;
+#&gt; [1] &quot;alter 8&quot;
+#&gt; [1] &quot;ego+alter: 12&quot;
+#&gt; [1] &quot;ego: 4&quot;
+#&gt; [1] &quot;alter 9&quot;
+#&gt; [1] &quot;ego+alter: 13&quot;
+#&gt; [1] &quot;ego: 4&quot;
+#&gt; [1] &quot;alter 10&quot;
+#&gt; [1] &quot;ego+alter: 14&quot;
+#&gt; [1] &quot;ego: 5&quot;
+#&gt; [1] &quot;alter 1&quot;
+#&gt; [1] &quot;ego+alter: 6&quot;
+#&gt; [1] &quot;ego: 5&quot;
+#&gt; [1] &quot;alter 2&quot;
+#&gt; [1] &quot;ego+alter: 7&quot;
+#&gt; [1] &quot;ego: 5&quot;
+#&gt; [1] &quot;alter 3&quot;
+#&gt; [1] &quot;ego+alter: 8&quot;
+#&gt; [1] &quot;ego: 5&quot;
+#&gt; [1] &quot;alter 4&quot;
+#&gt; [1] &quot;ego+alter: 9&quot;
+#&gt; [1] &quot;ego: 5&quot;
+#&gt; [1] &quot;alter 5&quot;
+#&gt; [1] &quot;ego+alter: 10&quot;
+#&gt; [1] &quot;ego: 5&quot;
+#&gt; [1] &quot;alter 6&quot;
+#&gt; [1] &quot;ego+alter: 11&quot;
+#&gt; [1] &quot;ego: 5&quot;
+#&gt; [1] &quot;alter 7&quot;
+#&gt; [1] &quot;ego+alter: 12&quot;
+#&gt; [1] &quot;ego: 5&quot;
+#&gt; [1] &quot;alter 8&quot;
+#&gt; [1] &quot;ego+alter: 13&quot;
+#&gt; [1] &quot;ego: 5&quot;
+#&gt; [1] &quot;alter 9&quot;
+#&gt; [1] &quot;ego+alter: 14&quot;
+#&gt; [1] &quot;ego: 5&quot;
+#&gt; [1] &quot;alter 10&quot;
+#&gt; [1] &quot;ego+alter: 15&quot;
+#&gt; [1] &quot;ego: 6&quot;
+#&gt; [1] &quot;alter 1&quot;
+#&gt; [1] &quot;ego+alter: 7&quot;
+#&gt; [1] &quot;ego: 6&quot;
+#&gt; [1] &quot;alter 2&quot;
+#&gt; [1] &quot;ego+alter: 8&quot;
+#&gt; [1] &quot;ego: 6&quot;
+#&gt; [1] &quot;alter 3&quot;
+#&gt; [1] &quot;ego+alter: 9&quot;
+#&gt; [1] &quot;ego: 6&quot;
+#&gt; [1] &quot;alter 4&quot;
+#&gt; [1] &quot;ego+alter: 10&quot;
+#&gt; [1] &quot;ego: 6&quot;
+#&gt; [1] &quot;alter 5&quot;
+#&gt; [1] &quot;ego+alter: 11&quot;
+#&gt; [1] &quot;ego: 6&quot;
+#&gt; [1] &quot;alter 6&quot;
+#&gt; [1] &quot;ego+alter: 12&quot;
+#&gt; [1] &quot;ego: 6&quot;
+#&gt; [1] &quot;alter 7&quot;
+#&gt; [1] &quot;ego+alter: 13&quot;
+#&gt; [1] &quot;ego: 6&quot;
+#&gt; [1] &quot;alter 8&quot;
+#&gt; [1] &quot;ego+alter: 14&quot;
+#&gt; [1] &quot;ego: 6&quot;
+#&gt; [1] &quot;alter 9&quot;
+#&gt; [1] &quot;ego+alter: 15&quot;
+#&gt; [1] &quot;ego: 6&quot;
+#&gt; [1] &quot;alter 10&quot;
+#&gt; [1] &quot;ego+alter: 16&quot;
+#&gt; [1] &quot;ego: 7&quot;
+#&gt; [1] &quot;alter 1&quot;
+#&gt; [1] &quot;ego+alter: 8&quot;
+#&gt; [1] &quot;ego: 7&quot;
+#&gt; [1] &quot;alter 2&quot;
+#&gt; [1] &quot;ego+alter: 9&quot;
+#&gt; [1] &quot;ego: 7&quot;
+#&gt; [1] &quot;alter 3&quot;
+#&gt; [1] &quot;ego+alter: 10&quot;
+#&gt; [1] &quot;ego: 7&quot;
+#&gt; [1] &quot;alter 4&quot;
+#&gt; [1] &quot;ego+alter: 11&quot;
+#&gt; [1] &quot;ego: 7&quot;
+#&gt; [1] &quot;alter 5&quot;
+#&gt; [1] &quot;ego+alter: 12&quot;
+#&gt; [1] &quot;ego: 7&quot;
+#&gt; [1] &quot;alter 6&quot;
+#&gt; [1] &quot;ego+alter: 13&quot;
+#&gt; [1] &quot;ego: 7&quot;
+#&gt; [1] &quot;alter 7&quot;
+#&gt; [1] &quot;ego+alter: 14&quot;
+#&gt; [1] &quot;ego: 7&quot;
+#&gt; [1] &quot;alter 8&quot;
+#&gt; [1] &quot;ego+alter: 15&quot;
+#&gt; [1] &quot;ego: 7&quot;
+#&gt; [1] &quot;alter 9&quot;
+#&gt; [1] &quot;ego+alter: 16&quot;
+#&gt; [1] &quot;ego: 7&quot;
+#&gt; [1] &quot;alter 10&quot;
+#&gt; [1] &quot;ego+alter: 17&quot;
+#&gt; [1] &quot;ego: 8&quot;
+#&gt; [1] &quot;alter 1&quot;
+#&gt; [1] &quot;ego+alter: 9&quot;
+#&gt; [1] &quot;ego: 8&quot;
+#&gt; [1] &quot;alter 2&quot;
+#&gt; [1] &quot;ego+alter: 10&quot;
+#&gt; [1] &quot;ego: 8&quot;
+#&gt; [1] &quot;alter 3&quot;
+#&gt; [1] &quot;ego+alter: 11&quot;
+#&gt; [1] &quot;ego: 8&quot;
+#&gt; [1] &quot;alter 4&quot;
+#&gt; [1] &quot;ego+alter: 12&quot;
+#&gt; [1] &quot;ego: 8&quot;
+#&gt; [1] &quot;alter 5&quot;
+#&gt; [1] &quot;ego+alter: 13&quot;
+#&gt; [1] &quot;ego: 8&quot;
+#&gt; [1] &quot;alter 6&quot;
+#&gt; [1] &quot;ego+alter: 14&quot;
+#&gt; [1] &quot;ego: 8&quot;
+#&gt; [1] &quot;alter 7&quot;
+#&gt; [1] &quot;ego+alter: 15&quot;
+#&gt; [1] &quot;ego: 8&quot;
+#&gt; [1] &quot;alter 8&quot;
+#&gt; [1] &quot;ego+alter: 16&quot;
+#&gt; [1] &quot;ego: 8&quot;
+#&gt; [1] &quot;alter 9&quot;
+#&gt; [1] &quot;ego+alter: 17&quot;
+#&gt; [1] &quot;ego: 8&quot;
+#&gt; [1] &quot;alter 10&quot;
+#&gt; [1] &quot;ego+alter: 18&quot;
+#&gt; [1] &quot;ego: 9&quot;
+#&gt; [1] &quot;alter 1&quot;
+#&gt; [1] &quot;ego+alter: 10&quot;
+#&gt; [1] &quot;ego: 9&quot;
+#&gt; [1] &quot;alter 2&quot;
+#&gt; [1] &quot;ego+alter: 11&quot;
+#&gt; [1] &quot;ego: 9&quot;
+#&gt; [1] &quot;alter 3&quot;
+#&gt; [1] &quot;ego+alter: 12&quot;
+#&gt; [1] &quot;ego: 9&quot;
+#&gt; [1] &quot;alter 4&quot;
+#&gt; [1] &quot;ego+alter: 13&quot;
+#&gt; [1] &quot;ego: 9&quot;
+#&gt; [1] &quot;alter 5&quot;
+#&gt; [1] &quot;ego+alter: 14&quot;
+#&gt; [1] &quot;ego: 9&quot;
+#&gt; [1] &quot;alter 6&quot;
+#&gt; [1] &quot;ego+alter: 15&quot;
+#&gt; [1] &quot;ego: 9&quot;
+#&gt; [1] &quot;alter 7&quot;
+#&gt; [1] &quot;ego+alter: 16&quot;
+#&gt; [1] &quot;ego: 9&quot;
+#&gt; [1] &quot;alter 8&quot;
+#&gt; [1] &quot;ego+alter: 17&quot;
+#&gt; [1] &quot;ego: 9&quot;
+#&gt; [1] &quot;alter 9&quot;
+#&gt; [1] &quot;ego+alter: 18&quot;
+#&gt; [1] &quot;ego: 9&quot;
+#&gt; [1] &quot;alter 10&quot;
+#&gt; [1] &quot;ego+alter: 19&quot;
+#&gt; [1] &quot;ego: 10&quot;
+#&gt; [1] &quot;alter 1&quot;
+#&gt; [1] &quot;ego+alter: 11&quot;
+#&gt; [1] &quot;ego: 10&quot;
+#&gt; [1] &quot;alter 2&quot;
+#&gt; [1] &quot;ego+alter: 12&quot;
+#&gt; [1] &quot;ego: 10&quot;
+#&gt; [1] &quot;alter 3&quot;
+#&gt; [1] &quot;ego+alter: 13&quot;
+#&gt; [1] &quot;ego: 10&quot;
+#&gt; [1] &quot;alter 4&quot;
+#&gt; [1] &quot;ego+alter: 14&quot;
+#&gt; [1] &quot;ego: 10&quot;
+#&gt; [1] &quot;alter 5&quot;
+#&gt; [1] &quot;ego+alter: 15&quot;
+#&gt; [1] &quot;ego: 10&quot;
+#&gt; [1] &quot;alter 6&quot;
+#&gt; [1] &quot;ego+alter: 16&quot;
+#&gt; [1] &quot;ego: 10&quot;
+#&gt; [1] &quot;alter 7&quot;
+#&gt; [1] &quot;ego+alter: 17&quot;
+#&gt; [1] &quot;ego: 10&quot;
+#&gt; [1] &quot;alter 8&quot;
+#&gt; [1] &quot;ego+alter: 18&quot;
+#&gt; [1] &quot;ego: 10&quot;
+#&gt; [1] &quot;alter 9&quot;
+#&gt; [1] &quot;ego+alter: 19&quot;
+#&gt; [1] &quot;ego: 10&quot;
+#&gt; [1] &quot;alter 10&quot;
+#&gt; [1] &quot;ego+alter: 20&quot;</code></pre>
+<pre class="r test"><code>for (i in 1:9) {
+  ego &lt;- df$ego[i]
+  alter &lt;- df$alter[i]
+  sn_m[ego, alter] &lt;- 1 
+}
+
+sn_m</code></pre>
+<pre class="test2"><code>#&gt;       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9]
+#&gt;  [1,]    0    1    1    0    0    0    0    0    0
+#&gt;  [2,]    0    0    0    0    0    0    0    0    0
+#&gt;  [3,]    0    1    0    0    0    1    1    0    0
+#&gt;  [4,]    0    1    0    0    0    0    0    0    0
+#&gt;  [5,]    0    0    0    0    0    0    0    0    0
+#&gt;  [6,]    0    0    0    0    0    0    1    0    0
+#&gt;  [7,]    0    1    0    0    0    0    1    0    0
+#&gt;  [8,]    0    0    0    0    0    0    0    0    0
+#&gt;  [9,]    0    0    0    0    0    0    0    0    0</code></pre>
+<pre class="r test"><code>diag(sn_m) &lt;- NA
+
+df$ego[4]</code></pre>
+<pre class="test2"><code>#&gt; [1] 7</code></pre>
+<pre class="r test"><code>sn_m[4,4]</code></pre>
+<pre class="test2"><code>#&gt; [1] NA</code></pre>
+<pre class="r test"><code>df[4, 4]</code></pre>
+<pre class="test2"><code>#&gt; [1] 1</code></pre>
+<pre class="r test"><code>df[4,]</code></pre>
+<pre class="test2"><code>#&gt;   id ego alter tie
+#&gt; 4  4   7     2   1</code></pre>
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkpvdXJuYWwgMiINCiNiaWJsaW9ncmFwaHk6IHJlZmVyZW5jZXMuYmliDQphdXRob3I6ICJEYXBobmUgSmFuc3NlbiINCi0tLQ0KDQoNCg0KYGBge3IsIGdsb2JhbHNldHRpbmdzLCBlY2hvPUZBTFNFLCB3YXJuaW5nPUZBTFNFLCByZXN1bHRzPSdoaWRlJ30NCmxpYnJhcnkoa25pdHIpDQoNCmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkNCm9wdHNfY2h1bmskc2V0KHRpZHkub3B0cz1saXN0KHdpZHRoLmN1dG9mZj0xMDApLHRpZHk9VFJVRSwgd2FybmluZyA9IEZBTFNFLCBtZXNzYWdlID0gRkFMU0UsY29tbWVudCA9ICIjPiIsIGNhY2hlPVRSVUUsIGNsYXNzLnNvdXJjZT1jKCJ0ZXN0IiksIGNsYXNzLm91dHB1dD1jKCJ0ZXN0MiIpKQ0Kb3B0aW9ucyh3aWR0aCA9IDEwMCkNCnJnbDo6c2V0dXBLbml0cigpDQoNCg0KDQpjb2xvcml6ZSA8LSBmdW5jdGlvbih4LCBjb2xvcikge3NwcmludGYoIjxzcGFuIHN0eWxlPSdjb2xvcjogJXM7Jz4lczwvc3Bhbj4iLCBjb2xvciwgeCkgfQ0KDQpgYGANCg0KYGBge3Iga2xpcHB5LCBlY2hvPUZBTFNFLCBpbmNsdWRlPVRSVUV9DQprbGlwcHk6OmtsaXBweShwb3NpdGlvbiA9IGMoJ3RvcCcsICdyaWdodCcpKQ0KI2tsaXBweTo6a2xpcHB5KGNvbG9yID0gJ2RhcmtyZWQnKQ0KI2tsaXBweTo6a2xpcHB5KHRvb2x0aXBfbWVzc2FnZSA9ICdDbGljayB0byBjb3B5JywgdG9vbHRpcF9zdWNjZXNzID0gJ0RvbmUnKQ0KYGBgDQoNCkxhc3QgY29tcGlsZWQgb24gYHIgU3lzLnRpbWUoKWANCg0KPCEtLS0NCkxhc3QgY29tcGlsZWQgb24gYHIgZm9ybWF0KFN5cy50aW1lKCksICclQiwgJVknKWANCi0tLT4NCg0KDQo8YnI+DQoNCi0tLS0NCg0KIyBIb21ld29yayB3ZWVrIDINCg0KLS0tLQ0KDQoNCmBgYHtyfQ0KcHJpbnQoIkhlbGxvIExhYiBKb3VybmFsIikNCmBgYA0KDQoNCg0K</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkpvdXJuYWwgMiINCiNiaWJsaW9ncmFwaHk6IHJlZmVyZW5jZXMuYmliDQphdXRob3I6ICJEYXBobmUgSmFuc3NlbiINCi0tLQ0KDQoNCg0KYGBge3IsIGdsb2JhbHNldHRpbmdzLCBlY2hvPUZBTFNFLCB3YXJuaW5nPUZBTFNFLCByZXN1bHRzPSdoaWRlJ30NCmxpYnJhcnkoa25pdHIpDQoNCmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkNCm9wdHNfY2h1bmskc2V0KHRpZHkub3B0cz1saXN0KHdpZHRoLmN1dG9mZj0xMDApLHRpZHk9VFJVRSwgd2FybmluZyA9IEZBTFNFLCBtZXNzYWdlID0gRkFMU0UsY29tbWVudCA9ICIjPiIsIGNhY2hlPVRSVUUsIGNsYXNzLnNvdXJjZT1jKCJ0ZXN0IiksIGNsYXNzLm91dHB1dD1jKCJ0ZXN0MiIpKQ0Kb3B0aW9ucyh3aWR0aCA9IDEwMCkNCnJnbDo6c2V0dXBLbml0cigpDQoNCg0KDQpjb2xvcml6ZSA8LSBmdW5jdGlvbih4LCBjb2xvcikge3NwcmludGYoIjxzcGFuIHN0eWxlPSdjb2xvcjogJXM7Jz4lczwvc3Bhbj4iLCBjb2xvciwgeCkgfQ0KDQpgYGANCg0KYGBge3Iga2xpcHB5LCBlY2hvPUZBTFNFLCBpbmNsdWRlPVRSVUV9DQprbGlwcHk6OmtsaXBweShwb3NpdGlvbiA9IGMoJ3RvcCcsICdyaWdodCcpKQ0KI2tsaXBweTo6a2xpcHB5KGNvbG9yID0gJ2RhcmtyZWQnKQ0KI2tsaXBweTo6a2xpcHB5KHRvb2x0aXBfbWVzc2FnZSA9ICdDbGljayB0byBjb3B5JywgdG9vbHRpcF9zdWNjZXNzID0gJ0RvbmUnKQ0KYGBgDQoNCkxhc3QgY29tcGlsZWQgb24gYHIgU3lzLnRpbWUoKWANCg0KPCEtLS0NCkxhc3QgY29tcGlsZWQgb24gYHIgZm9ybWF0KFN5cy50aW1lKCksICclQiwgJVknKWANCi0tLT4NCg0KDQo8YnI+DQoNCi0tLS0NCg0KLS0tDQoNCiMgUHJhY3RpY2luZyBwbG90dGluZw0KDQo8YnI+DQoNCiMjIFphY2hhcnnigJlzIGthcmF0ZSBjbHViDQoNCmBgYHtyfQ0KcmVxdWlyZShpZ3JhcGgpDQoNCmcgPC0gbWFrZV9ncmFwaCgiWmFjaGFyeSIpDQpwbG90KGcpDQpgYGANCg0KYGBge3J9DQpnbWF0IDwtIGFzX2FkamFjZW5jeV9tYXRyaXgoZywgdHlwZSA9ICJib3RoIiwgc3BhcnNlID0gRkFMU0UpDQpnbWF0DQpgYGANCg0KYGBge3J9DQpuY29sKGdtYXQpDQpgYGANCmBgYHtyfQ0KIyBudW1iZXIgb2Ygbm9kZXMNCnZjb3VudChnKQ0KIyBudW1iZXIgb2YgZWRnZXMNCmVjb3VudChnKQ0KYGBgDQoNCmBgYHtyfQ0KaWdyYXBoOjpkZWdyZWUoZykNCmhpc3QodGFibGUoaWdyYXBoOjpkZWdyZWUoZykpLCB4bGFiPSdpbmRlZ3JlZScsIG1haW49ICdIaXN0b2dyYW0gb2YgaW5kZWdyZWUnKQ0KYGBgDQpgYGB7cn0NCiMgYmUgYXdhcmUgdGhhdCBkaXJlY3RlZCBncmFwaHMgYXJlIGNvbnNpZGVyZWQgYXMgdW5kaXJlY3RlZC4gYnV0IGcgaXMgdW5kaXJlY3RlZC4NCnRyYW5zaXRpdml0eShnLCB0eXBlID0gYygibG9jYWx1bmRpcmVjdGVkIiksIGlzb2xhdGVzID0gYygiTmFOIiwgInplcm8iKSkNCmBgYA0KYGBge3J9DQppZ3JhcGg6OmJldHdlZW5uZXNzKGcsIGRpcmVjdGVkID0gRkFMU0UpDQpgYGANCg0KYGBge3J9DQpkeWFkLmNlbnN1cyhnKQ0KYGBgDQoNCmBgYHtyfQ0KMzQqMzMNCjExMjIvMg0KNzgrNDgzDQpgYGANCg0KDQpgYGB7cn0NCiNpbnN0YWxsLnBhY2thZ2VzKCJzbmEiKQ0KDQpyZXF1aXJlKCdzbmEnKQ0KDQppZ3JhcGg6OnRyaWFkLmNlbnN1cyhnKQ0KIyBJIHdpbGwgdXNlIHNuYSBiZWNhdXNlIGl0IHNob3dzIHRoZSBuYW1lcyBvZiB0aGUgdHJpYWRzIGFzIHdlbGwuDQoNCnNuYTo6dHJpYWQuY2Vuc3VzKGdtYXQpDQoNCmRldGFjaCgicGFja2FnZTpzbmEiKSANCmBgYA0KYGBge3J9DQppZ3JhcGg6OnRyYW5zaXRpdml0eShnLCB0eXBlID0gImdsb2JhbCIpDQpzbmE6Omd0cmFucyhnbWF0KQ0KDQp0cmlhZF9nIDwtIGRhdGEuZnJhbWUoc25hOjp0cmlhZC5jZW5zdXMoZ21hdCkpDQoNCnRyYW5zaXRpdml0eV9nIDwtICgzICogdHJpYWRfZyRYMzAwKS8odHJpYWRfZyRYMjAxICsgMyAqIHRyaWFkX2ckWDMwMCkNCnRyYW5zaXRpdml0eV9nDQpgYGANCg0KYGBge3J9DQooMzQqMzMqMzIpLzMNCmBgYA0KDQpgYGB7cn0NCiMgY2hhbmdpbmcgVg0KVihnKSRzaXplID0gYmV0d2Vlbm5lc3MoZywgbm9ybWFsaXplZCA9IFQsIGRpcmVjdGVkID0gRkFMU0UpICogNjAgKyAxMCAgI2FmdGVyIHNvbWUgdHJpYWwgYW5kIGVycm9yDQpwbG90KGcsIG1vZGUgPSAidW5kaXJlY3RlZCIpDQpgYGANCg0KDQpgYGB7cn0NCmcNCg0Kc3VtbWFyeShnKQ0KDQpoZWFkKGcpDQpgYGANCg0KYGBge3J9DQpzZXQuc2VlZCgyMzQ1KQ0KbCA8LSBsYXlvdXRfd2l0aF9tZHMoZykgICNodHRwczovL2lncmFwaC5vcmcvci9kb2MvbGF5b3V0X3dpdGhfbWRzLmh0bWwNCnBsb3QoZywgbGF5b3V0ID0gbCkNCmBgYA0KDQpgYGB7cn0NCmwgICNsZXQgdXMgdGFrZSBhIGxvb2sgYXQgdGhlIGNvb3JkaW5hdGVzDQpsWzEsIDFdIDwtIDQNCmxbMzQsIDFdIDwtIC0zLjUNCnBsb3QoZywgbGF5b3V0ID0gbCkNCmBgYA0KDQpgYGB7cn0NCnBsb3QoZywgbGF5b3V0ID0gbCwgbWFyZ2luID0gYygwLCAwLCAwLCAwKSkNCmxlZ2VuZCh4ID0gLTIsIHkgPSAtMS41LCBjKCJOb3RlOiB0aGUgcG9zaXRpb24gb2Ygbm9kZXMgMSBhbmQgMzQgaGF2ZSBiZWVuIHNldCBieSBKb2NoZW0gVG9sc21hIFxuIGZvciB2aXN1YWxpc2F0aW9uIHB1cnBvc2VzIG9ubHkgYW5kIGRvIG5vdCByZWZsZWN0IG5ldHdvcmsgcHJvcGVydGllcyIpLA0KICAgIGJ0eSA9ICJuIiwgY2V4ID0gMC44KQ0KYGBgDQoNCg0KPGJyPg0KDQojIyBDby1hdXRob3IgbmV0d29ya3MNCmBgYHtyfQ0KIyBsb2FkIHRoZSBuZWNlc3NhcnkgZGF0YXNldHMNCmxvYWQoIkRhdGEvc29jX2RmLlJEYXRhIikNCmxvYWQoIkRhdGEvc29jX2NvbGxhYnMxLlJEYXRhIikNCmxvYWQoIkRhdGEvc29jX2NvbGxhYnMyLlJEYXRhIikNCmBgYA0KDQpgYGB7cn0NCiMgV2UgZmlyc3Qgd2FudCB0byBnZXQgYWxsIHRoZSB1bmlxdWUgY29sbGFib3JhdG9ycyBvZiBzb2Npb2xvZ3kgc3RhZmYgYXQgdGhlIFJVLg0Kc29jX2NvbGxhYnNfdW5pcXVlIDwtIHVuaXF1ZShzb2NfY29sbGFic1ssIDRdKSAgDQojIFRoZXJlIGFyZSAyMjkgdW5pcXVlIGNvbGxhYm9yYXRvcnMgZm9yIFJVIHN0YWZmLg0KDQojIFRoZW4gd2UgYWRkIHRoZSBzb2Mgc3RhZmYgdGhlbXNlbHZlcyBmcm9tIGdvb2dsZSBzY2hvbGFyLiANCnNvY19jb2xsYWJzX3VuaXF1ZSA8LSBjKHNvY19jb2xsYWJzX3VuaXF1ZSwgc29jX2RmJGdzX2lkKSAgDQoNCiNUaGVuIHdlIHR1cm4gdGhpcyBpbnRvIGEgZGF0YWZyYW1lIHdpdGggdmFsdWUgMSBvbiB0aGUgZmlyc3QgdmFyaWFibGUuDQpzb2NfY29sbGFic191bmlxdWUgPC0gZGF0YS5mcmFtZShzb2NfY29sbGFic191bmlxdWUpDQpzb2NfY29sbGFic191bmlxdWUkdjEgPC0gMSAgIyBjb252ZW5pZW50IHRvIHNlbGVjdCBvbiBhZnRlciB0aGUgbWVyZ2UNCnNvY19jb2xsYWJzX3VuaXF1ZSA8LSB1bmlxdWUoc29jX2NvbGxhYnNfdW5pcXVlKQ0KYGBgDQoNCg0KYGBge3J9DQojIHNvIHRoaXMgaXMgYSB2ZXJ5IGltcG9ydGFudCBzdGVwLCB3ZSBqb2luIHRoZSB1bmlxdWUgc29jIGNvbGxhYm9yYXRvcnMgdG8gdGhlIGNvbGxhYm9yYXRvcnMgb2YNCiMgY29sbGFib3JhdG9ycyBieSBtYWtpbmcgYSBuZXcgZGF0YXNldCBjYWxsZWQgJ29uZWZpdmVkZWdyZWUnIHdpdGggdGhlIHZhcmlhYmxlcyBjb2F1dGhvciwgICAgICAjIGNvYXV0aG9yaWQgYW5kIGdzaWQuDQpyZXF1aXJlKHRpZHl2ZXJzZSkNCm9uZWZpdmVkZWdyZWUgPC0gbGVmdF9qb2luKGNvbGxhYnNfMWRlZXAsIHNvY19jb2xsYWJzX3VuaXF1ZSwgYnkgPSBjKGNvYXV0aF9pZCA9ICJzb2NfY29sbGFic191bmlxdWUiKSkNCmBgYA0KDQoNCmBgYHtyfQ0KIyBUaGVuLCB3ZSBkcm9wIHRob3NlIHRoYXQgYXJlIG5vdCBhbW9uZyBzb2Npb2xvZ3kgY29sbGFib3JhdG9ycyBhbmQgd2hvIGRvbid0IGxzaXQgY29hdXRob3JzDQojIHJlZ2FyZGxlc3MgaW4gdGhlIGNvbHVtbnMgdjEgYW5kIGNvYXV0aC4NCm9uZWZpdmVkZWdyZWUgPC0gb25lZml2ZWRlZ3JlZVshaXMubmEob25lZml2ZWRlZ3JlZSR2MSksIF0NCm9uZWZpdmVkZWdyZWUgPC0gb25lZml2ZWRlZ3JlZVshaXMubmEob25lZml2ZWRlZ3JlZSRjb2F1dGgpLCBdDQpgYGANCg0KDQpgYGB7cn0NCiMgd2UgcGljayB0aGUgY29sdW1ucyAnbmFtZScgYW5kICdjb2F1dGgnIGFuZCBoYXZlIGFuIGVkZ2VsaXN0IG9mIHNvYyBjb2xsYWJvcmF0b3JzIGFuZCB3aGV0aGVyIHRoZXkgICAgIyBjb2xsYWJvcmF0ZSB3aXRoIHRob3NlIHNhbWUgY29sbGFib3JhdG9ycyB0aGUgMS41IGRlZ3JlZSBuZXR3b3JrLiBXZSBjaGFuZ2UgdGhlIG5hbWVzIG9mIHRoZSBjb2x1bW5zICAjIHRvIGZyb20gYW5kIHRvLiANCm9uZWZpdmVkZWdyZWUgPC0gb25lZml2ZWRlZ3JlZVssIGMoIm5hbWUiLCAiY29hdXRoIildDQpuYW1lcyhvbmVmaXZlZGVncmVlKSA8LSBjKCJmcm9tIiwgInRvIikNCmBgYA0KDQoNCmBgYHtyfQ0KIyB3ZSBnZXQgc29jIGNvbGxhYm9yYXRvcnMgYW5kIGFkZCB0aG9zZSB0byB0aGUgZGF0YSBhYm92ZSBhbmQgZW5kIHVwIHdpdGggYSBuaWNlIGVkZ2VsaXN0IQ0Kc29jYyA8LSBzb2NfY29sbGFic1shaXMubmEoc29jX2NvbGxhYnMkY29hdXRoKSwgXQ0KDQojIFdlIG9ubHkga2VlcCB0aGUgY29sdW1ucyBuYW1lIGFuZCBjb2F1dGguDQpzb2NjIDwtIHNvY2NbLCBjKCJuYW1lIiwgImNvYXV0aCIpXQ0KDQojIFdlIGNoYW5nZSB0aGUgbmFtZXMgb2YgdGhlIGNvYXV0aG9ycyB0byBmcm9tIGFuZCB0by4gDQpuYW1lcyhzb2NjKSA8LSBjKCJmcm9tIiwgInRvIikNCg0KIyBXZSBjb21wdXRlIHRoZSBkYXRhc2V0IG9uZWZpdmVkZWdyZWUgYnkgYWRkaW5nIHRoZSBkYXRhc2V0IHNvY2MuIA0Kb25lZml2ZWRlZ3JlZSA8LSByYmluZChzb2NjLCBvbmVmaXZlZGVncmVlKQ0KDQojIFdlIHNhdmUgb25lZml2ZWRlZ3JlZS4gDQpzYXZlKG9uZWZpdmVkZWdyZWUsIGZpbGUgPSAiRGF0YS9zb2Nfb25lZml2ZWRlZ3JlZS5SRGF0YSIpDQpgYGANCg0KDQpgYGB7cn0NCiMgbWF0cml4IGJlY2F1c2UgaWdyYXBoIHdhbnRzIHRoYXQNCm9uZWZpdmVkZWdyZWUgPC0gYXMubWF0cml4KG9uZWZpdmVkZWdyZWUpICANCg0KIyBOb3RpY2UgdGhhdCB3ZSBjYWxsIGlncmFwaCBoZXJlLCBpbiBhbnRpY2lwYXRpb24gb2YgdGhlIHZpeiB0dXRvcmlhbC4NCmxpYnJhcnkoaWdyYXBoKSAgDQoNCiMgV2UgdXNlIHRoZSBpZ3JhcGggZnVuY3Rpb24gJ2dyYXBoX2Zyb21fZWRnZWxpc3QnIHRvIG1ha2UgYSBncmFwaCBmcm9tIG9uZWZpdmVkZWdyZWUuIA0KbmV0MSA8LSBncmFwaF9mcm9tX2VkZ2VsaXN0KG9uZWZpdmVkZWdyZWUsIGRpcmVjdGVkID0gVFJVRSkgIA0KDQpwbG90KG5ldDEpICANCmBgYA0KYGBge3J9DQojIE1ha2luZyB0aGUgZ3JhcGggcHJldHRpZXIgdGhhbiBpdCB3YXMgYWxyZWFkeS4NCnBsb3QobmV0MSAsDQogICAgIHZlcnRleC5jb2xvciA9ICJnb2xkIiwgIyBuaWNlIGNvbG9yIGZvciB0aGUgdmVydGljZXMNCiAgICAgdmVydGV4LnNpemUgPSA0LCAgIyB3ZSdsbCB2ZXJ0aWNlcyBhIGJpdCBzbWFsbGVyDQogICAgIHZlcnRleC5mcmFtZS5jb2xvciA9ICJncmF5IiwgICMgd2UnbGwgcHV0IGEgZ3JheSBmcmFtZSBhcm91bmQgdmVydGljZXMNCiAgICAgdmVydGV4LmxhYmVsLmNvbG9yID0gImJsYWNrIiwgICMgbm90IHRoYXQgdWdseSBibHVlIGNvbG9yIGZvciB0aGUgbGFiZWxzIChuYW1lcykNCiAgICAgdmVydGV4LmxhYmVsLmZhbWlseSA9ICJDYWxpYnJpIiwgIyBub3QgYSBmYW4gb2YgdGltZXMgbmV3IHJvbWFuIGluIGZpZ3VyZXMNCiAgICAgdmVydGV4LmxhYmVsLmNleCA9IDAuNCwgICMgbWFrZSB0aGUgbGFiZWwgYSBiaXQgc21hbGxlciB0b28NCiAgICAgdmVydGV4LmxhYmVsLmRpc3QgPSAwLjUsICAjIHdlJ2xsIHB1bGwgdGhlIGxhYmVscyBhIGJpdCBhd2F5IGZyb20gdGhlIHZlcnRpY2VzDQogICAgIGVkZ2UuY3VydmVkID0gMC4yLCAjIGN1cnZlZCBlZGdlcyBpcyBhbHdheXMgYSBuaWNlIHRvdWNoDQogICAgIGVkZ2UuYXJyb3cuc2l6ZSA9IDAuMSkgIyBtYWtlIGFycm93IHNpemUgKGRpcmVjdGlvbiBvZiBlZGdlKSBzbWFsbGVyDQpgYGANCmBgYHtyfQ0KIyBHYXRoZXJpbmcgdGhlIHZlcnRpY2VzIGluIHRoZSBuZXR3b3JrIG9iamVjdCBhcyBkYXRhIGZyYW1lIHRocm91Z2ggdGhlIGZ1bmN0aW9uICdhc19pZHMoVihuZXQxKSknLg0KaW5fbmV0d29yayA8LSBkYXRhLmZyYW1lKGFzX2lkcyhWKG5ldDEpKSkNCg0KIyBUaGUgY29sdW1uIHdpdGggbmFtZXMgaXMgbm93IGNhbGxlZCAnbmFtZScuDQpuYW1lcyhpbl9uZXR3b3JrKVsxXSA8LSAibmFtZSINCiANCiNzb2NfZGYkdG90YWxfY2l0ZXMgPC0gc29jX2RmJHRvdGFsX2NpdGVzLngNCg0KIyBUaGUgUmFkYm91ZCBzb2Npb2xvZ3kgbm9kZXMgYXJlIGNvbGxlY3RlZCBmcm9tIHRoZSBzb2NfZGYgZGF0YSBmcmFtZS4NCnJ1X25vZGVzIDwtIHNvY19kZlssIGMoIm5hbWUiLCAidG90YWxfY2l0ZXMiKV0NCg0KIyBUaGUgUmFkYm91ZCBzb2Npb2xvZ3kgbm9kZXMgYXJlIGluY2x1ZGVkIGluIHRoZSAnaW5fbmV0d29yaycgZGF0YXNldC4NCmluX25ldHdvcmsgPC0gbGVmdF9qb2luKGluX25ldHdvcmssIHJ1X25vZGVzLCBieSA9IGMoIm5hbWUiID0gIm5hbWUiKSkNCg0KIyBUaGUgbm9kZXMgd2hvIHdoZXJlIGluIHRoZSBzb2NfZGYgYW5kIHRob3NlIHdobyB3ZXJlIG5vdCBnZXQgYSBkaWZmZXJlbnQgY29sb3IgbGFiZWwuIA0KaW5fbmV0d29yayR2Y29sIDwtIGlmZWxzZShpcy5uYShpbl9uZXR3b3JrJHRvdGFsX2NpdGVzKSwgIiNFNjlGMDAiLCAiIzU2QjRFOSIpDQoNCnBsb3QobmV0MSwNCiAgICAgdmVydGV4LmNvbG9yID0gaW5fbmV0d29yayR2Y29sLCAjVEhJUyBXQVMgV0hBVCBXRSBESUQgVEhFIExBU1QgQ09ERUJMT0NLIEZPUiENCiAgICAgdmVydGV4LnNpemUgPSA0LCAgIyB3ZSdsbCBtYWtlIHRoZW0gYSBiaXQgc21hbGxlcg0KICAgICB2ZXJ0ZXguZnJhbWUuY29sb3IgPSAiZ3JheSIsICAjIHdlJ2xsIHB1dCBhIGZyYW1lIGFyb3VuZCBpdA0KICAgICB2ZXJ0ZXgubGFiZWwuY29sb3IgPSAiYmxhY2siLCAgIyBub3QgdGhhdCB1Z2x5IGJsdWUgY29sb3IgZm9yIHRoZSBuYW1lcw0KICAgICB2ZXJ0ZXgubGFiZWwuZmFtaWx5ID0gIkhlbHZldGljYSIsICMgbm90IGEgZmFuIG9mIHRpbWVzIGluIGZpZ3VyZXMNCiAgICAgdmVydGV4LmxhYmVsLmNleCA9IDAuNCwgICMgYSBiaXQgc21hbGxlciB0b28NCiAgICAgdmVydGV4LmxhYmVsLmRpc3QgPSAwLjUsICAjIHdlJ2xsIHB1bGwgdGhlIGxhYmVscyBhIGJpdCBhd2F5IGZyb20gdGhlIHZlcnRpY2VzDQogICAgIGVkZ2UuY3VydmVkID0gMC4yLCAgIyBjdXJ2ZWQgZWRnZXMgaXMgYWx3YXlzIGEgbmljZSB0b3VnaA0KICAgICBlZGdlLmFycm93LnNpemUgPSAwLjEpICMgYXJyb3cgc2l6ZSBzbWFsbGVyDQpgYGANCmBgYHtyfQ0KIyBUaGlzIHBsb3Qgb25seSBzaG93cyB0aGUgbGFiZWxzIG9mIFJVIHNvY2lvbG9neSBzdGFmZi4NCnBsb3QobmV0MSwNCiAgICAgdmVydGV4LmNvbG9yID0gaW5fbmV0d29yayR2Y29sLCANCiMgTk9USUNFIFRIRVNFIENPTkRJVElPTkFMIFNUQVRFTUVOVFMgQkVMT1cNCiAgICAgdmVydGV4LmxhYmVsID0gaWZlbHNlKCFpcy5uYShpbl9uZXR3b3JrJHRvdGFsX2NpdGVzKSwgaW5fbmV0d29yayRuYW1lLCBOQSksDQogICAgIHZlcnRleC5zaXplID0gNCwgICMgd2UnbGwgbWFrZSB0aGVtIGEgYml0IHNtYWxsZXINCiAgICAgdmVydGV4LmZyYW1lLmNvbG9yID0gImdyYXkiLCAgIyB3ZSdsbCBwdXQgYSBmcmFtZSBhcm91bmQgaXQNCiAgICAgdmVydGV4LmxhYmVsLmNvbG9yID0gImJsYWNrIiwgICMgbm90IHRoYXQgdWdseSBibHVlIGNvbG9yIGZvciB0aGUgbmFtZXMNCiAgICAgdmVydGV4LmxhYmVsLmZhbWlseSA9ICJIZWx2ZXRpY2EiLCAjIG5vdCBhIGZhbiBvZiB0aW1lcyBpbiBmaWd1cmVzDQogICAgIHZlcnRleC5sYWJlbC5jZXggPSAwLjY1LCAgIyBhIGJpdCBzbWFsbGVyIHRvbw0KICAgICB2ZXJ0ZXgubGFiZWwuZGlzdCA9IDAuNSwgICMgd2UnbGwgcHVsbCB0aGUgbGFiZWxzIGEgYml0IGF3YXkgZnJvbSB0aGUgdmVydGljZXMNCiAgICAgZWRnZS5jdXJ2ZWQgPSAwLjIsICMgY3VydmVkIGVkZ2VzIGlzIGFsd2F5cyBhIG5pY2UgdG91Z2gNCiAgICAgZWRnZS5hcnJvdy5zaXplID0gMC4xKSAjIGFycm93IHNpemUgc21hbGxlcg0KDQpgYGANCg0KDQpgYGB7cn0NCiMgSW4gdGhpcyBwbG90IHRoZSB2ZXJ0ZXggc2l6ZSBpcyBhZGp1c3RlZCBmb3IgY2l0YXRpb24uDQpwbG90KG5ldDEsDQogICAgIHZlcnRleC5jb2xvciA9IGluX25ldHdvcmskdmNvbCwgDQogICAgIHZlcnRleC5sYWJlbCA9IGlmZWxzZSghaXMubmEoaW5fbmV0d29yayR0b3RhbF9jaXRlcyksIGluX25ldHdvcmskbmFtZSwgTkEpLA0KIyBTQU1FIEhFUkUsIFRSWSBUTyBTTU9PVEggVEhFIFRPVEFMX0NJVEVTIEEgQklUIFdJVEggTE9HU0NBTEUNCiAgICAgdmVydGV4LnNpemUgPSBpZmVsc2UoIWlzLm5hKGluX25ldHdvcmskdG90YWxfY2l0ZXMpLCBsb2coaW5fbmV0d29yayR0b3RhbF9jaXRlcyksIDIpLA0KICAgICB2ZXJ0ZXguZnJhbWUuY29sb3IgPSAiZ3JheSIsICAjIHdlJ2xsIHB1dCBhIGZyYW1lIGFyb3VuZCBpdA0KICAgICB2ZXJ0ZXgubGFiZWwuY29sb3IgPSAiYmxhY2siLCAgIyBub3QgdGhhdCB1Z2x5IGJsdWUgY29sb3IgZm9yIHRoZSBuYW1lcw0KICAgICB2ZXJ0ZXgubGFiZWwuZmFtaWx5ID0gIkhlbHZldGljYSIsICMgbm90IGEgZmFuIG9mIHRpbWVzIGluIGZpZ3VyZXMNCiAgICAgdmVydGV4LmxhYmVsLmNleCA9IDAuNjUsICAjIGEgYml0IHNtYWxsZXIgdG9vDQogICAgIHZlcnRleC5sYWJlbC5kaXN0ID0gMC41LCAgIyB3ZSdsbCBwdWxsIHRoZSBsYWJlbHMgYSBiaXQgYXdheSBmcm9tIHRoZSB2ZXJ0aWNlcw0KICAgICBlZGdlLmN1cnZlZCA9IDAuMiwgIyBjdXJ2ZWQgZWRnZXMgaXMgYWx3YXlzIGEgbmljZSB0b3VnaA0KICAgICBlZGdlLmFycm93LnNpemUgPSAwLjEpICMgYXJyb3cgc2l6ZSBzbWFsbGVyDQpgYGANCg0KYGBge3J9DQojIE15IG93biBwbG90DQoNCiMgVGhlIG5vZGVzIG9mIHRoZSBwZW9wbGUgd2hvIGFyZSBwYXJ0IG9mIHRoZSBSVSBzb2NpYWwgc2NpZW5jZSBkZXBhcnRtZW50IGdldCB0aGUgY29sb3IgbGFiZWwnY29yYWwxJyBhbmQgdGhlIG5vZGVzIHdobyBhcmUgbm90IGdldCB0aGUgY29sb3IgI2xhYmVsICdhcXVhbWFyaW5lMScNCiMgQWxzbywgdGhlIGZvbnQgaXMgY2hhbmdlZCB0byBjYWxpYnJpLCB0aGUgZGlzdGFuY2Ugb2YgdGhlIGxhYmVscyBpcyBiaWdnZXIsIGFuZCB0aGUgc2l6ZSBvZiB0aGUgZWRnZSBpZiB0aGUgYXJyb3dzIGlzIHNtYWxsZXINCmluX25ldHdvcmskdmNvbCA8LSBpZmVsc2UoaXMubmEoaW5fbmV0d29yayR0b3RhbF9jaXRlcyksICJhcXVhbWFyaW5lMSIsICJjb3JhbDEiKQ0KDQpwbG90KG5ldDEsDQogICAgIHZlcnRleC5jb2xvciA9IGluX25ldHdvcmskdmNvbCwgDQogICAgIHZlcnRleC5sYWJlbCA9IGlmZWxzZSghaXMubmEoaW5fbmV0d29yayR0b3RhbF9jaXRlcyksIGluX25ldHdvcmskbmFtZSwgTkEpLA0KICAgICB2ZXJ0ZXguc2l6ZSA9IGlmZWxzZSghaXMubmEoaW5fbmV0d29yayR0b3RhbF9jaXRlcyksIGxvZyhpbl9uZXR3b3JrJHRvdGFsX2NpdGVzKSwgNSksDQogICAgIHZlcnRleC5mcmFtZS5jb2xvciA9ICJncmF5IiwgICNjb2xvciBvZiB0aGUgZnJhbWUgaXMgZ3JleQ0KICAgICB2ZXJ0ZXgubGFiZWwuY29sb3IgPSAiYmxhY2siLCAgI2NvbG9yIG9mIHRoZSBuYW1lcyBpcyBibGFjaw0KICAgICB2ZXJ0ZXgubGFiZWwuZmFtaWx5ID0gIkNhbGlicmkiLCAjbGV0dGVydHlwZSBpcyBjYWxpYnJpDQogICAgIHZlcnRleC5sYWJlbC5jZXggPSAwLjcsICAjc2l6ZSBvZiB0aGUgbGFiZWwNCiAgICAgdmVydGV4LmxhYmVsLmRpc3QgPSAxLCAgI2Rpc3RhbmNlIGJldHdlZW4gbGFiZWxzIGFuZCB2ZXJ0aWNlcw0KICAgICBlZGdlLmN1cnZlZCA9IDAuMSwgI3RoZSBjdXJ2eW5lc3Mgb2YgdGhlIGVkZ2VzDQogICAgIGVkZ2UuYXJyb3cuc2l6ZSA9IDAuNikgI3NpemUgb2YgdGhlIGFycm93cyANCiAgICAgDQpgYGANCg0KDQpgYGB7cn0NCiMgTWFraW5nIGEgbmV3IGRhdGFzZXQgYmFzZWQgb24gdGhlIHZhcmlhYmxlcyAnbmFtZScgYW5kICdnZW5kZXInIGZyb20gdGhlIGRhdGFzZXQgJ3NvY19kZicNCnJ1Z2VuZGVyIDwtIHNvY19kZlssIGMoIm5hbWUiLCAiZ2VuZGVyIildDQoNCiMgTWVyZ2luZyB0aGUgZGF0YXNldCAncnVnZW5kZXInIHdpdGggJ2luX25ldHdvcmsnIGJhc2VkIG9uIHRoZSB2YXJpYWJsZSAnbmFtZScNCg0KaW5fbmV0d29yayA8LSBsZWZ0X2pvaW4oaW5fbmV0d29yaywgcnVnZW5kZXIsIGJ5ID0gYygibmFtZSIgPSAibmFtZSIpKQ0KYGBgDQoNCmBgYHtyfQ0KIyBUdXJuaW5nIHRoZSB2YXJpYWJsZSAnZ2VuZGVyJyBpbiB0aGUgZGF0YXNldCAnaW5fbmV0d29yaycgaW50byBhIG51bWVyaWNhbCB2YXJpYWJsZSBuYW1lZCAnZ2VuZGVybnVtJw0KDQppbl9uZXR3b3JrJGdlbmRlcm51bSA8LSBhcy5pbnRlZ2VyKGFzLmZhY3Rvcihpbl9uZXR3b3JrJGdlbmRlcikpDQpgYGANCg0KDQpgYGB7cn0NCiMgQ3JlYXRpbmcgYSBwbG90IHdpdGggcmVjdGFuZ2xlcyByZXByZXNlbnRpbmcgdGhlIG1lbiB3aXRoaW4gdGhlIHNvY2lvbG9neSBkZXBhcnRtZW50IGFuZCBjaXJjbGVzIHJlcHJlc2VudGluZyB0aGUgd29tZW4gd2l0aGluIHRoZSBzb2Npb2xvZ3kgZGVwYXJ0bWVudC4gQnkgbWVhbnMgb2YgdGhlc2UgZGlmZmVyZW50IHNoYXBlcywgeW91IGNhbiBtb3JlIGVhc2lseSBkZXRlY3Qgd2hldGhlciBtZW4gYXJlIG1vcmUgb2Z0ZW4gY29ubmVjdGVkIHRvIG90aGVyIG1lbiBhbmQgd2hldGhlciB3b21lbiBhcmUgbW9yZSBvZnRlbiBjb25uZWN0ZWQgdG8gb3RoZXIgd29tZW4uIA0KDQp3YzEgPC0gd2hpY2goVihuZXQxKSRnZW5kZXJudW09PTEpIA0Kd2MyIDwtIHdoaWNoKFYobmV0MSkkZ2VuZGVybnVtPT0yKSANClYobmV0MSkkc2hhcGVbd2MxXSA8LSAicmVjdGFuZ2xlIg0KVihuZXQxKSRzaGFwZVt3YzJdIDwtICJjaXJjbGUiDQoNCnBsb3QobmV0MSwgDQogICAgIHZlcnRleC5jb2xvciA9IGluX25ldHdvcmskdmNvbCwgDQogICAgIHZlcnRleC5sYWJlbCA9IGlmZWxzZSghaXMubmEoaW5fbmV0d29yayR0b3RhbF9jaXRlcyksIGluX25ldHdvcmskbmFtZSwgTkEpLA0KICAgICB2ZXJ0ZXguc2l6ZSA9IGlmZWxzZSghaXMubmEoaW5fbmV0d29yayR0b3RhbF9jaXRlcyksIGxvZyhpbl9uZXR3b3JrJHRvdGFsX2NpdGVzKSwgNSksDQogICAgIHZlcnRleC5mcmFtZS5jb2xvciA9ICJncmF5IiwgICNjb2xvciBvZiB0aGUgZnJhbWUgaXMgZ3JleQ0KICAgICB2ZXJ0ZXgubGFiZWwuY29sb3IgPSAiYmxhY2siLCAgI2NvbG9yIG9mIHRoZSBuYW1lcyBpcyBibGFjaw0KICAgICB2ZXJ0ZXgubGFiZWwuZmFtaWx5ID0gIkNhbGlicmkiLCAjbGV0dGVydHlwZSBpcyBjYWxpYnJpDQogICAgIHZlcnRleC5sYWJlbC5jZXggPSAwLjcsICAjc2l6ZSBvZiB0aGUgbGFiZWwNCiAgICAgdmVydGV4LmxhYmVsLmRpc3QgPSAxLCAgI2Rpc3RhbmNlIGJldHdlZW4gbGFiZWxzIGFuZCB2ZXJ0aWNlcw0KICAgICBlZGdlLmN1cnZlZCA9IDAuMSwgI3RoZSBjdXJ2eW5lc3Mgb2YgdGhlIGVkZ2VzDQogICAgIGVkZ2UuYXJyb3cuc2l6ZSA9IDAuNikgI3NpemUgb2YgdGhlIGFycm93cyAgDQpgYGANCg0KDQpgYGB7cn0NCg0KIyBDcmVhdGluZyBhIHBsb3Qgd2hpY2ggc2hvd3Mgd2hpY2ggbWVtYmVycyBvZiB0aGUgc29jaW9sb2d5IGRlcGFydG1lbnQgYXQgUmFkYm91ZCBVbml2ZXJzaXR5IGhhdmUgNTAwIG9yIG1vcmUgY2l0YXRpb25zLiBJbiB0aGlzIHdheSB5b3UgY2FuIG1vcmUgZWFzaWx5IHNlZSB3aGF0IGlzIHRoZSByYXRpbyBiZXR3ZWVuIG1lbiBhbmQgd29tZW4gd2l0aGluIHRoZSBzb2Npb2xvZ3kgZGVwYXJ0bWVudCB3aXRoIDUwMCBvciBtb3JlIGNpdGF0aW9ucyAoYW4gaW5kaWNhdG9yIG9mIHRoZSBkZWdyZWUgdG8gd2hpY2ggdGhleSBhcmUgd2VsbC1rbm93biBzY2llbnRpc3RzIHdpdGhpbiB0aGUgZmllbGQgb2Ygc29jaWFsIHNjaWVuY2UpLiANCg0Kd2MxIDwtIHdoaWNoKFYobmV0MSkkZ2VuZGVybnVtPT0xKSANCndjMiA8LSB3aGljaChWKG5ldDEpJGdlbmRlcm51bT09MikgDQpWKG5ldDEpJHNoYXBlW3djMV0gPC0gInJlY3RhbmdsZSINClYobmV0MSkkc2hhcGVbd2MyXSA8LSAiY2lyY2xlIg0KDQpwbG90KG5ldDEsIA0KICAgICB2ZXJ0ZXguY29sb3IgPSBpbl9uZXR3b3JrJHZjb2wsIA0KICAgICB2ZXJ0ZXgubGFiZWwgPSBpZmVsc2UoaW5fbmV0d29yayR0b3RhbF9jaXRlcz49NTAwLCBpbl9uZXR3b3JrJG5hbWUsIE5BKSwNCiAgICAgdmVydGV4LnNpemUgPSBpZmVsc2UoIWlzLm5hKGluX25ldHdvcmskdG90YWxfY2l0ZXMpLCBsb2coaW5fbmV0d29yayR0b3RhbF9jaXRlcyksIDUpLA0KICAgICB2ZXJ0ZXguZnJhbWUuY29sb3IgPSAiZ3JheSIsICNjb2xvciBvZiB0aGUgZnJhbWUgaXMgZ3JleQ0KICAgICB2ZXJ0ZXgubGFiZWwuY29sb3IgPSAiYmxhY2siLCAgI2NvbG9yIG9mIHRoZSBuYW1lcyBpcyBibGFjaw0KICAgICB2ZXJ0ZXgubGFiZWwuZmFtaWx5ID0gIkNhbGlicmkiLCAjbGV0dGVydHlwZSBpcyBjYWxpYnJpDQogICAgIHZlcnRleC5sYWJlbC5jZXggPSAwLjcsICAjc2l6ZSBvZiB0aGUgbGFiZWwNCiAgICAgdmVydGV4LmxhYmVsLmRpc3QgPSAxLCAjZGlzdGFuY2UgYmV0d2VlbiBsYWJlbHMgYW5kIHZlcnRpY2VzDQogICAgIGVkZ2UuY3VydmVkID0gMC4xLCAjdGhlIGN1cnZ5bmVzcyBvZiB0aGUgZWRnZXMNCiAgICAgZWRnZS5hcnJvdy5zaXplID0gMC42KSAjc2l6ZSBvZiB0aGUgYXJyb3dzICANCmBgYA0KDQoNCi0tLS0NCg0KIyBQcmFjdGljaW5nIG1ha2luZyBsb29wcw0KDQoNCmBgYHtyfQ0KIyBDcmVhdGlvbiB2YXJpYWJsZXMgbmV3IGRhdGFzZXQNCmlkIDwtIGMoMSwgMiwgMywgNCwgNSwgNiwgNywgOCwgOSkNCmVnbyA8LSBjKDEsIDMsIDQsIDcsIDEsIDMsIDMsIDcgLCA2KQ0KYWx0ZXIgPC0gYygyLCAyLCAyLCAyLCAzLCA2LCA3LCA3LCA3KQ0KdGllIDwtIGMoMSwgMSwgMSwgMSwgMSwgMSwgMSwgMSwgMSkNCg0KDQoNCmRmIDwtIGRhdGEuZnJhbWUoaWQsIGVnbywgYWx0ZXIsIHRpZSkNCmBgYA0KDQoNCmBgYHtyfQ0KIyBNYWtlIGEgbWF0cml4DQpzbl9tIDwtIG1hdHJpeChkYXRhPTAsIG5yb3cgPSA5LCBuY29sID0gOSkNCg0KYGBgDQoNCg0KYGBge3J9DQojIGJhc2ljIHN0cnVjdHVyZSBvZiBhIGxvb3ANCmZvciAoZWdvIGluIDE6MTApIHsNCiAgZm9yKGFsdGVyIGluIDE6MTApIHsNCiAgICBwcmludChwYXN0ZSgiZWdvOiIsZWdvKSkNCiAgICBwcmludChwYXN0ZSgiYWx0ZXIiLCBhbHRlcikpDQogICAgcHJpbnQocGFzdGUoImVnbythbHRlcjoiLCBlZ28rYWx0ZXIpKQ0KICAgIH0NCn0NCmBgYA0KDQpgYGB7cn0NCmZvciAoaSBpbiAxOjkpIHsNCiAgZWdvIDwtIGRmJGVnb1tpXQ0KICBhbHRlciA8LSBkZiRhbHRlcltpXQ0KICBzbl9tW2VnbywgYWx0ZXJdIDwtIDEgDQp9DQoNCnNuX20NCg0KZGlhZyhzbl9tKSA8LSBOQQ0KDQpkZiRlZ29bNF0NCnNuX21bNCw0XQ0KZGZbNCwgNF0NCmRmWzQsXQ0KDQpgYGANCg0KDQoNCg==</div>
 
 
 </div>
