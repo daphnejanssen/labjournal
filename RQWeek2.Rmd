@@ -41,5 +41,8 @@ Last compiled on `r format(Sys.time(), '%B, %Y')`
 
 <br>
 
-*...?*
+*To what extent is there a difference between men and women at Radboud University in who they work with, within Sociology and Communication science, and Engineering and Computing science?*
+
+*And to what extent does this result in gender inequality in terms of the number of articles published and the number of citations per article, between men and women at Radboud University within Sociology and Communication Studies, and Engineering and Computer Science?*
+
 

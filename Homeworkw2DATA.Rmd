@@ -36,4 +36,35 @@ Last compiled on `r format(Sys.time(), '%B, %Y')`
 
 ----
 
-# Data
+# Data 
+
+**Sample**
+
+The staff of the department of Sociology and the department of Communication Science, representing the social sciences. And the staff of the Computer Science department and the Engineering department, representing the scientific field of STEM.
+
+**Nodes**
+
+The scientists within the aforementioned departments.
+
+**Edges**
+
+The co-authorships of scientists within (1) the departments of social sciences (Sociology and Communication Science) and (2) the departments of STEM (Computer Science and Engineering). 
+
+<br>
+
+**Independent variable**
+
+-	Network structure: *co-authorship connections among men and women* at the diad level within the departments of Sociology and Communication Science, and the departments of Computer Science and Engineering.
+
+**Dependent variable**
+
+-	*Number of published articles*: do men who have connections with other men influence each other by publishing more articles (together) (*influence processes*). This could widen the gap between the prominence of male and female scientists.
+
+-	*Number of citations*: do men who have connections with other men influence each other by both being more often citated (influence processes). This could widen the gap between the prominence of male and female scientists.
+
+**Control variables**
+
+-	*Number of men and women within the departments of Sociology and Communication Science, and the departments of Computer Science and Engineering.*
+
+-	*Number of different topics men and women research within the departments of Sociology and Communication Science, and the departments of Computer Science and Engineering*
+
