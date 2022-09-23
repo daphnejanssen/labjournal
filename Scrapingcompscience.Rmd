@@ -21,7 +21,7 @@ require(rvest)
 require(devtools)
 # Note we're doing something different here. We're installing a *latest* version directly from GitHub
 # This is because the released version of this packages contains some errors!
-devtools::install_github("jkeirstead/scholar") 
+#devtools::install_github("jkeirstead/scholar") 
 
 
 require(scholar)
@@ -36,11 +36,19 @@ require(scholar)
 ```{r}
 # Let's first get the staff page read_html is a function that simply extracts html webpages and
 # puts them in xml format
-comp_staff <- read_html("https://www.ru.nl/icis/about_icis/staff/")
 
+# Bas --> note how i changed the link, the other link needed cookie consent (at least at my mac, so that made it complicated)
+#  I followed the link on the website that just provided the lsit
+comp_staff <- read_html("https://www.cs.ru.nl/staff/index.html?")  
 head(comp_staff)
-
 class(comp_staff)
+
+comp_staff <- comp_staff %>%
+    rvest::html_nodes("body") %>%
+    xml2::xml_find_all("//a") %>% # Bas --> notice this change, if you inspect the page, you see that individual scholars are mentioned at "a" elements of the html
+    rvest::html_text()
+comp_staff
+
 ```
 ```{r}
 comp_staff <- comp_staff %>%
