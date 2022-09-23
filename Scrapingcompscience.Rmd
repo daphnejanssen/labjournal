@@ -50,14 +50,7 @@ comp_staff <- comp_staff %>%
 comp_staff
 
 ```
-```{r}
-comp_staff <- comp_staff %>%
-    rvest::html_nodes("body") %>%
-    xml2::xml_find_all("//td") %>%
-    rvest::html_text()
 
-comp_staff
-```
 
 ```{r}
 fodd <- function(x) {
