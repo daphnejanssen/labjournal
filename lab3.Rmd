@@ -244,7 +244,7 @@ soc_df
 soc_list_profiles <- list()  # first we create an empty list that we then fill up with the for loop
 soc_list_publications <- list()
 
-time <- .1
+time <- 1
 i <- 1
 while (i <= nrow(soc_df)) {
     print(i)
@@ -260,7 +260,9 @@ while (i <= nrow(soc_df)) {
     # scholar ids
     i <- i + 1
     }, 
-      warning = function(w) {print("warning")},
+      warning = function(w) {
+        print("warning")
+        i <<- i + 1},
       error =function(e) {
         time <<- min(time *10, 3600*2)
         cat("Error:", conditionMessage(e), "\n") #warning message
@@ -274,17 +276,25 @@ while (i <= nrow(soc_df)) {
 soc_df_publications <- bind_rows(soc_list_publications)
 ```
 
+```{r}
+save(soc_list_publications)
+```
+
 
 ```{r}
 soc_profiles_df <- list()
 for (i in 1:length(soc_list_profiles)) {
     # soc_profiles_df[[i]] <- data.frame(t(unlist(soc_list_profiles[[i]][1:8]))) #some annyoing
     # data handling
+  
+  
+  if (!is.null(soc_list_profiles[[i]])) {
     soc_profiles_df[[i]] <- unlist(soc_list_profiles[[i]][1:8])
     soc_profiles_df[[i]] <- data.frame(soc_profiles_df[[i]])
     soc_profiles_df[[i]] <- data.frame(t(soc_profiles_df[[i]]))
-
+  }
 }
+
 soc_profiles_df <- bind_rows(soc_profiles_df)
 soc_df <- left_join(soc_df, soc_profiles_df, by = c(gs_id = "id"))  # merge data with soc_df
 soc_df  # notice all the new information we were able to get from the scholar profiles!
@@ -368,7 +378,7 @@ for (i in 1:nrow(soc_df)) {
 
 }
 soc_collabs <- bind_rows(soc_collabs)  # bind rows, get the unique ones!
-soc_collabs_unique <- unique(soc_collabs[, 3])  # so 229 unique collaborators for RU staff?
+soc_collabs_unique <- unique(soc_collabs[, "coauth_id"])  # so 229 unique collaborators for RU staff?
 soc_collabs_unique <- soc_collabs_unique[!is.na(soc_collabs_unique)]
 save(soc_collabs, file = "soc_df_collabs1.RData")  # you notice this takes a while, so we save the data here.
 ```

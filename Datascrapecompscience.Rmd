@@ -34,35 +34,16 @@ require(scholar)
 
 ## Getting “anchor” data 
 ```{r}
-# Let's first get the staff page read_html is a function that simply extracts html webpages and
-# puts them in xml format
-<<<<<<< HEAD
+# Getting the staff page by the function read_html to extract html webpages and put them in xml format
 
-# Bas --> note how i changed the link, the other link needed cookie consent (at least at my mac, so that made it complicated)
-#  I followed the link on the website that just provided the lsit
 comp_staff <- read_html("https://www.cs.ru.nl/staff/index.html?")
-=======
->>>>>>> a8e5372b246a313c4644f130a58d3ed01f3bccda
 
-# Bas --> note how i changed the link, the other link needed cookie consent (at least at my mac, so that made it complicated)
-#  I followed the link on the website that just provided the lsit
-comp_staff <- read_html("https://www.cs.ru.nl/staff/index.html?")  
-head(comp_staff)
-class(comp_staff)
-<<<<<<< HEAD
+
 ```
+
 ```{r}
 
 # Individual scholars are mentioned at "a" elements of the html
-comp_staff <- comp_staff %>%
-    rvest::html_nodes("body") %>%
-    xml2::xml_find_all("//a") %>% 
-    rvest::html_text()
-  
-comp_staff
-
-=======
-
 comp_staff <- comp_staff %>%
     rvest::html_nodes("body") %>%
     xml2::xml_find_all("//a") %>% # Bas --> notice this change, if you inspect the page, you see that individual scholars are mentioned at "a" elements of the html
@@ -92,16 +73,6 @@ comp_names
 
 ------
 
-```{r}
-soc_experts <- soc_staff[!fodd(1:nstaf)]  # in the 1 until 94st number, get the even elements
-head(soc_experts)
-```
-
-```{r}
-soc_df <- data.frame(cbind(soc_names, soc_experts))  
->>>>>>> a8e5372b246a313c4644f130a58d3ed01f3bccda
-```
-
 
 ```{r}
 # Making a dataframe of comp_staff, called comp_df
@@ -118,9 +89,6 @@ delrows <- which(comp_df$comp_staff == "A" | comp_df$comp_staff == "B" | comp_df
 
 comp_df <- comp_df[-delrows, ]
 ```
-
-
--------
 
 ```{r}
 # Making a dataframe of comp_df, called compsc_df
@@ -142,7 +110,6 @@ compsc_df$last_name <- gsub('^.* ([[:alnum:]]+)$', '\\1', compsc_df$comp_names)
 
 # Creating a new variable with the first names of the respondents
 compsc_df$first_name <- str_extract_all(compsc_df$comp_names, "(?<=\\().+?(?=\\))", simplify = TRUE)
-
 ```
 
 ```{r}
