@@ -1,44 +1,4 @@
----
-title: "Journal 3"
-#bibliography: references.bib
-author: "Daphne Janssen"
----
-
-
-
-```{r, globalsettings, echo=FALSE, warning=FALSE, results='hide'}
-library(knitr)
-
-knitr::opts_chunk$set(echo = TRUE)
-opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE, warning = FALSE, message = FALSE,comment = "#>", cache=TRUE, class.source=c("test"), class.output=c("test2"))
-options(width = 100)
-rgl::setupKnitr()
-
-
-
-colorize <- function(x, color) {sprintf("<span style='color: %s;'>%s</span>", color, x) }
-
-```
-
-```{r klippy, echo=FALSE, include=TRUE}
-klippy::klippy(position = c('top', 'right'))
-#klippy::klippy(color = 'darkred')
-#klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
-```
-
-Last compiled on `r Sys.time()`
-
-<!---
-Last compiled on `r format(Sys.time(), '%B, %Y')`
---->
-
-
-<br>
-
-----
-
----
-# Practicing with webscraping
+# Webscraping the staff of the Instititute for Computing and Information Science
 
 <br>
 
@@ -61,7 +21,7 @@ require(rvest)
 require(devtools)
 # Note we're doing something different here. We're installing a *latest* version directly from GitHub
 # This is because the released version of this packages contains some errors!
-devtools::install_github("jkeirstead/scholar") 
+#devtools::install_github("jkeirstead/scholar") 
 
 
 require(scholar)
@@ -76,18 +36,41 @@ require(scholar)
 ```{r}
 # Let's first get the staff page read_html is a function that simply extracts html webpages and
 # puts them in xml format
-soc_staff <- read_html("https://www.ru.nl/sociology/research/staff/")
+<<<<<<< HEAD
 
-head(soc_staff)
+# Bas --> note how i changed the link, the other link needed cookie consent (at least at my mac, so that made it complicated)
+#  I followed the link on the website that just provided the lsit
+comp_staff <- read_html("https://www.cs.ru.nl/staff/index.html?")
+=======
+>>>>>>> a8e5372b246a313c4644f130a58d3ed01f3bccda
 
-class(soc_staff)
+# Bas --> note how i changed the link, the other link needed cookie consent (at least at my mac, so that made it complicated)
+#  I followed the link on the website that just provided the lsit
+comp_staff <- read_html("https://www.cs.ru.nl/staff/index.html?")  
+head(comp_staff)
+class(comp_staff)
+<<<<<<< HEAD
 ```
 ```{r}
-soc_staff <- soc_staff %>%
+
+# Individual scholars are mentioned at "a" elements of the html
+comp_staff <- comp_staff %>%
     rvest::html_nodes("body") %>%
-    xml2::xml_find_all("//td") %>%
+    xml2::xml_find_all("//a") %>% 
     rvest::html_text()
+  
+comp_staff
+
+=======
+
+comp_staff <- comp_staff %>%
+    rvest::html_nodes("body") %>%
+    xml2::xml_find_all("//a") %>% # Bas --> notice this change, if you inspect the page, you see that individual scholars are mentioned at "a" elements of the html
+    rvest::html_text()
+comp_staff
+
 ```
+
 
 ```{r}
 fodd <- function(x) {
@@ -95,17 +78,19 @@ fodd <- function(x) {
  x%%2 != 0 
 }
 
-nstaf <- length(soc_staff)
-nstaf
-fodd(1:nstaf)
+n2staf <- length(soc_staff)
+n2staf
+fodd(1:n2staf)
 
-soc_names <- soc_staff[fodd(1:nstaf)] 
-head(soc_names)
-soc_names
+comp_names <- comp_staff[fodd(1:n2staf)] 
+head(comp_names)
+comp_names
 
-soc_names
+comp_names
 
 ```
+
+------
 
 ```{r}
 soc_experts <- soc_staff[!fodd(1:nstaf)]  # in the 1 until 94st number, get the even elements
@@ -114,47 +99,83 @@ head(soc_experts)
 
 ```{r}
 soc_df <- data.frame(cbind(soc_names, soc_experts))  
+>>>>>>> a8e5372b246a313c4644f130a58d3ed01f3bccda
 ```
 
 
 ```{r}
-# inspect again, and remove the rows we don't need (check for yourself to be certain!)
+# Making a dataframe of comp_staff, called comp_df
+comp_df <- data.frame(comp_staff)
 
-delrows <- which(soc_df$soc_names == "Staff:" | soc_df$soc_names == "PhD:" | soc_df$soc_names == "External PhD:" |
-    soc_df$soc_names == "Guest researchers:" | soc_df$soc_names == "Other researchers:")
+print(comp_df)
 
-soc_df <- soc_df[-delrows, ]
+```
+
+
+```{r}
+# Removing all individual letters of the alphabet.
+delrows <- which(comp_df$comp_staff == "A" | comp_df$comp_staff == "B" | comp_df$comp_staff == "C" | comp_df$comp_staff == "D" | comp_df$comp_staff == "E" | comp_df$comp_staff == "F" |  comp_df$comp_staff == "G" | comp_df$comp_staff == "H" | comp_df$comp_staff == "I" | comp_df$comp_staff == "J" | comp_df$comp_staff == "K" | comp_df$comp_staff == "L" | comp_df$comp_staff == "M" | comp_df$comp_staff == "N" | comp_df$comp_staff == "O" | comp_df$comp_staff == "P" | comp_df$comp_staff == "Q" | comp_df$comp_staff == "R" | comp_df$comp_staff == "S" | comp_df$comp_staff == "T" | comp_df$comp_staff == "U" | comp_df$comp_staff == "V" | comp_df$comp_staff == "W" | comp_df$comp_staff == "X" | comp_df$comp_staff == "Y" | comp_df$comp_staff == "Z")
+
+comp_df <- comp_df[-delrows, ]
+```
+
+
+-------
+
+```{r}
+# Making a dataframe of comp_df, called compsc_df
+compsc_df <- data.frame(comp_df)
+
+# Giving the first (and only column) of comp_df the name 'comp_names'
+colnames(compsc_df)[colnames(compsc_df) == "comp_df"] <- "comp_names"
+
+colnames(compsc_df)
+
 ```
 
 ```{r}
-# Last name seems to be everything before the comma
-soc_df$last_name <- gsub(",.*$", "", soc_df$soc_names)
+# Creating a new variable with the titles of the respondents
+compsc_df$title <- gsub(" .*", "", compsc_df$comp_names)
 
-# first name is everything between brackets
-soc_df$first_name <- str_extract_all(soc_df$soc_names, "(?<=\\().+?(?=\\))", simplify = TRUE)
+# Creating a new variable with the last names of the respondents
+compsc_df$last_name <- gsub('^.* ([[:alnum:]]+)$', '\\1', compsc_df$comp_names)
+
+# Creating a new variable with the first names of the respondents
+compsc_df$first_name <- str_extract_all(compsc_df$comp_names, "(?<=\\().+?(?=\\))", simplify = TRUE)
+
 ```
 
 ```{r}
-soc_df$last_name <- gsub(" J. \\(Jansje\\) van MSc", "", soc_df$last_name)
-soc_df$first_name <- tolower(soc_df$first_name)  # everything to lower!
-soc_df$last_name <- tolower(soc_df$last_name)
+# !!! Trying to change the mistakes in the coding of the last names
+compsc_df$last_name <- gsub('MSc S.\\(Saeid\\)', '', compsc_df$comp_names)
+
+
+# Turning all letters into lowercase letters
+compsc_df$first_name <- tolower(compsc_df$first_name)  # everything to lower!
+compsc_df$last_name <- tolower(compsc_df$last_name)
 ```
 
 ```{r}
 # trimws looses all spacing before and after (if you specify 'both') a character string
-soc_df$last_name <- trimws(soc_df$last_name, which = c("both"), whitespace = "[ \t\r\n]")
-soc_df$first_name <- trimws(soc_df$first_name, which = c("both"), whitespace = "[ \t\r\n]")
-soc_df$soc_experts <- trimws(soc_df$soc_experts, which = c("both"), whitespace = "[ \t\r\n]")
-soc_df$soc_names <- trimws(soc_df$soc_names, which = c("both"), whitespace = "[ \t\r\n]")
+compsc_df$last_name <- trimws(compsc_df$last_name, which = c("both"), whitespace = "[ \t\r\n]")
+
+compsc_df$first_name <- trimws(compsc_df$first_name, which = c("both"), whitespace = "[ \t\r\n]")
+
+compsc_df$comp_names <- trimws(compsc_df$comp_names, which = c("both"), whitespace = "[ \t\r\n]")
 ```
 
 ```{r}
-# set affiliation to radboud, comes in handy for querying google scholar
-soc_df$affiliation <- "radboud university"
+# setting an affiliation to Radboud University
+compsc_df$affiliation <- "radboud university"
 ```
 
 ```{r}
-soc_df
+compsc_df
+```
+
+```{r}
+# Setting an empty identifier
+compsc_df$gs_id <- ""  
 ```
 
 ```{r}
@@ -215,60 +236,54 @@ get_scholar_id_fix <- function (last_name = "", first_name = "", affiliation = N
 ```
 
 
-```{r}
-# Look throught get_scholar_id_fix(last_name, first_name, affiliation) 
-# if we can find google scholar profiles of sociology staff!
-soc_df$gs_id <- ""
 
-for (i in 1:nrow(soc_df)) {
+
+```{r}
+# Getting the google scholar id of all the computing science staff members (by using the following variables: last_name, first_name, affiliation). The gathered information will be put into the new variable get_scholar_id_fix. 
+
+compsc_df$gs_id <- ""
+
+for (i in 1:nrow(compsc_df)) {
   print(i)
   time <- runif(1, 0, 1)
   Sys.sleep(time)
   
   tryCatch({
-     soc_df[i,c("gs_id")] <- get_scholar_id_fix(last_name = soc_df[i, c("last_name")], # so search on last_name of staff (third column)
-                                             first_name = soc_df[i, c("first_name")],  # search on first_name of staff (fourth column)
-                                             affiliation = soc_df[i,c("affiliation")]) # search on affiliation of each staff (fifth column)
-
-    }, error=function(e){cat("ERROR :", conditionMessage(e), "\n")}) # continue on error, but print the error
+     compsc_df[i,c("gs_id")] <- get_scholar_id_fix(last_name = compsc_df[i, c("last_name")], 
+                                             first_name = compsc_df[i, c("first_name")],  
+                                             affiliation = compsc_df[i,c("affiliation")]) 
+    }, error=function(e){cat("ERROR :", conditionMessage(e), "\n")}) 
   }
 
+
 # remove those without pubs from the df
-# seems we're left with about 34 sociology staff members!
-soc_df <- soc_df[!soc_df$gs_id == "", ]
-soc_df
+# seems we're left with about computing science staff members!
+compsc_df <- compsc_df[!compsc_df$gs_id == "", ]
+compsc_df
 ```
+
+
+
+
+
 
 
 ```{r}
 soc_list_profiles <- list()  # first we create an empty list that we then fill up with the for loop
 soc_list_publications <- list()
 
-time <- .1
-i <- 1
-while (i <= nrow(soc_df)) {
+for (i in 1:nrow(soc_df)) {
     print(i)
+    time <- runif(1, 0, 1)
     Sys.sleep(time)
 
-    
-    tryCatch({
-            # note how you call different elements in a list '[[]]', fill in the i-th element
+    # note how you call different elements in a list '[[]]', fill in the i-th element
     soc_list_profiles[[i]] <- get_profile(soc_df[i, c("gs_id")])  # Note how we call row i (remember how to call rows in a DF/Matrix) and then the associated scholar id
     soc_list_publications[[i]] <- get_publications(soc_df[i, c("gs_id")])
     soc_list_publications[[i]][, c("gs_id")] <- soc_df[i, c("gs_id")]  # note that we again attach an id
     # so both functions here call the entire profile and pubs for an author, based on google
     # scholar ids
-    i <- i + 1
-    }, 
-      warning = function(w) {print("warning")},
-      error =function(e) {
-        time <<- min(time *10, 3600*2)
-        cat("Error:", conditionMessage(e), "\n") #warning message
-        cat("sleep time:", time,  "\n")
-        cat("ik zit in loop", i)
-      })
-    
- 
+
 }
 # Notice how fast the data blow up! The 34 RU sociology scholars publish ~3000 papers
 soc_df_publications <- bind_rows(soc_list_publications)
@@ -373,8 +388,6 @@ soc_collabs_unique <- soc_collabs_unique[!is.na(soc_collabs_unique)]
 save(soc_collabs, file = "soc_df_collabs1.RData")  # you notice this takes a while, so we save the data here.
 ```
 
---------------------------------------------------------------------------
-
 ```{r}
 # then the names of those collaborators plus THEIR collaborators understand that we don't have
 # names of them yet from the code above?
@@ -410,5 +423,3 @@ for (i in c("_ukytQYAAAAJ", "lkVq32sAAAAJ", "p3IwtT4AAAAJ")) {
 ## Data exploration
 
 
-
-....
