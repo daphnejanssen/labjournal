@@ -9,10 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="by: Daphne Janssen" />
+<meta name="author" content="Daphne Janssen" />
 
 
-<title>Lab journal</title>
+<title>Journal 4</title>
 
 <script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -74,28 +74,6 @@ if (window.hljs) {
 }
 </style>
 
-<style type="text/css">
-/* for pandoc --citeproc since 2.11 */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
-</style>
 
 <link rel="stylesheet" href="tweaks.css" type="text/css" />
 
@@ -450,8 +428,8 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Lab journal</h1>
-<h4 class="author">by: Daphne Janssen</h4>
+<h1 class="title toc-ignore">Journal 4</h1>
+<h4 class="author">Daphne Janssen</h4>
 
 </div>
 
@@ -460,60 +438,140 @@ div.tocify {
   addClassKlippyTo("pre.r, pre.markdown");
   addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
 </script>
-<hr />
-<div class="columns">
-<div class="column" style="width:50%;">
-<div id="my-lab-journal" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> My Lab Journal</h1>
-<p>Last compiled on 2022-09-30 15:51:56</p>
+<p>Last compiled on 2022-09-30 15:52:02</p>
 <!---
 Last compiled on september, 2022
 --->
-<p>This is the Lab Journal I use during the course Social Networks.</p>
 <p><br></p>
 <hr />
-<div id="repository-snass-course" class="section level2" number="1.1">
-<h2><span class="header-section-number">1.1</span> Repository SNASS
-course</h2>
-<p>Everyone can fork this repository. Use this example to journal your
-lab work and assignments.</p>
-<p>We, Jochem Tolsma and Bas Hofstra, use this repository for our Social
-Network Analysis For Social Scientists course <span
-class="citation">(Tolsma and Hofstra 2022)</span>.</p>
-</div>
-</div>
-</div><div class="column" style="width:50%;">
-<p><img src="images/STEM%20Image3.jpg" /></p>
-<p><img src="images/STEM%20Image.png" /></p>
-</div>
-</div>
 <hr />
-<div id="how-to-use" class="section level2" number="1.2">
-<h2><span class="header-section-number">1.2</span> How to use</h2>
-<ol style="list-style-type: decimal">
-<li><p>Fork the repository for this website and follow instructions on
-<code>README</code> to get started <a
-href="https://github.com/JochemTolsma/labjournal">here</a>.</p></li>
-<li><p>Journal your work, by editing the .Rmd-files</p></li>
-<li><p>…</p></li>
-<li><p>Change everything to make it your own!</p></li>
-</ol>
-<p><br></p>
-<p>Use the top menu to navigate through the journal.</p>
-<hr />
-</div>
-<div id="references" class="section level1 unnumbered">
-<h1 class="unnumbered">References</h1>
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-SNASS" class="csl-entry">
-Tolsma, Jochem, and Bas Hofstra. 2022. <em>Social Network Analysis for
-Social Scientists</em>. <a
-href="https://jtolsma.nl/SNASS/">https://jtolsma.nl/SNASS/</a>.
-</div>
-</div>
+<div id="practicing-with-rsiena" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Practicing with
+RSiena</h1>
+<pre class="r test"><code>#install.packages(&#39;RSiena&#39;)
+library(RSiena)
+friend.data.w1 &lt;- s501
+friend.data.w2 &lt;- s502
+friend.data.w3 &lt;- s503
+drink &lt;- s50a
+smoke &lt;- s50s
+friendship &lt;- sienaDependent(array(c(friend.data.w1, friend.data.w2, friend.data.w3), dim = c(50, 50,
+    3)))
+smoke1 &lt;- coCovar(smoke[, 1])
+alcohol &lt;- varCovar(drink)
+mydata &lt;- sienaDataCreate(friendship, smoke1, alcohol)
+# and request
+mydata</code></pre>
+<pre class="test2"><code>#&gt; Dependent variables:  friendship 
+#&gt; Number of observations: 3 
+#&gt; 
+#&gt; Nodeset                  Actors 
+#&gt; Number of nodes              50 
+#&gt; 
+#&gt; Dependent variable friendship      
+#&gt; Type               oneMode         
+#&gt; Observations       3               
+#&gt; Nodeset            Actors          
+#&gt; Densities          0.046 0.047 0.05
+#&gt; 
+#&gt; Constant covariates:  smoke1 
+#&gt; Changing covariates:  alcohol</code></pre>
+<pre class="r test"><code># to see what you have produced.</code></pre>
+<pre class="r test"><code>myalgorithm &lt;- sienaAlgorithmCreate(projname = &quot;s50_3&quot;)</code></pre>
+<pre class="test2"><code>#&gt; If you use this algorithm object, siena07 will create/use an output file s50_3.txt .</code></pre>
+<pre class="r test"><code>myeff &lt;- getEffects(mydata)
+myeff &lt;- includeEffects(myeff, transTrip, cycle3)</code></pre>
+<pre class="test2"><code>#&gt;   effectName          include fix   test  initialValue parm
+#&gt; 1 transitive triplets TRUE    FALSE FALSE          0   0   
+#&gt; 2 3-cycles            TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, egoX, altX, egoXaltX, interaction1 = &quot;alcohol&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName                  include fix   test  initialValue parm
+#&gt; 1 alcohol alter               TRUE    FALSE FALSE          0   0   
+#&gt; 2 alcohol ego                 TRUE    FALSE FALSE          0   0   
+#&gt; 3 alcohol ego x alcohol alter TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, simX, interaction1 = &quot;smoke1&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName        include fix   test  initialValue parm
+#&gt; 1 smoke1 similarity TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code>myeff</code></pre>
+<pre class="test2"><code>#&gt;    effectName                          include fix   test  initialValue parm
+#&gt; 1  constant friendship rate (period 1) TRUE    FALSE FALSE    4.69604   0   
+#&gt; 2  constant friendship rate (period 2) TRUE    FALSE FALSE    4.32885   0   
+#&gt; 3  outdegree (density)                 TRUE    FALSE FALSE   -1.46770   0   
+#&gt; 4  reciprocity                         TRUE    FALSE FALSE    0.00000   0   
+#&gt; 5  transitive triplets                 TRUE    FALSE FALSE    0.00000   0   
+#&gt; 6  3-cycles                            TRUE    FALSE FALSE    0.00000   0   
+#&gt; 7  smoke1 similarity                   TRUE    FALSE FALSE    0.00000   0   
+#&gt; 8  alcohol alter                       TRUE    FALSE FALSE    0.00000   0   
+#&gt; 9  alcohol ego                         TRUE    FALSE FALSE    0.00000   0   
+#&gt; 10 alcohol ego x alcohol alter         TRUE    FALSE FALSE    0.00000   0</code></pre>
+<pre class="r test"><code>ans &lt;- siena07(myalgorithm, data = mydata, effects = myeff)</code></pre>
+<pre class="r test"><code>summary(ans)</code></pre>
+<pre class="test2"><code>#&gt; Estimates, standard errors and convergence t-ratios
+#&gt; 
+#&gt;                                        Estimate   Standard   Convergence 
+#&gt;                                                     Error      t-ratio   
+#&gt; 
+#&gt; Rate parameters: 
+#&gt;   0.1      Rate parameter period 1      6.5436  ( 1.0346   )             
+#&gt;   0.2      Rate parameter period 2      5.2028  ( 0.8518   )             
+#&gt; 
+#&gt; Other parameters: 
+#&gt;   1.  eval outdegree (density)         -2.7187  ( 0.1257   )   0.0426    
+#&gt;   2.  eval reciprocity                  2.4236  ( 0.2173   )   0.0183    
+#&gt;   3.  eval transitive triplets          0.6482  ( 0.1444   )   0.0469    
+#&gt;   4.  eval 3-cycles                    -0.0847  ( 0.2725   )   0.0514    
+#&gt;   5.  eval smoke1 similarity            0.2544  ( 0.2106   )   0.0178    
+#&gt;   6.  eval alcohol alter               -0.0224  ( 0.0655   )   0.0322    
+#&gt;   7.  eval alcohol ego                  0.0373  ( 0.0702   )   0.0470    
+#&gt;   8.  eval alcohol ego x alcohol alter  0.1278  ( 0.0497   )   0.0218    
+#&gt; 
+#&gt; Overall maximum convergence ratio:    0.1207 
+#&gt; 
+#&gt; 
+#&gt; Total of 2204 iteration steps.
+#&gt; 
+#&gt; Covariance matrix of estimates (correlations below diagonal)
+#&gt; 
+#&gt;        0.016       -0.018       -0.009        0.011       -0.002        0.000        0.000        0.000
+#&gt;       -0.662        0.047        0.010       -0.025       -0.001        0.000        0.001       -0.001
+#&gt;       -0.482        0.303        0.021       -0.034        0.000        0.000       -0.002       -0.001
+#&gt;        0.328       -0.427       -0.857        0.074       -0.002        0.000        0.002        0.001
+#&gt;       -0.067       -0.024       -0.012       -0.027        0.044        0.003        0.004       -0.001
+#&gt;        0.055       -0.021       -0.044       -0.022        0.241        0.004       -0.001        0.000
+#&gt;        0.034        0.048       -0.181        0.116        0.247       -0.284        0.005       -0.001
+#&gt;       -0.075       -0.057       -0.109        0.087       -0.090       -0.068       -0.157        0.002
+#&gt; 
+#&gt; Derivative matrix of expected statistics X by parameters:
+#&gt; 
+#&gt;      295.468      232.583      487.012      151.858       25.282       23.739       32.966      142.176
+#&gt;      137.601      146.643      270.700       89.577       13.917       12.587        9.099       68.463
+#&gt;      364.076      325.929     1169.926      373.375       28.739       97.575      101.499      210.879
+#&gt;      166.695      162.152      556.687      187.815       16.205       34.923       29.252       85.205
+#&gt;       28.408       24.806       52.268       16.146       35.992      -48.058      -42.052        9.839
+#&gt;       34.508       36.574      167.820       57.203      -44.611      366.393      236.393       86.037
+#&gt;       47.587       34.222      180.580       56.593      -40.440      236.221      343.475      119.730
+#&gt;      152.533      138.730      369.359      117.047       11.043      102.804      118.185      591.166
+#&gt; 
+#&gt; Covariance matrix of X (correlations below diagonal):
+#&gt; 
+#&gt;      485.394      417.955     1139.843      363.468       47.211       89.180      105.759      264.274
+#&gt;        0.930      416.120     1095.835      356.485       42.866       88.022       88.986      246.330
+#&gt;        0.807        0.838     4111.861     1331.219      113.661      332.471      336.214      716.313
+#&gt;        0.789        0.836        0.993      437.166       36.136      108.815      105.686      228.563
+#&gt;        0.315        0.309        0.260        0.254       46.347      -67.903      -58.528       16.923
+#&gt;        0.183        0.195        0.234        0.235       -0.450      490.995      395.252      173.115
+#&gt;        0.223        0.203        0.243        0.235       -0.399        0.828      463.852      195.286
+#&gt;        0.434        0.437        0.404        0.395        0.090        0.283        0.328      764.065</code></pre>
+<pre class="r test"><code>myeff &lt;- setEffect(myeff, inPopSqrt, fix = TRUE, test = TRUE, initialValue = 0)</code></pre>
+<pre class="test2"><code>#&gt;   effectName                   include fix  test initialValue parm
+#&gt; 1 indegree - popularity (sqrt) TRUE    TRUE TRUE          0   0</code></pre>
+<pre class="r test"><code>myeff &lt;- setEffect(myeff, inPopSqrt, fix = FALSE, test = TRUE, initialValue = 0)</code></pre>
+<pre class="test2"><code>#&gt;   effectName                   include fix   test initialValue parm
+#&gt; 1 indegree - popularity (sqrt) TRUE    FALSE TRUE          0   0</code></pre>
+<pre class="r test"><code>ans &lt;- siena07(myalgorithm, data = mydata, effects = myeff)</code></pre>
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkxhYiBqb3VybmFsIg0KYXV0aG9yOiAiYnk6IERhcGhuZSBKYW5zc2VuIg0KYmlibGlvZ3JhcGh5OiByZWZlcmVuY2VzLmJpYg0KDQogDQotLS0NCg0KDQpgYGB7ciwgaW5zdGFsbCByZW1vdGVseSwgZ2xvYmFsc2V0dGluZ3MsIGVjaG89RkFMU0UsIHdhcm5pbmc9RkFMU0UsIHJlc3VsdHM9J2hpZGUnLCBldmFsPUZBTFNFfQ0KI2luc3RhbGwucGFja2FnZXMoInJlbW90ZXMiKQ0KI3JlbW90ZXM6Omluc3RhbGxfZ2l0aHViKCJybGVzdXIva2xpcHB5IikNCmBgYCANCg0KYGBge3IsIGdsb2JhbHNldHRpbmdzLCBlY2hvPUZBTFNFLCB3YXJuaW5nPUZBTFNFLCByZXN1bHRzPSdoaWRlJ30NCmxpYnJhcnkoa25pdHIpDQoNCmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkNCm9wdHNfY2h1bmskc2V0KHRpZHkub3B0cz1saXN0KHdpZHRoLmN1dG9mZj0xMDApLHRpZHk9VFJVRSwgd2FybmluZyA9IEZBTFNFLCBtZXNzYWdlID0gRkFMU0UsY29tbWVudCA9ICIjPiIsIGNhY2hlPVRSVUUsIGNsYXNzLnNvdXJjZT1jKCJ0ZXN0IiksIGNsYXNzLm91dHB1dD1jKCJ0ZXN0MiIpKQ0Kb3B0aW9ucyh3aWR0aCA9IDEwMCkNCnJnbDo6c2V0dXBLbml0cigpDQoNCg0KDQpjb2xvcml6ZSA8LSBmdW5jdGlvbih4LCBjb2xvcikge3NwcmludGYoIjxzcGFuIHN0eWxlPSdjb2xvcjogJXM7Jz4lczwvc3Bhbj4iLCBjb2xvciwgeCkgfQ0KDQpgYGANCg0KYGBge3Iga2xpcHB5LCBlY2hvPUZBTFNFLCBpbmNsdWRlPVRSVUV9DQprbGlwcHk6OmtsaXBweShwb3NpdGlvbiA9IGMoJ3RvcCcsICdyaWdodCcpKQ0KI2tsaXBweTo6a2xpcHB5KGNvbG9yID0gJ2RhcmtyZWQnKQ0KI2tsaXBweTo6a2xpcHB5KHRvb2x0aXBfbWVzc2FnZSA9ICdDbGljayB0byBjb3B5JywgdG9vbHRpcF9zdWNjZXNzID0gJ0RvbmUnKQ0KYGBgDQoNCg0KDQoNCi0tLS0NCg0KOjo6Ojo6Ojo6Ojo6Ojogey5jb2x1bW5zfQ0KOjo6IHsuY29sdW1uIHdpZHRoPSI1MCUifQ0KDQojIE15IExhYiBKb3VybmFsDQpMYXN0IGNvbXBpbGVkIG9uIGByIFN5cy50aW1lKClgDQoNCjwhLS0tDQpMYXN0IGNvbXBpbGVkIG9uIGByIGZvcm1hdChTeXMudGltZSgpLCAnJUIsICVZJylgDQotLS0+DQoNClRoaXMgaXMgdGhlIExhYiBKb3VybmFsIEkgdXNlIGR1cmluZyB0aGUgY291cnNlIFNvY2lhbCBOZXR3b3Jrcy4gDQoNCjxicj4NCg0KLS0tLQ0KDQojIyBSZXBvc2l0b3J5IFNOQVNTIGNvdXJzZSANCg0KRXZlcnlvbmUgY2FuIGZvcmsgdGhpcyByZXBvc2l0b3J5LiBVc2UgdGhpcyBleGFtcGxlIHRvIGpvdXJuYWwgeW91ciBsYWIgd29yayBhbmQgYXNzaWdubWVudHMuIA0KDQpXZSwgSm9jaGVtIFRvbHNtYSBhbmQgQmFzIEhvZnN0cmEsIHVzZSB0aGlzIHJlcG9zaXRvcnkgZm9yIG91ciBTb2NpYWwgTmV0d29yayBBbmFseXNpcyBGb3IgU29jaWFsIFNjaWVudGlzdHMgY291cnNlIFtAU05BU1NdLiANCg0KDQo6OjoNCjo6OiB7LmNvbHVtbiB3aWR0aD0iNTAlIn0NCg0KDQohW10oaW1hZ2VzL1NURU0gSW1hZ2UzLmpwZykNCg0KDQohW10oaW1hZ2VzL1NURU0gSW1hZ2UucG5nKQ0KDQoNCg0KOjo6DQo6Ojo6Ojo6Ojo6Ojo6Og0KDQoNCi0tLS0NCg0KIyMgSG93IHRvIHVzZQ0KDQoxLiBGb3JrIHRoZSByZXBvc2l0b3J5IGZvciB0aGlzIHdlYnNpdGUgYW5kIGZvbGxvdyBpbnN0cnVjdGlvbnMgb24gYFJFQURNRWAgdG8gZ2V0IHN0YXJ0ZWQgW2hlcmVdKGh0dHBzOi8vZ2l0aHViLmNvbS9Kb2NoZW1Ub2xzbWEvbGFiam91cm5hbCkuICANCg0KMi4gSm91cm5hbCB5b3VyIHdvcmssIGJ5IGVkaXRpbmcgdGhlIC5SbWQtZmlsZXMNCg0KMy4gLi4uDQoNCjQuIENoYW5nZSBldmVyeXRoaW5nIHRvIG1ha2UgaXQgeW91ciBvd24hDQoNCg0KPGJyPg0KDQpVc2UgdGhlIHRvcCBtZW51IHRvIG5hdmlnYXRlIHRocm91Z2ggdGhlIGpvdXJuYWwuDQoNCg0KLS0tLQ0KDQojIFJlZmVyZW5jZXMNCg0KDQoNCg0K</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkpvdXJuYWwgNCINCiNiaWJsaW9ncmFwaHk6IHJlZmVyZW5jZXMuYmliDQphdXRob3I6ICJEYXBobmUgSmFuc3NlbiINCi0tLQ0KDQoNCg0KYGBge3IsIGdsb2JhbHNldHRpbmdzLCBlY2hvPUZBTFNFLCB3YXJuaW5nPUZBTFNFLCByZXN1bHRzPSdoaWRlJ30NCmxpYnJhcnkoa25pdHIpDQoNCmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkNCm9wdHNfY2h1bmskc2V0KHRpZHkub3B0cz1saXN0KHdpZHRoLmN1dG9mZj0xMDApLHRpZHk9VFJVRSwgd2FybmluZyA9IEZBTFNFLCBtZXNzYWdlID0gRkFMU0UsY29tbWVudCA9ICIjPiIsIGNhY2hlPVRSVUUsIGNsYXNzLnNvdXJjZT1jKCJ0ZXN0IiksIGNsYXNzLm91dHB1dD1jKCJ0ZXN0MiIpKQ0Kb3B0aW9ucyh3aWR0aCA9IDEwMCkNCnJnbDo6c2V0dXBLbml0cigpDQoNCg0KDQpjb2xvcml6ZSA8LSBmdW5jdGlvbih4LCBjb2xvcikge3NwcmludGYoIjxzcGFuIHN0eWxlPSdjb2xvcjogJXM7Jz4lczwvc3Bhbj4iLCBjb2xvciwgeCkgfQ0KDQpgYGANCg0KYGBge3Iga2xpcHB5LCBlY2hvPUZBTFNFLCBpbmNsdWRlPVRSVUV9DQprbGlwcHk6OmtsaXBweShwb3NpdGlvbiA9IGMoJ3RvcCcsICdyaWdodCcpKQ0KI2tsaXBweTo6a2xpcHB5KGNvbG9yID0gJ2RhcmtyZWQnKQ0KI2tsaXBweTo6a2xpcHB5KHRvb2x0aXBfbWVzc2FnZSA9ICdDbGljayB0byBjb3B5JywgdG9vbHRpcF9zdWNjZXNzID0gJ0RvbmUnKQ0KYGBgDQoNCkxhc3QgY29tcGlsZWQgb24gYHIgU3lzLnRpbWUoKWANCg0KPCEtLS0NCkxhc3QgY29tcGlsZWQgb24gYHIgZm9ybWF0KFN5cy50aW1lKCksICclQiwgJVknKWANCi0tLT4NCg0KDQo8YnI+DQoNCi0tLS0NCg0KLS0tDQojIFByYWN0aWNpbmcgd2l0aCBSU2llbmENCg0KYGBge3J9DQojaW5zdGFsbC5wYWNrYWdlcygnUlNpZW5hJykNCmxpYnJhcnkoUlNpZW5hKQ0KZnJpZW5kLmRhdGEudzEgPC0gczUwMQ0KZnJpZW5kLmRhdGEudzIgPC0gczUwMg0KZnJpZW5kLmRhdGEudzMgPC0gczUwMw0KZHJpbmsgPC0gczUwYQ0Kc21va2UgPC0gczUwcw0KZnJpZW5kc2hpcCA8LSBzaWVuYURlcGVuZGVudChhcnJheShjKGZyaWVuZC5kYXRhLncxLCBmcmllbmQuZGF0YS53MiwgZnJpZW5kLmRhdGEudzMpLCBkaW0gPSBjKDUwLCA1MCwNCiAgICAzKSkpDQpzbW9rZTEgPC0gY29Db3ZhcihzbW9rZVssIDFdKQ0KYWxjb2hvbCA8LSB2YXJDb3ZhcihkcmluaykNCm15ZGF0YSA8LSBzaWVuYURhdGFDcmVhdGUoZnJpZW5kc2hpcCwgc21va2UxLCBhbGNvaG9sKQ0KIyBhbmQgcmVxdWVzdA0KbXlkYXRhDQojIHRvIHNlZSB3aGF0IHlvdSBoYXZlIHByb2R1Y2VkLg0KYGBgDQoNCmBgYHtyfQ0KbXlhbGdvcml0aG0gPC0gc2llbmFBbGdvcml0aG1DcmVhdGUocHJvam5hbWUgPSAiczUwXzMiKQ0KYGBgDQpgYGB7cn0NCm15ZWZmIDwtIGdldEVmZmVjdHMobXlkYXRhKQ0KbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIHRyYW5zVHJpcCwgY3ljbGUzKQ0KbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIGVnb1gsIGFsdFgsIGVnb1hhbHRYLCBpbnRlcmFjdGlvbjEgPSAiYWxjb2hvbCIpDQpteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgc2ltWCwgaW50ZXJhY3Rpb24xID0gInNtb2tlMSIpDQpteWVmZg0KYGBgDQoNCmBgYHtyfQ0KYW5zIDwtIHNpZW5hMDcobXlhbGdvcml0aG0sIGRhdGEgPSBteWRhdGEsIGVmZmVjdHMgPSBteWVmZikNCmBgYA0KDQpgYGB7cn0NCnN1bW1hcnkoYW5zKQ0KYGBgDQoNCmBgYHtyfQ0KbXllZmYgPC0gc2V0RWZmZWN0KG15ZWZmLCBpblBvcFNxcnQsIGZpeCA9IFRSVUUsIHRlc3QgPSBUUlVFLCBpbml0aWFsVmFsdWUgPSAwKQ0KYGBgDQoNCmBgYHtyfQ0KbXllZmYgPC0gc2V0RWZmZWN0KG15ZWZmLCBpblBvcFNxcnQsIGZpeCA9IEZBTFNFLCB0ZXN0ID0gVFJVRSwgaW5pdGlhbFZhbHVlID0gMCkNCg0KYGBgDQoNCmBgYHtyfQ0KYW5zIDwtIHNpZW5hMDcobXlhbGdvcml0aG0sIGRhdGEgPSBteWRhdGEsIGVmZmVjdHMgPSBteWVmZikNCg0KYGBgDQoNCg==</div>
 
 
 </div>
@@ -551,7 +609,7 @@ $(document).ready(function () {
 <!-- code folding -->
 <script>
 $(document).ready(function () {
-  window.initializeSourceEmbed("index.Rmd");
+  window.initializeSourceEmbed("lab4.Rmd");
   window.initializeCodeFolding("show" === "show");
 });
 </script>

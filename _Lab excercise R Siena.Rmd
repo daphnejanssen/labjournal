@@ -1,101 +1,5 @@
----
-title: "Journal 4"
-#bibliography: references.bib
-author: "Daphne Janssen"
----
 
-
-
-```{r, globalsettings, echo=FALSE, warning=FALSE, results='hide'}
-library(knitr)
-
-knitr::opts_chunk$set(echo = TRUE)
-opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE, warning = FALSE, message = FALSE,comment = "#>", cache=TRUE, class.source=c("test"), class.output=c("test2"))
-options(width = 100)
-rgl::setupKnitr()
-
-
-
-colorize <- function(x, color) {sprintf("<span style='color: %s;'>%s</span>", color, x) }
-
-```
-
-```{r klippy, echo=FALSE, include=TRUE}
-klippy::klippy(position = c('top', 'right'))
-#klippy::klippy(color = 'darkred')
-#klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
-```
-
-Last compiled on `r Sys.time()`
-
-<!---
-Last compiled on `r format(Sys.time(), '%B, %Y')`
---->
-
-
-<br>
-
-----
-
----
-# Practicing with RSiena
-
-## During-class practice
-```{r}
-#install.packages('RSiena')
-library(RSiena)
-friend.data.w1 <- s501
-friend.data.w2 <- s502
-friend.data.w3 <- s503
-drink <- s50a
-smoke <- s50s
-friendship <- sienaDependent(array(c(friend.data.w1, friend.data.w2, friend.data.w3), dim = c(50, 50,
-    3)))
-smoke1 <- coCovar(smoke[, 1])
-alcohol <- varCovar(drink)
-mydata <- sienaDataCreate(friendship, smoke1, alcohol)
-# and request
-mydata
-# to see what you have produced.
-```
-
-```{r}
-myalgorithm <- sienaAlgorithmCreate(projname = "s50_3")
-```
-```{r}
-myeff <- getEffects(mydata)
-myeff <- includeEffects(myeff, transTrip, cycle3)
-myeff <- includeEffects(myeff, egoX, altX, egoXaltX, interaction1 = "alcohol")
-myeff <- includeEffects(myeff, simX, interaction1 = "smoke1")
-myeff
-```
-
-```{r}
-ans <- siena07(myalgorithm, data = mydata, effects = myeff)
-```
-
-```{r}
-summary(ans)
-```
-
-```{r}
-myeff <- setEffect(myeff, inPopSqrt, fix = TRUE, test = TRUE, initialValue = 0)
-```
-
-```{r}
-myeff <- setEffect(myeff, inPopSqrt, fix = FALSE, test = TRUE, initialValue = 0)
-
-```
-
-```{r}
-ans <- siena07(myalgorithm, data = mydata, effects = myeff)
-
-```
-
-<br>
-
-
-## Lab excercise R Siena 
+# Lab excercise R Siena 
 
 ```{r}
 install.packages("installr")  #you  first install packages
@@ -220,7 +124,7 @@ mydata <- twitter_20190919[[2]]
 seats <- twitter_20190919[[3]]
 ```
 
-### Research Question 1 
+## Research Question 1 
 
 ```{r}
 # retrieve nominationdata from rsiena object
@@ -390,11 +294,9 @@ ansM1c <- siena07(myalgorithm, data = mydata, prevAns = ansM1b, effects = myeff_
 save(ansM1, file = "ansM1a.RData")
 save(ansM1b, file = "ansM1b.RData")
 save(ansM1c, file = "ansM1c.RData")
-
-# The estimate of the retweats within the same party is positive compared to the estimate of the retweats between different parties. So, there is segregation along party affiliation in the retweet network among Dutch MPs.
 ```
 
-### Research Question 2
+## Research Question 2
 
 ```{r, eval=FALSE}
 myeff_m2 <- myeff
@@ -410,11 +312,9 @@ save(ansM2, file = "ansM2.RData")
 load("ansM2.RData")
 
 ansM2
-
-# I have not (yet) succeeded in estimating the right model. 
 ```
 
-### Research Question 3
+## Research Question 3
 
 ```{r, eval=FALSE}
 myeff_m3 <- myeff
@@ -430,10 +330,5 @@ save(ansM3, file = "ansM3.RData")
 load("ansM3.RData")
 
 ansM3
-
-# I have not (yet) succeeded in estimating the right model. 
 ```
-
-
-
 

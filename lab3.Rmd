@@ -38,7 +38,7 @@ Last compiled on `r format(Sys.time(), '%B, %Y')`
 ----
 
 ---
-# Practicing with webscraping
+# Practicing with webscraping Social science faculty RU
 
 <br>
 
@@ -103,8 +103,6 @@ soc_names <- soc_staff[fodd(1:nstaf)]
 head(soc_names)
 soc_names
 
-soc_names
-
 ```
 
 ```{r}
@@ -153,11 +151,12 @@ soc_df$soc_names <- trimws(soc_df$soc_names, which = c("both"), whitespace = "[ 
 soc_df$affiliation <- "radboud university"
 ```
 
-```{r}
-soc_df
-```
+<br>
 
-```{r}
+
+## Google Scholar Profiles and Publications
+
+```{r, eval=FALSE}
 #require(scholar)
 
 get_scholar_id_fix <- function (last_name = "", first_name = "", affiliation = NA)
@@ -214,8 +213,8 @@ get_scholar_id_fix <- function (last_name = "", first_name = "", affiliation = N
 }
 ```
 
+```{r, eval=FALSE}
 
-```{r}
 # Look throught get_scholar_id_fix(last_name, first_name, affiliation) 
 # if we can find google scholar profiles of sociology staff!
 soc_df$gs_id <- ""
@@ -239,8 +238,7 @@ soc_df <- soc_df[!soc_df$gs_id == "", ]
 soc_df
 ```
 
-
-```{r}
+```{r, eval=FALSE}
 soc_list_profiles <- list()  # first we create an empty list that we then fill up with the for loop
 soc_list_publications <- list()
 
@@ -276,12 +274,11 @@ while (i <= nrow(soc_df)) {
 soc_df_publications <- bind_rows(soc_list_publications)
 ```
 
-```{r}
+```{r, eval=FALSE}
 save(soc_list_publications)
 ```
 
-
-```{r}
+```{r, eval=FALSE}
 soc_profiles_df <- list()
 for (i in 1:length(soc_list_profiles)) {
     # soc_profiles_df[[i]] <- data.frame(t(unlist(soc_list_profiles[[i]][1:8]))) #some annyoing
@@ -300,7 +297,7 @@ soc_df <- left_join(soc_df, soc_profiles_df, by = c(gs_id = "id"))  # merge data
 soc_df  # notice all the new information we were able to get from the scholar profiles!
 ```
 
-```{r}
+```{r, eval=FALSE}
 # get citation history of a scholar
 soc_staff_cit <- list()
 for (i in 1:nrow(soc_df)) {
@@ -317,9 +314,10 @@ colnames(soc_staff_cit)[3] <- "gs_id"
 
 <br>
 
+
 ## Getting collaborators
 
-```{r}
+```{r, eval=FALSE}
 require(xml2)
 require(tidyverse)
 
@@ -364,7 +362,7 @@ fcollabs <- function(gsid, lookforcollabs) {
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 # first the soc collaborators note how we already build a function (fcollabs()) for you you need to
 # input a google scholar id and a 1 (if you want to find collabs) or 0 (only extracting names)
 # fcollabs --> you can check it out if you're interested
@@ -383,9 +381,7 @@ soc_collabs_unique <- soc_collabs_unique[!is.na(soc_collabs_unique)]
 save(soc_collabs, file = "soc_df_collabs1.RData")  # you notice this takes a while, so we save the data here.
 ```
 
---------------------------------------------------------------------------
-
-```{r}
+```{r, eval=FALSE}
 # then the names of those collaborators plus THEIR collaborators understand that we don't have
 # names of them yet from the code above?
 collabs_1deep <- list()
@@ -405,8 +401,8 @@ collabs_1deep_unique <- collabs_1deep_unique[!is.na(collabs_1deep_unique)]
 save(collabs_1deep, file = "soc_collabs2.RData")  # you notice this takes a while, so we save the data here.
 ```
 
-```{r}
-for (i in c("_ukytQYAAAAJ", "lkVq32sAAAAJ", "p3IwtT4AAAAJ")) {
+```{r, eval=FALSE}
+# for (i in c("_ukytQYAAAAJ", "lkVq32sAAAAJ", "p3IwtT4AAAAJ")) {
     # drop google scholar ids that look suspiciously productive
     soc_df <- soc_df[!soc_df$gs_id == i, ]
     soc_df_publications <- soc_df_publications[!(soc_df_publications$gs_id == i), ]
@@ -414,11 +410,3 @@ for (i in c("_ukytQYAAAAJ", "lkVq32sAAAAJ", "p3IwtT4AAAAJ")) {
     soc_collabs <- soc_collabs[!(soc_collabs$gs_id == i), ]
 }
 ```
-
-<br>
-
-## Data exploration
-
-
-
-....

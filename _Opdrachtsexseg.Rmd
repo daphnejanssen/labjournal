@@ -1,0 +1,79 @@
+
+# Loading data
+
+```{r}
+rm(list=ls())
+alcohol <- read.table("klas03e-alcohol.dat")
+delinquency <- read.table("klas03e-delinquency.dat")
+primary <- read.table("klas03e-primary.dat")
+demographics <- read.table("klas03e-demographics.dat")
+waveA <- read.table("klas03e-friends-waveA.dat")
+waveB <- read.table("klas03e-friends-waveB.dat")
+waveC <- read.table("klas03e-friends-waveC.dat")
+waveD <- read.table("klas03e-friends-waveD.dat")
+```
+
+```{r}
+
+w=4
+n=nrow(waveA)
+library(RSiena)
+
+waveA <- as.matrix(waveA)
+waveB <- as.matrix(waveB)
+waveC <- as.matrix(waveC)
+waveD <- as.matrix(waveD)
+
+?array
+f_array <- array(c(waveA, waveB, waveC, waveD), dim=c(25,25,4))
+friendship <- sienaDependent(f_array)
+
+
+p_array <- array(c(primary), dim=c(25,25,1))
+friendship <- sienaDependent(p_array)
+
+?coCovar
+
+smoke1 <- coCovar(smoke[, 1])
+alcohol <- varCovar(drink)
+
+mydata <- sienaDataCreate(friendship, smoke1, alcohol)
+
+print01Report(alcohol, modelname = "Siena", getDocumentation=FALSE)
+
+```
+
+```{r}
+### Step 1: define data
+
+# define RSiena data structures
+friendship <- sienaDependent(array(c(waveA, waveB, waveC, waveD), dim = c(50, 50,
+    3)))
+smoke1 <- coCovar(smoke[, 1])
+alcohol <- varCovar(drink)
+mydata <- sienaDataCreate(friendship, smoke1, alcohol)
+
+### Step 2: create effects structure
+myeff <- getEffects(mydata)
+
+### Step 3: get initial description
+print01Report(mydata, modelname = "s50_3_init")
+
+### Step4: specify model
+myeff <- includeEffects(myeff, transTrip, cycle3)
+myeff <- includeEffects(myeff, egoX, altX, egoXaltX, interaction1 = "alcohol")
+myeff <- includeEffects(myeff, simX, interaction1 = "smoke1")
+
+### Step5 estimate
+myAlgorithm <- sienaAlgorithmCreate(projname = "s50_3")
+(ans <- siena07(myAlgorithm, data = mydata, effects = myeff))
+# (the outer parentheses lead to printing the obtained result on the screen) if necessary, estimate
+# further
+(ans <- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans))
+
+
+
+
+unconditional method of moments estimation
+```
+
