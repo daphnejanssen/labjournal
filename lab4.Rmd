@@ -40,8 +40,12 @@ Last compiled on `r format(Sys.time(), '%B, %Y')`
 ---
 # Practicing with RSiena
 
+<br>
+
 ## During-class practice
 ```{r}
+# install.packages('formatR')
+
 #install.packages('RSiena')
 library(RSiena)
 friend.data.w1 <- s501
@@ -70,7 +74,7 @@ myeff <- includeEffects(myeff, simX, interaction1 = "smoke1")
 myeff
 ```
 
-```{r}
+```{r, eval=FALSE}
 ans <- siena07(myalgorithm, data = mydata, effects = myeff)
 ```
 
@@ -87,7 +91,7 @@ myeff <- setEffect(myeff, inPopSqrt, fix = FALSE, test = TRUE, initialValue = 0)
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 ans <- siena07(myalgorithm, data = mydata, effects = myeff)
 
 ```
@@ -98,9 +102,9 @@ ans <- siena07(myalgorithm, data = mydata, effects = myeff)
 ## Lab excercise R Siena 
 
 ```{r}
-install.packages("installr")  #you  first install packages
+#install.packages("installr")  #you  first install packages
 require(installr)  #then you will need to activate packages. 
-updateR()  #run the function to start the update process
+#updateR()  #run the function to start the update process
 ```
 
 ```{r}
@@ -213,16 +217,17 @@ fscolnet <- function(network, ccovar) {
 
 ```{r}
 getwd()
-load("twitter_20190919.RData")  #change to your working directory
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\twitter_20190919.Rdata") 
 str(twitter_20190919, 1)
 keyf <- twitter_20190919[[1]]
 mydata <- twitter_20190919[[2]]
 seats <- twitter_20190919[[3]]
 ```
+<br>
 
 ### Research Question 1 
 
-```{r}
+```{r, eval=FALSE}
 # retrieve nominationdata from rsiena object
 fnet <- mydata$depvars$fnet
 atmnet <- mydata$depvars$atmnet
@@ -374,7 +379,7 @@ myeff_m1 <- myeff
 myeff_m1 <- includeEffects(myeff_m1, sameX, interaction1 = "partij", name = "rtnet")
 ```
 
-```{r}
+```{r, eval=FALSE}
 # I used a seed so you will probably see the same results
 myalgorithm <- sienaAlgorithmCreate(projname = "test", seed = 345654)
 ```
@@ -393,6 +398,8 @@ save(ansM1c, file = "ansM1c.RData")
 
 # The estimate of the retweats within the same party is positive compared to the estimate of the retweats between different parties. So, there is segregation along party affiliation in the retweet network among Dutch MPs.
 ```
+
+<br>
 
 ### Research Question 2
 
@@ -413,6 +420,8 @@ ansM2
 
 # I have not (yet) succeeded in estimating the right model. 
 ```
+
+<br>
 
 ### Research Question 3
 

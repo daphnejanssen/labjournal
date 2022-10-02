@@ -438,9 +438,9 @@ div.tocify {
   addClassKlippyTo("pre.r, pre.markdown");
   addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
 </script>
-<p>Last compiled on 2022-09-30 15:52:02</p>
+<p>Last compiled on 2022-10-02 17:23:44</p>
 <!---
-Last compiled on september, 2022
+Last compiled on oktober, 2022
 --->
 <p><br></p>
 <hr />
@@ -448,7 +448,12 @@ Last compiled on september, 2022
 <div id="practicing-with-rsiena" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Practicing with
 RSiena</h1>
-<pre class="r test"><code>#install.packages(&#39;RSiena&#39;)
+<div id="during-class-practice" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> During-class
+practice</h2>
+<pre class="r test"><code># install.packages(&#39;formatR&#39;)
+
+# install.packages(&#39;RSiena&#39;)
 library(RSiena)
 friend.data.w1 &lt;- s501
 friend.data.w2 &lt;- s502
@@ -512,56 +517,56 @@ myeff &lt;- includeEffects(myeff, transTrip, cycle3)</code></pre>
 #&gt;                                                     Error      t-ratio   
 #&gt; 
 #&gt; Rate parameters: 
-#&gt;   0.1      Rate parameter period 1      6.5436  ( 1.0346   )             
-#&gt;   0.2      Rate parameter period 2      5.2028  ( 0.8518   )             
+#&gt;   0.1      Rate parameter period 1      6.6606  ( 1.2055   )             
+#&gt;   0.2      Rate parameter period 2      5.1879  ( 0.8459   )             
 #&gt; 
 #&gt; Other parameters: 
-#&gt;   1.  eval outdegree (density)         -2.7187  ( 0.1257   )   0.0426    
-#&gt;   2.  eval reciprocity                  2.4236  ( 0.2173   )   0.0183    
-#&gt;   3.  eval transitive triplets          0.6482  ( 0.1444   )   0.0469    
-#&gt;   4.  eval 3-cycles                    -0.0847  ( 0.2725   )   0.0514    
-#&gt;   5.  eval smoke1 similarity            0.2544  ( 0.2106   )   0.0178    
-#&gt;   6.  eval alcohol alter               -0.0224  ( 0.0655   )   0.0322    
-#&gt;   7.  eval alcohol ego                  0.0373  ( 0.0702   )   0.0470    
-#&gt;   8.  eval alcohol ego x alcohol alter  0.1278  ( 0.0497   )   0.0218    
+#&gt;   1.  eval outdegree (density)         -2.7240  ( 0.1176   )    0.0367   
+#&gt;   2.  eval reciprocity                  2.4367  ( 0.2118   )    0.0185   
+#&gt;   3.  eval transitive triplets          0.6507  ( 0.1471   )   -0.0044   
+#&gt;   4.  eval 3-cycles                    -0.0971  ( 0.2933   )   -0.0013   
+#&gt;   5.  eval smoke1 similarity            0.2523  ( 0.1956   )   -0.0432   
+#&gt;   6.  eval alcohol alter               -0.0189  ( 0.0715   )    0.0619   
+#&gt;   7.  eval alcohol ego                  0.0335  ( 0.0730   )    0.0115   
+#&gt;   8.  eval alcohol ego x alcohol alter  0.1264  ( 0.0504   )   -0.0240   
 #&gt; 
-#&gt; Overall maximum convergence ratio:    0.1207 
+#&gt; Overall maximum convergence ratio:    0.1431 
 #&gt; 
 #&gt; 
-#&gt; Total of 2204 iteration steps.
+#&gt; Total of 2460 iteration steps.
 #&gt; 
 #&gt; Covariance matrix of estimates (correlations below diagonal)
 #&gt; 
-#&gt;        0.016       -0.018       -0.009        0.011       -0.002        0.000        0.000        0.000
-#&gt;       -0.662        0.047        0.010       -0.025       -0.001        0.000        0.001       -0.001
-#&gt;       -0.482        0.303        0.021       -0.034        0.000        0.000       -0.002       -0.001
-#&gt;        0.328       -0.427       -0.857        0.074       -0.002        0.000        0.002        0.001
-#&gt;       -0.067       -0.024       -0.012       -0.027        0.044        0.003        0.004       -0.001
-#&gt;        0.055       -0.021       -0.044       -0.022        0.241        0.004       -0.001        0.000
-#&gt;        0.034        0.048       -0.181        0.116        0.247       -0.284        0.005       -0.001
-#&gt;       -0.075       -0.057       -0.109        0.087       -0.090       -0.068       -0.157        0.002
+#&gt;        0.014       -0.016       -0.007        0.009       -0.002        0.000        0.000        0.000
+#&gt;       -0.642        0.045        0.010       -0.027       -0.002       -0.002        0.001       -0.001
+#&gt;       -0.390        0.322        0.022       -0.038       -0.001       -0.001        0.000       -0.002
+#&gt;        0.258       -0.440       -0.883        0.086        0.002        0.002       -0.001        0.002
+#&gt;       -0.089       -0.050       -0.031        0.031        0.038        0.004        0.003       -0.001
+#&gt;        0.027       -0.137       -0.102        0.115        0.256        0.005       -0.002        0.000
+#&gt;       -0.048        0.072        0.016       -0.038        0.180       -0.368        0.005        0.000
+#&gt;       -0.061       -0.078       -0.212        0.159       -0.104       -0.044       -0.089        0.003
 #&gt; 
 #&gt; Derivative matrix of expected statistics X by parameters:
 #&gt; 
-#&gt;      295.468      232.583      487.012      151.858       25.282       23.739       32.966      142.176
-#&gt;      137.601      146.643      270.700       89.577       13.917       12.587        9.099       68.463
-#&gt;      364.076      325.929     1169.926      373.375       28.739       97.575      101.499      210.879
-#&gt;      166.695      162.152      556.687      187.815       16.205       34.923       29.252       85.205
-#&gt;       28.408       24.806       52.268       16.146       35.992      -48.058      -42.052        9.839
-#&gt;       34.508       36.574      167.820       57.203      -44.611      366.393      236.393       86.037
-#&gt;       47.587       34.222      180.580       56.593      -40.440      236.221      343.475      119.730
-#&gt;      152.533      138.730      369.359      117.047       11.043      102.804      118.185      591.166
+#&gt;      287.573      227.131      475.707      149.761       27.326       25.693       27.507      158.385
+#&gt;      128.491      140.584      255.873       85.168       11.471       16.306       10.892       75.252
+#&gt;      363.504      331.901     1218.172      389.345       33.686       57.667       65.733      246.930
+#&gt;      167.800      162.696      569.119      190.671       16.054       18.159       19.980      100.942
+#&gt;       29.415       23.713       57.350       17.782       37.051      -46.689      -42.116       12.939
+#&gt;       13.455       23.559       55.938       19.066      -43.371      334.440      210.595       84.290
+#&gt;       17.677       15.635       75.083       23.860      -39.988      227.989      319.606       98.255
+#&gt;      153.074      138.074      318.108       99.163       11.159       94.083       89.708      613.625
 #&gt; 
 #&gt; Covariance matrix of X (correlations below diagonal):
 #&gt; 
-#&gt;      485.394      417.955     1139.843      363.468       47.211       89.180      105.759      264.274
-#&gt;        0.930      416.120     1095.835      356.485       42.866       88.022       88.986      246.330
-#&gt;        0.807        0.838     4111.861     1331.219      113.661      332.471      336.214      716.313
-#&gt;        0.789        0.836        0.993      437.166       36.136      108.815      105.686      228.563
-#&gt;        0.315        0.309        0.260        0.254       46.347      -67.903      -58.528       16.923
-#&gt;        0.183        0.195        0.234        0.235       -0.450      490.995      395.252      173.115
-#&gt;        0.223        0.203        0.243        0.235       -0.399        0.828      463.852      195.286
-#&gt;        0.434        0.437        0.404        0.395        0.090        0.283        0.328      764.065</code></pre>
+#&gt;      451.531      382.318     1097.972      349.513       49.992       28.990       48.527      252.495
+#&gt;        0.924      379.154     1042.179      337.055       39.669       40.398       48.361      232.145
+#&gt;        0.803        0.832     4138.476     1331.454      120.784      153.196      207.038      649.614
+#&gt;        0.790        0.831        0.994      433.770       38.160       49.364       62.832      206.487
+#&gt;        0.353        0.305        0.281        0.275       44.516      -68.960      -63.648        6.818
+#&gt;        0.063        0.096        0.110        0.110       -0.479      466.437      375.561      185.917
+#&gt;        0.108        0.117        0.152        0.142       -0.450        0.820      449.308      191.303
+#&gt;        0.416        0.417        0.353        0.347        0.036        0.301        0.316      816.430</code></pre>
 <pre class="r test"><code>myeff &lt;- setEffect(myeff, inPopSqrt, fix = TRUE, test = TRUE, initialValue = 0)</code></pre>
 <pre class="test2"><code>#&gt;   effectName                   include fix  test initialValue parm
 #&gt; 1 indegree - popularity (sqrt) TRUE    TRUE TRUE          0   0</code></pre>
@@ -569,9 +574,349 @@ myeff &lt;- includeEffects(myeff, transTrip, cycle3)</code></pre>
 <pre class="test2"><code>#&gt;   effectName                   include fix   test initialValue parm
 #&gt; 1 indegree - popularity (sqrt) TRUE    FALSE TRUE          0   0</code></pre>
 <pre class="r test"><code>ans &lt;- siena07(myalgorithm, data = mydata, effects = myeff)</code></pre>
+<p><br></p>
+</div>
+<div id="lab-excercise-r-siena" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Lab excercise R
+Siena</h2>
+<pre class="r test"><code># install.packages(&#39;installr&#39;) #you first install packages
+require(installr)  #then you will need to activate packages. 
+# updateR() #run the function to start the update process</code></pre>
+<pre class="r test"><code>### Author: DAPHNE JASNSSEN Lastmod: 30-09-2022###
+
+# cleanup workspace
+rm(list = ls())</code></pre>
+<pre class="r test"><code># install packages
+library(RSiena)</code></pre>
+<pre class="r test"><code># set working directory
+setwd(&quot;C:\\Users\\Daphn\\Documenten\\labjournal\\Data&quot;)  #change to your own workdirectory</code></pre>
+<pre class="r test"><code># density: observed relations divided by possible relations
+fdensity &lt;- function(x) {
+    # x is your nomination network make sure diagonal cells are NA
+    diag(x) &lt;- NA
+    # take care of RSiena structural zeros, set as missing.
+    x[x == 10] &lt;- NA
+    sum(x == 1, na.rm = T)/(sum(x == 1 | x == 0, na.rm = T))
+}
+
+# calculate intragroup density
+fdensityintra &lt;- function(x, A) {
+    # A is matrix indicating whether nodes in dyad have same node attributes
+    diag(x) &lt;- NA
+    x[x == 10] &lt;- NA
+    diag(A) &lt;- NA
+    sum(x == 1 &amp; A == 1, na.rm = T)/(sum((x == 1 | x == 0) &amp; A == 1, na.rm = T))
+}
+
+# calculate intragroup density
+fdensityinter &lt;- function(x, A) {
+    # A is matrix indicating whether nodes in dyad have same node attributes
+    diag(x) &lt;- NA
+    x[x == 10] &lt;- NA
+    diag(A) &lt;- NA
+    sum(x == 1 &amp; A != 1, na.rm = T)/(sum((x == 1 | x == 0) &amp; A != 1, na.rm = T))
+}
+
+# construct dyadcharacteristic whether nodes are similar/homogenous
+fhomomat &lt;- function(x) {
+    # x is a vector of node-covariate
+    xmat &lt;- matrix(x, nrow = length(x), ncol = length(x))
+    xmatt &lt;- t(xmat)
+    xhomo &lt;- xmat == xmatt
+    return(xhomo)
+}
+
+# a function to calculate all valid dyads.
+fndyads &lt;- function(x) {
+    diag(x) &lt;- NA
+    x[x == 10] &lt;- NA
+    (sum((x == 1 | x == 0), na.rm = T))
+}
+
+# a function to calculate all valid intragroupdyads.
+fndyads2 &lt;- function(x, A) {
+    diag(x) &lt;- NA
+    x[x == 10] &lt;- NA
+    diag(A) &lt;- NA
+    (sum((x == 1 | x == 0) &amp; A == 1, na.rm = T))
+}
+
+
+fscolnet &lt;- function(network, ccovar) {
+    # Calculate coleman on network level:
+    # https://reader.elsevier.com/reader/sd/pii/S0378873314000239?token=A42F99FF6E2B750436DD2CB0DB7B1F41BDEC16052A45683C02644DAF88215A3379636B2AA197B65941D6373E9E2EE413
+
+    fhomomat &lt;- function(x) {
+        xmat &lt;- matrix(x, nrow = length(x), ncol = length(x))
+        xmatt &lt;- t(xmat)
+        xhomo &lt;- xmat == xmatt
+        return(xhomo)
+    }
+
+    fsumintra &lt;- function(x, A) {
+        # A is matrix indicating whether nodes constituting dyad have same characteristics
+        diag(x) &lt;- NA
+        x[x == 10] &lt;- NA
+        diag(A) &lt;- NA
+        sum(x == 1 &amp; A == 1, na.rm = T)
+    }
+
+    # expecation w*=sum_g sum_i (ni((ng-1)/(N-1)))
+    network[network == 10] &lt;- NA
+    ni &lt;- rowSums(network, na.rm = T)
+    ng &lt;- NA
+    for (i in 1:length(ccovar)) {
+        ng[i] &lt;- table(ccovar)[rownames(table(ccovar)) == ccovar[i]]
+    }
+    N &lt;- length(ccovar)
+    wexp &lt;- sum(ni * ((ng - 1)/(N - 1)), na.rm = T)
+
+    # wgg1 how many intragroup ties
+    w &lt;- fsumintra(network, fhomomat(ccovar))
+
+    Scol_net &lt;- ifelse(w &gt;= wexp, (w - wexp)/(sum(ni, na.rm = T) - wexp), (w - wexp)/wexp)
+    return(Scol_net)
+}</code></pre>
+<pre class="r test"><code>getwd()</code></pre>
+<pre class="test2"><code>#&gt; [1] &quot;C:/Users/Daphn/Documenten/labjournal&quot;</code></pre>
+<pre class="r test"><code>load(&quot;C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\twitter_20190919.Rdata&quot;)
+str(twitter_20190919, 1)</code></pre>
+<pre class="test2"><code>#&gt; List of 3
+#&gt;  $ keyf  :&#39;data.frame&#39;:  147 obs. of  41 variables:
+#&gt;  $ mydata:List of 8
+#&gt;   ..- attr(*, &quot;higher&quot;)= Named logi [1:9] FALSE FALSE FALSE FALSE FALSE FALSE ...
+#&gt;   .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;fnet,fnet&quot; &quot;atmnet,fnet&quot; &quot;rtnet,fnet&quot; &quot;fnet,atmnet&quot; ...
+#&gt;   ..- attr(*, &quot;disjoint&quot;)= Named logi [1:9] FALSE FALSE FALSE FALSE FALSE FALSE ...
+#&gt;   .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;fnet,fnet&quot; &quot;atmnet,fnet&quot; &quot;rtnet,fnet&quot; &quot;fnet,atmnet&quot; ...
+#&gt;   ..- attr(*, &quot;atLeastOne&quot;)= Named logi [1:9] FALSE FALSE FALSE FALSE FALSE FALSE ...
+#&gt;   .. ..- attr(*, &quot;names&quot;)= chr [1:9] &quot;fnet,fnet&quot; &quot;atmnet,fnet&quot; &quot;rtnet,fnet&quot; &quot;fnet,atmnet&quot; ...
+#&gt;   ..- attr(*, &quot;class&quot;)= chr &quot;siena&quot;
+#&gt;  $ seats :&#39;data.frame&#39;:  150 obs. of  5 variables:</code></pre>
+<pre class="r test"><code>keyf &lt;- twitter_20190919[[1]]
+mydata &lt;- twitter_20190919[[2]]
+seats &lt;- twitter_20190919[[3]]</code></pre>
+<div id="research-question-1" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Research Question
+1</h3>
+<pre class="r test"><code># retrieve nominationdata from rsiena object
+fnet &lt;- mydata$depvars$fnet
+atmnet &lt;- mydata$depvars$atmnet
+rtnet &lt;- mydata$depvars$rtnet
+
+# retrieve node-attributes from rsiena object
+vrouw &lt;- mydata$cCovars$vrouw
+partij &lt;- mydata$cCovars$partij
+ethminz &lt;- mydata$cCovars$ethminz
+lft &lt;- mydata$cCovars$lft
+
+# de-mean-center node attributes
+ethminz &lt;- ethminz + attributes(ethminz)$mean
+partij &lt;- partij + attributes(partij)$mean
+vrouw &lt;- vrouw + attributes(vrouw)$mean
+lft &lt;- lft + attributes(lft)$mean
+
+# construct matrices for similarity for each dimension (dyad characteristics)
+vrouwm &lt;- fhomomat(vrouw)
+partijm &lt;- fhomomat(partij)
+ethminzm &lt;- fhomomat(ethminz)
+
+# just for fun, make dyad characteristic indicating whether both nodes are ethnic minorities
+xmat &lt;- matrix(ethminz, nrow = length(ethminz), ncol = length(ethminz))
+xmatt &lt;- t(xmat)
+minoritym &lt;- xmat == 1 &amp; xmatt == 1
+
+# for age max 5 year difference / for descriptives
+xmat &lt;- matrix(lft, nrow = length(lft), ncol = length(lft))
+xmatt &lt;- t(xmat)
+lftm &lt;- (abs(xmat - xmatt) &lt; 6)
+
+# calculate all possible similar dyads, not the focus of this exercise.  fndyads2(fnet[,,1],
+# vrouwm) fndyads2(fnet[,,3], vrouwm) fndyads2(fnet[,,1], partijm) fndyads2(fnet[,,3], partijm)
+# fndyads2(fnet[,,1], ethminzm) fndyads2(fnet[,,3], ethminzm)
+
+# make a big object to store all results
+desmat &lt;- matrix(NA, nrow = 10, ncol = 9)
+
+# lets start using our functions
+desmat[1, 1] &lt;- fdensity(fnet[, , 1])
+desmat[1, 2] &lt;- fdensity(fnet[, , 2])
+desmat[1, 3] &lt;- fdensity(fnet[, , 3])
+desmat[2, 1] &lt;- fdensityintra(fnet[, , 1], vrouwm)
+desmat[2, 2] &lt;- fdensityintra(fnet[, , 2], vrouwm)
+desmat[2, 3] &lt;- fdensityintra(fnet[, , 3], vrouwm)
+desmat[3, 1] &lt;- fdensityinter(fnet[, , 1], vrouwm)
+desmat[3, 2] &lt;- fdensityinter(fnet[, , 2], vrouwm)
+desmat[3, 3] &lt;- fdensityinter(fnet[, , 3], vrouwm)
+desmat[4, 1] &lt;- fdensityintra(fnet[, , 1], partijm)
+desmat[4, 2] &lt;- fdensityintra(fnet[, , 2], partijm)
+desmat[4, 3] &lt;- fdensityintra(fnet[, , 3], partijm)
+desmat[5, 1] &lt;- fdensityinter(fnet[, , 1], partijm)
+desmat[5, 2] &lt;- fdensityinter(fnet[, , 2], partijm)
+desmat[5, 3] &lt;- fdensityinter(fnet[, , 3], partijm)
+desmat[6, 1] &lt;- fdensityintra(fnet[, , 1], ethminzm)
+desmat[6, 2] &lt;- fdensityintra(fnet[, , 2], ethminzm)
+desmat[6, 3] &lt;- fdensityintra(fnet[, , 3], ethminzm)
+desmat[7, 1] &lt;- fdensityinter(fnet[, , 1], ethminzm)
+desmat[7, 2] &lt;- fdensityinter(fnet[, , 2], ethminzm)
+desmat[7, 3] &lt;- fdensityinter(fnet[, , 3], ethminzm)
+desmat[8, 1] &lt;- fdensityinter(fnet[, , 1], minoritym)
+desmat[8, 2] &lt;- fdensityinter(fnet[, , 2], minoritym)
+desmat[8, 3] &lt;- fdensityinter(fnet[, , 3], minoritym)
+desmat[9, 1] &lt;- fdensityintra(fnet[, , 1], lftm)
+desmat[9, 2] &lt;- fdensityintra(fnet[, , 2], lftm)
+desmat[9, 3] &lt;- fdensityintra(fnet[, , 3], lftm)
+desmat[10, 1] &lt;- fdensityinter(fnet[, , 1], lftm)
+desmat[10, 2] &lt;- fdensityinter(fnet[, , 2], lftm)
+desmat[10, 3] &lt;- fdensityinter(fnet[, , 3], lftm)
+
+desmat[1, 1 + 3] &lt;- fdensity(atmnet[, , 1])
+desmat[1, 2 + 3] &lt;- fdensity(atmnet[, , 2])
+desmat[1, 3 + 3] &lt;- fdensity(atmnet[, , 3])
+desmat[2, 1 + 3] &lt;- fdensityintra(atmnet[, , 1], vrouwm)
+desmat[2, 2 + 3] &lt;- fdensityintra(atmnet[, , 2], vrouwm)
+desmat[2, 3 + 3] &lt;- fdensityintra(atmnet[, , 3], vrouwm)
+desmat[3, 1 + 3] &lt;- fdensityinter(atmnet[, , 1], vrouwm)
+desmat[3, 2 + 3] &lt;- fdensityinter(atmnet[, , 2], vrouwm)
+desmat[3, 3 + 3] &lt;- fdensityinter(atmnet[, , 3], vrouwm)
+desmat[4, 1 + 3] &lt;- fdensityintra(atmnet[, , 1], partijm)
+desmat[4, 2 + 3] &lt;- fdensityintra(atmnet[, , 2], partijm)
+desmat[4, 3 + 3] &lt;- fdensityintra(atmnet[, , 3], partijm)
+desmat[5, 1 + 3] &lt;- fdensityinter(atmnet[, , 1], partijm)
+desmat[5, 2 + 3] &lt;- fdensityinter(atmnet[, , 2], partijm)
+desmat[5, 3 + 3] &lt;- fdensityinter(atmnet[, , 3], partijm)
+desmat[6, 1 + 3] &lt;- fdensityintra(atmnet[, , 1], ethminzm)
+desmat[6, 2 + 3] &lt;- fdensityintra(atmnet[, , 2], ethminzm)
+desmat[6, 3 + 3] &lt;- fdensityintra(atmnet[, , 3], ethminzm)
+desmat[7, 1 + 3] &lt;- fdensityinter(atmnet[, , 1], ethminzm)
+desmat[7, 2 + 3] &lt;- fdensityinter(atmnet[, , 2], ethminzm)
+desmat[7, 3 + 3] &lt;- fdensityinter(atmnet[, , 3], ethminzm)
+desmat[8, 1 + 3] &lt;- fdensityinter(atmnet[, , 1], minoritym)
+desmat[8, 2 + 3] &lt;- fdensityinter(atmnet[, , 2], minoritym)
+desmat[8, 3 + 3] &lt;- fdensityinter(atmnet[, , 3], minoritym)
+desmat[9, 1 + 3] &lt;- fdensityintra(atmnet[, , 1], lftm)
+desmat[9, 2 + 3] &lt;- fdensityintra(atmnet[, , 2], lftm)
+desmat[9, 3 + 3] &lt;- fdensityintra(atmnet[, , 3], lftm)
+desmat[10, 1 + 3] &lt;- fdensityinter(atmnet[, , 1], lftm)
+desmat[10, 2 + 3] &lt;- fdensityinter(atmnet[, , 2], lftm)
+desmat[10, 3 + 3] &lt;- fdensityinter(atmnet[, , 3], lftm)
+
+desmat[1, 1 + 6] &lt;- fdensity(rtnet[, , 1])
+desmat[1, 2 + 6] &lt;- fdensity(rtnet[, , 2])
+desmat[1, 3 + 6] &lt;- fdensity(rtnet[, , 3])
+desmat[2, 1 + 6] &lt;- fdensityintra(rtnet[, , 1], vrouwm)
+desmat[2, 2 + 6] &lt;- fdensityintra(rtnet[, , 2], vrouwm)
+desmat[2, 3 + 6] &lt;- fdensityintra(rtnet[, , 3], vrouwm)
+desmat[3, 1 + 6] &lt;- fdensityinter(rtnet[, , 1], vrouwm)
+desmat[3, 2 + 6] &lt;- fdensityinter(rtnet[, , 2], vrouwm)
+desmat[3, 3 + 6] &lt;- fdensityinter(rtnet[, , 3], vrouwm)
+desmat[4, 1 + 6] &lt;- fdensityintra(rtnet[, , 1], partijm)
+desmat[4, 2 + 6] &lt;- fdensityintra(rtnet[, , 2], partijm)
+desmat[4, 3 + 6] &lt;- fdensityintra(rtnet[, , 3], partijm)
+desmat[5, 1 + 6] &lt;- fdensityinter(rtnet[, , 1], partijm)
+desmat[5, 2 + 6] &lt;- fdensityinter(rtnet[, , 2], partijm)
+desmat[5, 3 + 6] &lt;- fdensityinter(rtnet[, , 3], partijm)
+desmat[6, 1 + 6] &lt;- fdensityintra(rtnet[, , 1], ethminzm)
+desmat[6, 2 + 6] &lt;- fdensityintra(rtnet[, , 2], ethminzm)
+desmat[6, 3 + 6] &lt;- fdensityintra(rtnet[, , 3], ethminzm)
+desmat[7, 1 + 6] &lt;- fdensityinter(rtnet[, , 1], ethminzm)
+desmat[7, 2 + 6] &lt;- fdensityinter(rtnet[, , 2], ethminzm)
+desmat[7, 3 + 6] &lt;- fdensityinter(rtnet[, , 3], ethminzm)
+desmat[8, 1 + 6] &lt;- fdensityinter(rtnet[, , 1], minoritym)
+desmat[8, 2 + 6] &lt;- fdensityinter(rtnet[, , 2], minoritym)
+desmat[8, 3 + 6] &lt;- fdensityinter(rtnet[, , 3], minoritym)
+desmat[9, 1 + 6] &lt;- fdensityintra(rtnet[, , 1], lftm)
+desmat[9, 2 + 6] &lt;- fdensityintra(rtnet[, , 2], lftm)
+desmat[9, 3 + 6] &lt;- fdensityintra(rtnet[, , 3], lftm)
+desmat[10, 1 + 6] &lt;- fdensityinter(rtnet[, , 1], lftm)
+desmat[10, 2 + 6] &lt;- fdensityinter(rtnet[, , 2], lftm)
+desmat[10, 3 + 6] &lt;- fdensityinter(rtnet[, , 3], lftm)
+
+colnames(desmat) &lt;- c(&quot;friends w1&quot;, &quot;friends w2&quot;, &quot;friends w3&quot;, &quot;atmentions w1&quot;, &quot;atmentions w2&quot;, &quot;atmentions w3&quot;,
+    &quot;retweets w1&quot;, &quot;retweets w2&quot;, &quot;retweets w3&quot;)
+rownames(desmat) &lt;- c(&quot;total&quot;, &quot;same sex&quot;, &quot;different sex&quot;, &quot;same party&quot;, &quot;different party&quot;, &quot;same ethnicity&quot;,
+    &quot;different ethnicity&quot;, &quot;both minority&quot;, &quot;same age (&lt;6)&quot;, &quot;different age (&gt;5)&quot;)
+desmat</code></pre>
+<pre class="r test"><code>library(RSiena)
+myeff &lt;- getEffects(mydata)
+myeff</code></pre>
+<pre class="test2"><code>#&gt;    name   effectName                      include fix   test  initialValue parm
+#&gt; 1  fnet   constant fnet rate (period 1)   TRUE    FALSE FALSE    7.22021   0   
+#&gt; 2  fnet   constant fnet rate (period 2)   TRUE    FALSE FALSE    3.79571   0   
+#&gt; 3  fnet   fnet: outdegree (density)       TRUE    FALSE FALSE    0.00000   0   
+#&gt; 4  fnet   fnet: reciprocity               TRUE    FALSE FALSE    0.00000   0   
+#&gt; 5  atmnet constant atmnet rate (period 1) TRUE    FALSE FALSE   16.26089   0   
+#&gt; 6  atmnet constant atmnet rate (period 2) TRUE    FALSE FALSE    9.17902   0   
+#&gt; 7  atmnet atmnet: outdegree (density)     TRUE    FALSE FALSE   -1.76137   0   
+#&gt; 8  atmnet atmnet: reciprocity             TRUE    FALSE FALSE    0.00000   0   
+#&gt; 9  rtnet  constant rtnet rate (period 1)  TRUE    FALSE FALSE   10.98716   0   
+#&gt; 10 rtnet  constant rtnet rate (period 2)  TRUE    FALSE FALSE    9.39819   0   
+#&gt; 11 rtnet  rtnet: outdegree (density)      TRUE    FALSE FALSE   -1.61392   0   
+#&gt; 12 rtnet  rtnet: reciprocity              TRUE    FALSE FALSE    0.00000   0</code></pre>
+<pre class="r test"><code>myeff_m1 &lt;- myeff
+myeff_m1 &lt;- includeEffects(myeff_m1, sameX, interaction1 = &quot;partij&quot;, name = &quot;rtnet&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName         include fix   test  initialValue parm
+#&gt; 1 rtnet: same partij TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code># I used a seed so you will probably see the same results
+myalgorithm &lt;- sienaAlgorithmCreate(projname = &quot;test&quot;, seed = 345654)</code></pre>
+<pre class="r test"><code># to speed things up a bit, I am using more cores.
+ansM1 &lt;- siena07(myalgorithm, data = mydata, effects = myeff_m1, useCluster = TRUE, nbrNodes = 4, initC = TRUE,
+    batch = TRUE)
+ansM1b &lt;- siena07(myalgorithm, data = mydata, prevAns = ansM1, effects = myeff_m1, useCluster = TRUE,
+    nbrNodes = 4, initC = TRUE, batch = TRUE)
+ansM1c &lt;- siena07(myalgorithm, data = mydata, prevAns = ansM1b, effects = myeff_m1, useCluster = TRUE,
+    nbrNodes = 4, initC = TRUE, batch = TRUE)
+
+save(ansM1, file = &quot;ansM1a.RData&quot;)
+save(ansM1b, file = &quot;ansM1b.RData&quot;)
+save(ansM1c, file = &quot;ansM1c.RData&quot;)
+
+# The estimate of the retweats within the same party is positive compared to the estimate of the
+# retweats between different parties. So, there is segregation along party affiliation in the
+# retweet network among Dutch MPs.</code></pre>
+</div>
+<div id="research-question-2" class="section level3" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span> Research Question
+2</h3>
+<pre class="r test"><code>myeff_m2 &lt;- myeff
+myeff_m2 &lt;- includeEffects(myeff_m2, sameX, interaction1 = &quot;partij&quot;, interaction2 = &quot;vrouw&quot;, interaction3 = &quot;lft&quot;,
+    name = &quot;rtnet&quot;)
+
+myalgorithm &lt;- sienaAlgorithmCreate(projname = &quot;test&quot;, seed = 345654)
+
+ansM2 &lt;- siena07(myalgorithm, data = mydata, effects = myeff_m2, useCluster = TRUE, nbrNodes = 4, initC = TRUE,
+    batch = TRUE)
+
+save(ansM2, file = &quot;ansM2.RData&quot;)
+
+load(&quot;ansM2.RData&quot;)
+
+ansM2
+
+# I have not (yet) succeeded in estimating the right model.</code></pre>
+</div>
+<div id="research-question-3" class="section level3" number="1.2.3">
+<h3><span class="header-section-number">1.2.3</span> Research Question
+3</h3>
+<pre class="r test"><code>myeff_m3 &lt;- myeff
+myeff_m3 &lt;- includeEffects(myeff_m2, sameX, interaction1 = &quot;partij&quot;, afstand, name = &quot;rtnet&quot;)
+
+myalgorithm &lt;- sienaAlgorithmCreate(projname = &quot;test&quot;, seed = 345654)
+
+ansM3 &lt;- siena07(myalgorithm, data = mydata, effects = myeff_m2, useCluster = TRUE, nbrNodes = 4, initC = TRUE,
+    batch = TRUE)
+
+save(ansM3, file = &quot;ansM3.RData&quot;)
+
+load(&quot;ansM3.RData&quot;)
+
+ansM3
+
+# I have not (yet) succeeded in estimating the right model.</code></pre>
+</div>
+</div>
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkpvdXJuYWwgNCINCiNiaWJsaW9ncmFwaHk6IHJlZmVyZW5jZXMuYmliDQphdXRob3I6ICJEYXBobmUgSmFuc3NlbiINCi0tLQ0KDQoNCg0KYGBge3IsIGdsb2JhbHNldHRpbmdzLCBlY2hvPUZBTFNFLCB3YXJuaW5nPUZBTFNFLCByZXN1bHRzPSdoaWRlJ30NCmxpYnJhcnkoa25pdHIpDQoNCmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkNCm9wdHNfY2h1bmskc2V0KHRpZHkub3B0cz1saXN0KHdpZHRoLmN1dG9mZj0xMDApLHRpZHk9VFJVRSwgd2FybmluZyA9IEZBTFNFLCBtZXNzYWdlID0gRkFMU0UsY29tbWVudCA9ICIjPiIsIGNhY2hlPVRSVUUsIGNsYXNzLnNvdXJjZT1jKCJ0ZXN0IiksIGNsYXNzLm91dHB1dD1jKCJ0ZXN0MiIpKQ0Kb3B0aW9ucyh3aWR0aCA9IDEwMCkNCnJnbDo6c2V0dXBLbml0cigpDQoNCg0KDQpjb2xvcml6ZSA8LSBmdW5jdGlvbih4LCBjb2xvcikge3NwcmludGYoIjxzcGFuIHN0eWxlPSdjb2xvcjogJXM7Jz4lczwvc3Bhbj4iLCBjb2xvciwgeCkgfQ0KDQpgYGANCg0KYGBge3Iga2xpcHB5LCBlY2hvPUZBTFNFLCBpbmNsdWRlPVRSVUV9DQprbGlwcHk6OmtsaXBweShwb3NpdGlvbiA9IGMoJ3RvcCcsICdyaWdodCcpKQ0KI2tsaXBweTo6a2xpcHB5KGNvbG9yID0gJ2RhcmtyZWQnKQ0KI2tsaXBweTo6a2xpcHB5KHRvb2x0aXBfbWVzc2FnZSA9ICdDbGljayB0byBjb3B5JywgdG9vbHRpcF9zdWNjZXNzID0gJ0RvbmUnKQ0KYGBgDQoNCkxhc3QgY29tcGlsZWQgb24gYHIgU3lzLnRpbWUoKWANCg0KPCEtLS0NCkxhc3QgY29tcGlsZWQgb24gYHIgZm9ybWF0KFN5cy50aW1lKCksICclQiwgJVknKWANCi0tLT4NCg0KDQo8YnI+DQoNCi0tLS0NCg0KLS0tDQojIFByYWN0aWNpbmcgd2l0aCBSU2llbmENCg0KYGBge3J9DQojaW5zdGFsbC5wYWNrYWdlcygnUlNpZW5hJykNCmxpYnJhcnkoUlNpZW5hKQ0KZnJpZW5kLmRhdGEudzEgPC0gczUwMQ0KZnJpZW5kLmRhdGEudzIgPC0gczUwMg0KZnJpZW5kLmRhdGEudzMgPC0gczUwMw0KZHJpbmsgPC0gczUwYQ0Kc21va2UgPC0gczUwcw0KZnJpZW5kc2hpcCA8LSBzaWVuYURlcGVuZGVudChhcnJheShjKGZyaWVuZC5kYXRhLncxLCBmcmllbmQuZGF0YS53MiwgZnJpZW5kLmRhdGEudzMpLCBkaW0gPSBjKDUwLCA1MCwNCiAgICAzKSkpDQpzbW9rZTEgPC0gY29Db3ZhcihzbW9rZVssIDFdKQ0KYWxjb2hvbCA8LSB2YXJDb3ZhcihkcmluaykNCm15ZGF0YSA8LSBzaWVuYURhdGFDcmVhdGUoZnJpZW5kc2hpcCwgc21va2UxLCBhbGNvaG9sKQ0KIyBhbmQgcmVxdWVzdA0KbXlkYXRhDQojIHRvIHNlZSB3aGF0IHlvdSBoYXZlIHByb2R1Y2VkLg0KYGBgDQoNCmBgYHtyfQ0KbXlhbGdvcml0aG0gPC0gc2llbmFBbGdvcml0aG1DcmVhdGUocHJvam5hbWUgPSAiczUwXzMiKQ0KYGBgDQpgYGB7cn0NCm15ZWZmIDwtIGdldEVmZmVjdHMobXlkYXRhKQ0KbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIHRyYW5zVHJpcCwgY3ljbGUzKQ0KbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIGVnb1gsIGFsdFgsIGVnb1hhbHRYLCBpbnRlcmFjdGlvbjEgPSAiYWxjb2hvbCIpDQpteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgc2ltWCwgaW50ZXJhY3Rpb24xID0gInNtb2tlMSIpDQpteWVmZg0KYGBgDQoNCmBgYHtyfQ0KYW5zIDwtIHNpZW5hMDcobXlhbGdvcml0aG0sIGRhdGEgPSBteWRhdGEsIGVmZmVjdHMgPSBteWVmZikNCmBgYA0KDQpgYGB7cn0NCnN1bW1hcnkoYW5zKQ0KYGBgDQoNCmBgYHtyfQ0KbXllZmYgPC0gc2V0RWZmZWN0KG15ZWZmLCBpblBvcFNxcnQsIGZpeCA9IFRSVUUsIHRlc3QgPSBUUlVFLCBpbml0aWFsVmFsdWUgPSAwKQ0KYGBgDQoNCmBgYHtyfQ0KbXllZmYgPC0gc2V0RWZmZWN0KG15ZWZmLCBpblBvcFNxcnQsIGZpeCA9IEZBTFNFLCB0ZXN0ID0gVFJVRSwgaW5pdGlhbFZhbHVlID0gMCkNCg0KYGBgDQoNCmBgYHtyfQ0KYW5zIDwtIHNpZW5hMDcobXlhbGdvcml0aG0sIGRhdGEgPSBteWRhdGEsIGVmZmVjdHMgPSBteWVmZikNCg0KYGBgDQoNCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkpvdXJuYWwgNCINCiNiaWJsaW9ncmFwaHk6IHJlZmVyZW5jZXMuYmliDQphdXRob3I6ICJEYXBobmUgSmFuc3NlbiINCi0tLQ0KDQoNCg0KYGBge3IsIGdsb2JhbHNldHRpbmdzLCBlY2hvPUZBTFNFLCB3YXJuaW5nPUZBTFNFLCByZXN1bHRzPSdoaWRlJ30NCmxpYnJhcnkoa25pdHIpDQoNCmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkNCm9wdHNfY2h1bmskc2V0KHRpZHkub3B0cz1saXN0KHdpZHRoLmN1dG9mZj0xMDApLHRpZHk9VFJVRSwgd2FybmluZyA9IEZBTFNFLCBtZXNzYWdlID0gRkFMU0UsY29tbWVudCA9ICIjPiIsIGNhY2hlPVRSVUUsIGNsYXNzLnNvdXJjZT1jKCJ0ZXN0IiksIGNsYXNzLm91dHB1dD1jKCJ0ZXN0MiIpKQ0Kb3B0aW9ucyh3aWR0aCA9IDEwMCkNCnJnbDo6c2V0dXBLbml0cigpDQoNCg0KDQpjb2xvcml6ZSA8LSBmdW5jdGlvbih4LCBjb2xvcikge3NwcmludGYoIjxzcGFuIHN0eWxlPSdjb2xvcjogJXM7Jz4lczwvc3Bhbj4iLCBjb2xvciwgeCkgfQ0KDQpgYGANCg0KYGBge3Iga2xpcHB5LCBlY2hvPUZBTFNFLCBpbmNsdWRlPVRSVUV9DQprbGlwcHk6OmtsaXBweShwb3NpdGlvbiA9IGMoJ3RvcCcsICdyaWdodCcpKQ0KI2tsaXBweTo6a2xpcHB5KGNvbG9yID0gJ2RhcmtyZWQnKQ0KI2tsaXBweTo6a2xpcHB5KHRvb2x0aXBfbWVzc2FnZSA9ICdDbGljayB0byBjb3B5JywgdG9vbHRpcF9zdWNjZXNzID0gJ0RvbmUnKQ0KYGBgDQoNCkxhc3QgY29tcGlsZWQgb24gYHIgU3lzLnRpbWUoKWANCg0KPCEtLS0NCkxhc3QgY29tcGlsZWQgb24gYHIgZm9ybWF0KFN5cy50aW1lKCksICclQiwgJVknKWANCi0tLT4NCg0KDQo8YnI+DQoNCi0tLS0NCg0KLS0tDQojIFByYWN0aWNpbmcgd2l0aCBSU2llbmENCg0KIyMgRHVyaW5nLWNsYXNzIHByYWN0aWNlDQpgYGB7cn0NCiMgaW5zdGFsbC5wYWNrYWdlcygnZm9ybWF0UicpDQoNCiNpbnN0YWxsLnBhY2thZ2VzKCdSU2llbmEnKQ0KbGlicmFyeShSU2llbmEpDQpmcmllbmQuZGF0YS53MSA8LSBzNTAxDQpmcmllbmQuZGF0YS53MiA8LSBzNTAyDQpmcmllbmQuZGF0YS53MyA8LSBzNTAzDQpkcmluayA8LSBzNTBhDQpzbW9rZSA8LSBzNTBzDQpmcmllbmRzaGlwIDwtIHNpZW5hRGVwZW5kZW50KGFycmF5KGMoZnJpZW5kLmRhdGEudzEsIGZyaWVuZC5kYXRhLncyLCBmcmllbmQuZGF0YS53MyksIGRpbSA9IGMoNTAsIDUwLA0KICAgIDMpKSkNCnNtb2tlMSA8LSBjb0NvdmFyKHNtb2tlWywgMV0pDQphbGNvaG9sIDwtIHZhckNvdmFyKGRyaW5rKQ0KbXlkYXRhIDwtIHNpZW5hRGF0YUNyZWF0ZShmcmllbmRzaGlwLCBzbW9rZTEsIGFsY29ob2wpDQojIGFuZCByZXF1ZXN0DQpteWRhdGENCiMgdG8gc2VlIHdoYXQgeW91IGhhdmUgcHJvZHVjZWQuDQpgYGANCg0KYGBge3J9DQpteWFsZ29yaXRobSA8LSBzaWVuYUFsZ29yaXRobUNyZWF0ZShwcm9qbmFtZSA9ICJzNTBfMyIpDQpgYGANCmBgYHtyfQ0KbXllZmYgPC0gZ2V0RWZmZWN0cyhteWRhdGEpDQpteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgdHJhbnNUcmlwLCBjeWNsZTMpDQpteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgZWdvWCwgYWx0WCwgZWdvWGFsdFgsIGludGVyYWN0aW9uMSA9ICJhbGNvaG9sIikNCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBzaW1YLCBpbnRlcmFjdGlvbjEgPSAic21va2UxIikNCm15ZWZmDQpgYGANCg0KYGBge3IsIGV2YWw9RkFMU0V9DQphbnMgPC0gc2llbmEwNyhteWFsZ29yaXRobSwgZGF0YSA9IG15ZGF0YSwgZWZmZWN0cyA9IG15ZWZmKQ0KYGBgDQoNCmBgYHtyfQ0Kc3VtbWFyeShhbnMpDQpgYGANCg0KYGBge3J9DQpteWVmZiA8LSBzZXRFZmZlY3QobXllZmYsIGluUG9wU3FydCwgZml4ID0gVFJVRSwgdGVzdCA9IFRSVUUsIGluaXRpYWxWYWx1ZSA9IDApDQpgYGANCg0KYGBge3J9DQpteWVmZiA8LSBzZXRFZmZlY3QobXllZmYsIGluUG9wU3FydCwgZml4ID0gRkFMU0UsIHRlc3QgPSBUUlVFLCBpbml0aWFsVmFsdWUgPSAwKQ0KDQpgYGANCg0KYGBge3IsIGV2YWw9RkFMU0V9DQphbnMgPC0gc2llbmEwNyhteWFsZ29yaXRobSwgZGF0YSA9IG15ZGF0YSwgZWZmZWN0cyA9IG15ZWZmKQ0KDQpgYGANCg0KPGJyPg0KDQoNCiMjIExhYiBleGNlcmNpc2UgUiBTaWVuYSANCg0KYGBge3J9DQojaW5zdGFsbC5wYWNrYWdlcygiaW5zdGFsbHIiKSAgI3lvdSAgZmlyc3QgaW5zdGFsbCBwYWNrYWdlcw0KcmVxdWlyZShpbnN0YWxscikgICN0aGVuIHlvdSB3aWxsIG5lZWQgdG8gYWN0aXZhdGUgcGFja2FnZXMuIA0KI3VwZGF0ZVIoKSAgI3J1biB0aGUgZnVuY3Rpb24gdG8gc3RhcnQgdGhlIHVwZGF0ZSBwcm9jZXNzDQpgYGANCg0KYGBge3J9DQojIyMgQXV0aG9yOiBEQVBITkUgSkFTTlNTRU4NCiMjIyBMYXN0bW9kOiAzMC0wOS0yMDIyIyMjDQoNCiMgY2xlYW51cCB3b3Jrc3BhY2UNCnJtKGxpc3QgPSBscygpKQ0KYGBgDQoNCmBgYHtyfQ0KIyBpbnN0YWxsIHBhY2thZ2VzDQpsaWJyYXJ5KFJTaWVuYSkNCmBgYA0KDQpgYGB7cn0NCiMgc2V0IHdvcmtpbmcgZGlyZWN0b3J5DQpzZXR3ZCgiQzpcXFVzZXJzXFxEYXBoblxcRG9jdW1lbnRlblxcbGFiam91cm5hbFxcRGF0YSIpICAjY2hhbmdlIHRvIHlvdXIgb3duIHdvcmtkaXJlY3RvcnkNCmBgYA0KDQpgYGB7cn0NCiMgZGVuc2l0eTogb2JzZXJ2ZWQgcmVsYXRpb25zIGRpdmlkZWQgYnkgcG9zc2libGUgcmVsYXRpb25zDQpmZGVuc2l0eSA8LSBmdW5jdGlvbih4KSB7DQogICAgIyB4IGlzIHlvdXIgbm9taW5hdGlvbiBuZXR3b3JrIG1ha2Ugc3VyZSBkaWFnb25hbCBjZWxscyBhcmUgTkENCiAgICBkaWFnKHgpIDwtIE5BDQogICAgIyB0YWtlIGNhcmUgb2YgUlNpZW5hIHN0cnVjdHVyYWwgemVyb3MsIHNldCBhcyBtaXNzaW5nLg0KICAgIHhbeCA9PSAxMF0gPC0gTkENCiAgICBzdW0oeCA9PSAxLCBuYS5ybSA9IFQpLyhzdW0oeCA9PSAxIHwgeCA9PSAwLCBuYS5ybSA9IFQpKQ0KfQ0KDQojIGNhbGN1bGF0ZSBpbnRyYWdyb3VwIGRlbnNpdHkNCmZkZW5zaXR5aW50cmEgPC0gZnVuY3Rpb24oeCwgQSkgew0KICAgICMgQSBpcyBtYXRyaXggaW5kaWNhdGluZyB3aGV0aGVyIG5vZGVzIGluIGR5YWQgaGF2ZSBzYW1lIG5vZGUgYXR0cmlidXRlcw0KICAgIGRpYWcoeCkgPC0gTkENCiAgICB4W3ggPT0gMTBdIDwtIE5BDQogICAgZGlhZyhBKSA8LSBOQQ0KICAgIHN1bSh4ID09IDEgJiBBID09IDEsIG5hLnJtID0gVCkvKHN1bSgoeCA9PSAxIHwgeCA9PSAwKSAmIEEgPT0gMSwgbmEucm0gPSBUKSkNCn0NCg0KIyBjYWxjdWxhdGUgaW50cmFncm91cCBkZW5zaXR5DQpmZGVuc2l0eWludGVyIDwtIGZ1bmN0aW9uKHgsIEEpIHsNCiAgICAjIEEgaXMgbWF0cml4IGluZGljYXRpbmcgd2hldGhlciBub2RlcyBpbiBkeWFkIGhhdmUgc2FtZSBub2RlIGF0dHJpYnV0ZXMNCiAgICBkaWFnKHgpIDwtIE5BDQogICAgeFt4ID09IDEwXSA8LSBOQQ0KICAgIGRpYWcoQSkgPC0gTkENCiAgICBzdW0oeCA9PSAxICYgQSAhPSAxLCBuYS5ybSA9IFQpLyhzdW0oKHggPT0gMSB8IHggPT0gMCkgJiBBICE9IDEsIG5hLnJtID0gVCkpDQp9DQoNCiMgY29uc3RydWN0IGR5YWRjaGFyYWN0ZXJpc3RpYyB3aGV0aGVyIG5vZGVzIGFyZSBzaW1pbGFyL2hvbW9nZW5vdXMNCmZob21vbWF0IDwtIGZ1bmN0aW9uKHgpIHsNCiAgICAjIHggaXMgYSB2ZWN0b3Igb2Ygbm9kZS1jb3ZhcmlhdGUNCiAgICB4bWF0IDwtIG1hdHJpeCh4LCBucm93ID0gbGVuZ3RoKHgpLCBuY29sID0gbGVuZ3RoKHgpKQ0KICAgIHhtYXR0IDwtIHQoeG1hdCkNCiAgICB4aG9tbyA8LSB4bWF0ID09IHhtYXR0DQogICAgcmV0dXJuKHhob21vKQ0KfQ0KDQojIGEgZnVuY3Rpb24gdG8gY2FsY3VsYXRlIGFsbCB2YWxpZCBkeWFkcy4NCmZuZHlhZHMgPC0gZnVuY3Rpb24oeCkgew0KICAgIGRpYWcoeCkgPC0gTkENCiAgICB4W3ggPT0gMTBdIDwtIE5BDQogICAgKHN1bSgoeCA9PSAxIHwgeCA9PSAwKSwgbmEucm0gPSBUKSkNCn0NCg0KIyBhIGZ1bmN0aW9uIHRvIGNhbGN1bGF0ZSBhbGwgdmFsaWQgaW50cmFncm91cGR5YWRzLg0KZm5keWFkczIgPC0gZnVuY3Rpb24oeCwgQSkgew0KICAgIGRpYWcoeCkgPC0gTkENCiAgICB4W3ggPT0gMTBdIDwtIE5BDQogICAgZGlhZyhBKSA8LSBOQQ0KICAgIChzdW0oKHggPT0gMSB8IHggPT0gMCkgJiBBID09IDEsIG5hLnJtID0gVCkpDQp9DQoNCg0KZnNjb2xuZXQgPC0gZnVuY3Rpb24obmV0d29yaywgY2NvdmFyKSB7DQogICAgIyBDYWxjdWxhdGUgY29sZW1hbiBvbiBuZXR3b3JrIGxldmVsOg0KICAgICMgaHR0cHM6Ly9yZWFkZXIuZWxzZXZpZXIuY29tL3JlYWRlci9zZC9waWkvUzAzNzg4NzMzMTQwMDAyMzk/dG9rZW49QTQyRjk5RkY2RTJCNzUwNDM2REQyQ0IwREI3QjFGNDFCREVDMTYwNTJBNDU2ODNDMDI2NDREQUY4ODIxNUEzMzc5NjM2QjJBQTE5N0I2NTk0MUQ2MzczRTlFMkVFNDEzDQogICAgDQogICAgZmhvbW9tYXQgPC0gZnVuY3Rpb24oeCkgew0KICAgICAgICB4bWF0IDwtIG1hdHJpeCh4LCBucm93ID0gbGVuZ3RoKHgpLCBuY29sID0gbGVuZ3RoKHgpKQ0KICAgICAgICB4bWF0dCA8LSB0KHhtYXQpDQogICAgICAgIHhob21vIDwtIHhtYXQgPT0geG1hdHQNCiAgICAgICAgcmV0dXJuKHhob21vKQ0KICAgIH0NCiAgICANCiAgICBmc3VtaW50cmEgPC0gZnVuY3Rpb24oeCwgQSkgew0KICAgICAgICAjIEEgaXMgbWF0cml4IGluZGljYXRpbmcgd2hldGhlciBub2RlcyBjb25zdGl0dXRpbmcgZHlhZCBoYXZlIHNhbWUgY2hhcmFjdGVyaXN0aWNzDQogICAgICAgIGRpYWcoeCkgPC0gTkENCiAgICAgICAgeFt4ID09IDEwXSA8LSBOQQ0KICAgICAgICBkaWFnKEEpIDwtIE5BDQogICAgICAgIHN1bSh4ID09IDEgJiBBID09IDEsIG5hLnJtID0gVCkNCiAgICB9DQogICAgDQogICAgIyBleHBlY2F0aW9uIHcqPXN1bV9nIHN1bV9pIChuaSgobmctMSkvKE4tMSkpKQ0KICAgIG5ldHdvcmtbbmV0d29yayA9PSAxMF0gPC0gTkENCiAgICBuaSA8LSByb3dTdW1zKG5ldHdvcmssIG5hLnJtID0gVCkNCiAgICBuZyA8LSBOQQ0KICAgIGZvciAoaSBpbiAxOmxlbmd0aChjY292YXIpKSB7DQogICAgICAgIG5nW2ldIDwtIHRhYmxlKGNjb3Zhcilbcm93bmFtZXModGFibGUoY2NvdmFyKSkgPT0gY2NvdmFyW2ldXQ0KICAgIH0NCiAgICBOIDwtIGxlbmd0aChjY292YXIpDQogICAgd2V4cCA8LSBzdW0obmkgKiAoKG5nIC0gMSkvKE4gLSAxKSksIG5hLnJtID0gVCkNCiAgICANCiAgICAjIHdnZzEgaG93IG1hbnkgaW50cmFncm91cCB0aWVzDQogICAgdyA8LSBmc3VtaW50cmEobmV0d29yaywgZmhvbW9tYXQoY2NvdmFyKSkNCiAgICANCiAgICBTY29sX25ldCA8LSBpZmVsc2UodyA+PSB3ZXhwLCAodyAtIHdleHApLyhzdW0obmksIG5hLnJtID0gVCkgLSB3ZXhwKSwgKHcgLSB3ZXhwKS93ZXhwKQ0KICAgIHJldHVybihTY29sX25ldCkNCn0NCmBgYA0KDQpgYGB7cn0NCmdldHdkKCkNCmxvYWQoIkM6XFxVc2Vyc1xcRGFwaG5cXERvY3VtZW50ZW5cXGxhYmpvdXJuYWxcXERhdGFcXHR3aXR0ZXJfMjAxOTA5MTkuUmRhdGEiKSANCnN0cih0d2l0dGVyXzIwMTkwOTE5LCAxKQ0Ka2V5ZiA8LSB0d2l0dGVyXzIwMTkwOTE5W1sxXV0NCm15ZGF0YSA8LSB0d2l0dGVyXzIwMTkwOTE5W1syXV0NCnNlYXRzIDwtIHR3aXR0ZXJfMjAxOTA5MTlbWzNdXQ0KYGBgDQoNCiMjIyBSZXNlYXJjaCBRdWVzdGlvbiAxIA0KDQpgYGB7ciwgZXZhbD1GQUxTRX0NCiMgcmV0cmlldmUgbm9taW5hdGlvbmRhdGEgZnJvbSByc2llbmEgb2JqZWN0DQpmbmV0IDwtIG15ZGF0YSRkZXB2YXJzJGZuZXQNCmF0bW5ldCA8LSBteWRhdGEkZGVwdmFycyRhdG1uZXQNCnJ0bmV0IDwtIG15ZGF0YSRkZXB2YXJzJHJ0bmV0DQoNCiMgcmV0cmlldmUgbm9kZS1hdHRyaWJ1dGVzIGZyb20gcnNpZW5hIG9iamVjdA0KdnJvdXcgPC0gbXlkYXRhJGNDb3ZhcnMkdnJvdXcNCnBhcnRpaiA8LSBteWRhdGEkY0NvdmFycyRwYXJ0aWoNCmV0aG1pbnogPC0gbXlkYXRhJGNDb3ZhcnMkZXRobWlueg0KbGZ0IDwtIG15ZGF0YSRjQ292YXJzJGxmdA0KDQojIGRlLW1lYW4tY2VudGVyIG5vZGUgYXR0cmlidXRlcw0KZXRobWlueiA8LSBldGhtaW56ICsgYXR0cmlidXRlcyhldGhtaW56KSRtZWFuDQpwYXJ0aWogPC0gcGFydGlqICsgYXR0cmlidXRlcyhwYXJ0aWopJG1lYW4NCnZyb3V3IDwtIHZyb3V3ICsgYXR0cmlidXRlcyh2cm91dykkbWVhbg0KbGZ0IDwtIGxmdCArIGF0dHJpYnV0ZXMobGZ0KSRtZWFuDQoNCiMgY29uc3RydWN0IG1hdHJpY2VzIGZvciBzaW1pbGFyaXR5IGZvciBlYWNoIGRpbWVuc2lvbiAoZHlhZCBjaGFyYWN0ZXJpc3RpY3MpDQp2cm91d20gPC0gZmhvbW9tYXQodnJvdXcpDQpwYXJ0aWptIDwtIGZob21vbWF0KHBhcnRpaikNCmV0aG1pbnptIDwtIGZob21vbWF0KGV0aG1pbnopDQoNCiMganVzdCBmb3IgZnVuLCBtYWtlIGR5YWQgY2hhcmFjdGVyaXN0aWMgaW5kaWNhdGluZyB3aGV0aGVyIGJvdGggbm9kZXMgYXJlIGV0aG5pYyBtaW5vcml0aWVzDQp4bWF0IDwtIG1hdHJpeChldGhtaW56LCBucm93ID0gbGVuZ3RoKGV0aG1pbnopLCBuY29sID0gbGVuZ3RoKGV0aG1pbnopKQ0KeG1hdHQgPC0gdCh4bWF0KQ0KbWlub3JpdHltIDwtIHhtYXQgPT0gMSAmIHhtYXR0ID09IDENCg0KIyBmb3IgYWdlIG1heCA1IHllYXIgZGlmZmVyZW5jZSAvIGZvciBkZXNjcmlwdGl2ZXMNCnhtYXQgPC0gbWF0cml4KGxmdCwgbnJvdyA9IGxlbmd0aChsZnQpLCBuY29sID0gbGVuZ3RoKGxmdCkpDQp4bWF0dCA8LSB0KHhtYXQpDQpsZnRtIDwtIChhYnMoeG1hdCAtIHhtYXR0KSA8IDYpDQoNCiMgY2FsY3VsYXRlIGFsbCBwb3NzaWJsZSBzaW1pbGFyIGR5YWRzLCBub3QgdGhlIGZvY3VzIG9mIHRoaXMgZXhlcmNpc2UuICBmbmR5YWRzMihmbmV0WywsMV0sIHZyb3V3bSkNCiMgZm5keWFkczIoZm5ldFssLDNdLCB2cm91d20pIGZuZHlhZHMyKGZuZXRbLCwxXSwgcGFydGlqbSkgZm5keWFkczIoZm5ldFssLDNdLCBwYXJ0aWptKQ0KIyBmbmR5YWRzMihmbmV0WywsMV0sIGV0aG1pbnptKSBmbmR5YWRzMihmbmV0WywsM10sIGV0aG1pbnptKQ0KDQojIG1ha2UgYSBiaWcgb2JqZWN0IHRvIHN0b3JlIGFsbCByZXN1bHRzDQpkZXNtYXQgPC0gbWF0cml4KE5BLCBucm93ID0gMTAsIG5jb2wgPSA5KQ0KDQojIGxldHMgc3RhcnQgdXNpbmcgb3VyIGZ1bmN0aW9ucw0KZGVzbWF0WzEsIDFdIDwtIGZkZW5zaXR5KGZuZXRbLCAsIDFdKQ0KZGVzbWF0WzEsIDJdIDwtIGZkZW5zaXR5KGZuZXRbLCAsIDJdKQ0KZGVzbWF0WzEsIDNdIDwtIGZkZW5zaXR5KGZuZXRbLCAsIDNdKQ0KZGVzbWF0WzIsIDFdIDwtIGZkZW5zaXR5aW50cmEoZm5ldFssICwgMV0sIHZyb3V3bSkNCmRlc21hdFsyLCAyXSA8LSBmZGVuc2l0eWludHJhKGZuZXRbLCAsIDJdLCB2cm91d20pDQpkZXNtYXRbMiwgM10gPC0gZmRlbnNpdHlpbnRyYShmbmV0WywgLCAzXSwgdnJvdXdtKQ0KZGVzbWF0WzMsIDFdIDwtIGZkZW5zaXR5aW50ZXIoZm5ldFssICwgMV0sIHZyb3V3bSkNCmRlc21hdFszLCAyXSA8LSBmZGVuc2l0eWludGVyKGZuZXRbLCAsIDJdLCB2cm91d20pDQpkZXNtYXRbMywgM10gPC0gZmRlbnNpdHlpbnRlcihmbmV0WywgLCAzXSwgdnJvdXdtKQ0KZGVzbWF0WzQsIDFdIDwtIGZkZW5zaXR5aW50cmEoZm5ldFssICwgMV0sIHBhcnRpam0pDQpkZXNtYXRbNCwgMl0gPC0gZmRlbnNpdHlpbnRyYShmbmV0WywgLCAyXSwgcGFydGlqbSkNCmRlc21hdFs0LCAzXSA8LSBmZGVuc2l0eWludHJhKGZuZXRbLCAsIDNdLCBwYXJ0aWptKQ0KZGVzbWF0WzUsIDFdIDwtIGZkZW5zaXR5aW50ZXIoZm5ldFssICwgMV0sIHBhcnRpam0pDQpkZXNtYXRbNSwgMl0gPC0gZmRlbnNpdHlpbnRlcihmbmV0WywgLCAyXSwgcGFydGlqbSkNCmRlc21hdFs1LCAzXSA8LSBmZGVuc2l0eWludGVyKGZuZXRbLCAsIDNdLCBwYXJ0aWptKQ0KZGVzbWF0WzYsIDFdIDwtIGZkZW5zaXR5aW50cmEoZm5ldFssICwgMV0sIGV0aG1pbnptKQ0KZGVzbWF0WzYsIDJdIDwtIGZkZW5zaXR5aW50cmEoZm5ldFssICwgMl0sIGV0aG1pbnptKQ0KZGVzbWF0WzYsIDNdIDwtIGZkZW5zaXR5aW50cmEoZm5ldFssICwgM10sIGV0aG1pbnptKQ0KZGVzbWF0WzcsIDFdIDwtIGZkZW5zaXR5aW50ZXIoZm5ldFssICwgMV0sIGV0aG1pbnptKQ0KZGVzbWF0WzcsIDJdIDwtIGZkZW5zaXR5aW50ZXIoZm5ldFssICwgMl0sIGV0aG1pbnptKQ0KZGVzbWF0WzcsIDNdIDwtIGZkZW5zaXR5aW50ZXIoZm5ldFssICwgM10sIGV0aG1pbnptKQ0KZGVzbWF0WzgsIDFdIDwtIGZkZW5zaXR5aW50ZXIoZm5ldFssICwgMV0sIG1pbm9yaXR5bSkNCmRlc21hdFs4LCAyXSA8LSBmZGVuc2l0eWludGVyKGZuZXRbLCAsIDJdLCBtaW5vcml0eW0pDQpkZXNtYXRbOCwgM10gPC0gZmRlbnNpdHlpbnRlcihmbmV0WywgLCAzXSwgbWlub3JpdHltKQ0KZGVzbWF0WzksIDFdIDwtIGZkZW5zaXR5aW50cmEoZm5ldFssICwgMV0sIGxmdG0pDQpkZXNtYXRbOSwgMl0gPC0gZmRlbnNpdHlpbnRyYShmbmV0WywgLCAyXSwgbGZ0bSkNCmRlc21hdFs5LCAzXSA8LSBmZGVuc2l0eWludHJhKGZuZXRbLCAsIDNdLCBsZnRtKQ0KZGVzbWF0WzEwLCAxXSA8LSBmZGVuc2l0eWludGVyKGZuZXRbLCAsIDFdLCBsZnRtKQ0KZGVzbWF0WzEwLCAyXSA8LSBmZGVuc2l0eWludGVyKGZuZXRbLCAsIDJdLCBsZnRtKQ0KZGVzbWF0WzEwLCAzXSA8LSBmZGVuc2l0eWludGVyKGZuZXRbLCAsIDNdLCBsZnRtKQ0KDQpkZXNtYXRbMSwgMSArIDNdIDwtIGZkZW5zaXR5KGF0bW5ldFssICwgMV0pDQpkZXNtYXRbMSwgMiArIDNdIDwtIGZkZW5zaXR5KGF0bW5ldFssICwgMl0pDQpkZXNtYXRbMSwgMyArIDNdIDwtIGZkZW5zaXR5KGF0bW5ldFssICwgM10pDQpkZXNtYXRbMiwgMSArIDNdIDwtIGZkZW5zaXR5aW50cmEoYXRtbmV0WywgLCAxXSwgdnJvdXdtKQ0KZGVzbWF0WzIsIDIgKyAzXSA8LSBmZGVuc2l0eWludHJhKGF0bW5ldFssICwgMl0sIHZyb3V3bSkNCmRlc21hdFsyLCAzICsgM10gPC0gZmRlbnNpdHlpbnRyYShhdG1uZXRbLCAsIDNdLCB2cm91d20pDQpkZXNtYXRbMywgMSArIDNdIDwtIGZkZW5zaXR5aW50ZXIoYXRtbmV0WywgLCAxXSwgdnJvdXdtKQ0KZGVzbWF0WzMsIDIgKyAzXSA8LSBmZGVuc2l0eWludGVyKGF0bW5ldFssICwgMl0sIHZyb3V3bSkNCmRlc21hdFszLCAzICsgM10gPC0gZmRlbnNpdHlpbnRlcihhdG1uZXRbLCAsIDNdLCB2cm91d20pDQpkZXNtYXRbNCwgMSArIDNdIDwtIGZkZW5zaXR5aW50cmEoYXRtbmV0WywgLCAxXSwgcGFydGlqbSkNCmRlc21hdFs0LCAyICsgM10gPC0gZmRlbnNpdHlpbnRyYShhdG1uZXRbLCAsIDJdLCBwYXJ0aWptKQ0KZGVzbWF0WzQsIDMgKyAzXSA8LSBmZGVuc2l0eWludHJhKGF0bW5ldFssICwgM10sIHBhcnRpam0pDQpkZXNtYXRbNSwgMSArIDNdIDwtIGZkZW5zaXR5aW50ZXIoYXRtbmV0WywgLCAxXSwgcGFydGlqbSkNCmRlc21hdFs1LCAyICsgM10gPC0gZmRlbnNpdHlpbnRlcihhdG1uZXRbLCAsIDJdLCBwYXJ0aWptKQ0KZGVzbWF0WzUsIDMgKyAzXSA8LSBmZGVuc2l0eWludGVyKGF0bW5ldFssICwgM10sIHBhcnRpam0pDQpkZXNtYXRbNiwgMSArIDNdIDwtIGZkZW5zaXR5aW50cmEoYXRtbmV0WywgLCAxXSwgZXRobWluem0pDQpkZXNtYXRbNiwgMiArIDNdIDwtIGZkZW5zaXR5aW50cmEoYXRtbmV0WywgLCAyXSwgZXRobWluem0pDQpkZXNtYXRbNiwgMyArIDNdIDwtIGZkZW5zaXR5aW50cmEoYXRtbmV0WywgLCAzXSwgZXRobWluem0pDQpkZXNtYXRbNywgMSArIDNdIDwtIGZkZW5zaXR5aW50ZXIoYXRtbmV0WywgLCAxXSwgZXRobWluem0pDQpkZXNtYXRbNywgMiArIDNdIDwtIGZkZW5zaXR5aW50ZXIoYXRtbmV0WywgLCAyXSwgZXRobWluem0pDQpkZXNtYXRbNywgMyArIDNdIDwtIGZkZW5zaXR5aW50ZXIoYXRtbmV0WywgLCAzXSwgZXRobWluem0pDQpkZXNtYXRbOCwgMSArIDNdIDwtIGZkZW5zaXR5aW50ZXIoYXRtbmV0WywgLCAxXSwgbWlub3JpdHltKQ0KZGVzbWF0WzgsIDIgKyAzXSA8LSBmZGVuc2l0eWludGVyKGF0bW5ldFssICwgMl0sIG1pbm9yaXR5bSkNCmRlc21hdFs4LCAzICsgM10gPC0gZmRlbnNpdHlpbnRlcihhdG1uZXRbLCAsIDNdLCBtaW5vcml0eW0pDQpkZXNtYXRbOSwgMSArIDNdIDwtIGZkZW5zaXR5aW50cmEoYXRtbmV0WywgLCAxXSwgbGZ0bSkNCmRlc21hdFs5LCAyICsgM10gPC0gZmRlbnNpdHlpbnRyYShhdG1uZXRbLCAsIDJdLCBsZnRtKQ0KZGVzbWF0WzksIDMgKyAzXSA8LSBmZGVuc2l0eWludHJhKGF0bW5ldFssICwgM10sIGxmdG0pDQpkZXNtYXRbMTAsIDEgKyAzXSA8LSBmZGVuc2l0eWludGVyKGF0bW5ldFssICwgMV0sIGxmdG0pDQpkZXNtYXRbMTAsIDIgKyAzXSA8LSBmZGVuc2l0eWludGVyKGF0bW5ldFssICwgMl0sIGxmdG0pDQpkZXNtYXRbMTAsIDMgKyAzXSA8LSBmZGVuc2l0eWludGVyKGF0bW5ldFssICwgM10sIGxmdG0pDQoNCmRlc21hdFsxLCAxICsgNl0gPC0gZmRlbnNpdHkocnRuZXRbLCAsIDFdKQ0KZGVzbWF0WzEsIDIgKyA2XSA8LSBmZGVuc2l0eShydG5ldFssICwgMl0pDQpkZXNtYXRbMSwgMyArIDZdIDwtIGZkZW5zaXR5KHJ0bmV0WywgLCAzXSkNCmRlc21hdFsyLCAxICsgNl0gPC0gZmRlbnNpdHlpbnRyYShydG5ldFssICwgMV0sIHZyb3V3bSkNCmRlc21hdFsyLCAyICsgNl0gPC0gZmRlbnNpdHlpbnRyYShydG5ldFssICwgMl0sIHZyb3V3bSkNCmRlc21hdFsyLCAzICsgNl0gPC0gZmRlbnNpdHlpbnRyYShydG5ldFssICwgM10sIHZyb3V3bSkNCmRlc21hdFszLCAxICsgNl0gPC0gZmRlbnNpdHlpbnRlcihydG5ldFssICwgMV0sIHZyb3V3bSkNCmRlc21hdFszLCAyICsgNl0gPC0gZmRlbnNpdHlpbnRlcihydG5ldFssICwgMl0sIHZyb3V3bSkNCmRlc21hdFszLCAzICsgNl0gPC0gZmRlbnNpdHlpbnRlcihydG5ldFssICwgM10sIHZyb3V3bSkNCmRlc21hdFs0LCAxICsgNl0gPC0gZmRlbnNpdHlpbnRyYShydG5ldFssICwgMV0sIHBhcnRpam0pDQpkZXNtYXRbNCwgMiArIDZdIDwtIGZkZW5zaXR5aW50cmEocnRuZXRbLCAsIDJdLCBwYXJ0aWptKQ0KZGVzbWF0WzQsIDMgKyA2XSA8LSBmZGVuc2l0eWludHJhKHJ0bmV0WywgLCAzXSwgcGFydGlqbSkNCmRlc21hdFs1LCAxICsgNl0gPC0gZmRlbnNpdHlpbnRlcihydG5ldFssICwgMV0sIHBhcnRpam0pDQpkZXNtYXRbNSwgMiArIDZdIDwtIGZkZW5zaXR5aW50ZXIocnRuZXRbLCAsIDJdLCBwYXJ0aWptKQ0KZGVzbWF0WzUsIDMgKyA2XSA8LSBmZGVuc2l0eWludGVyKHJ0bmV0WywgLCAzXSwgcGFydGlqbSkNCmRlc21hdFs2LCAxICsgNl0gPC0gZmRlbnNpdHlpbnRyYShydG5ldFssICwgMV0sIGV0aG1pbnptKQ0KZGVzbWF0WzYsIDIgKyA2XSA8LSBmZGVuc2l0eWludHJhKHJ0bmV0WywgLCAyXSwgZXRobWluem0pDQpkZXNtYXRbNiwgMyArIDZdIDwtIGZkZW5zaXR5aW50cmEocnRuZXRbLCAsIDNdLCBldGhtaW56bSkNCmRlc21hdFs3LCAxICsgNl0gPC0gZmRlbnNpdHlpbnRlcihydG5ldFssICwgMV0sIGV0aG1pbnptKQ0KZGVzbWF0WzcsIDIgKyA2XSA8LSBmZGVuc2l0eWludGVyKHJ0bmV0WywgLCAyXSwgZXRobWluem0pDQpkZXNtYXRbNywgMyArIDZdIDwtIGZkZW5zaXR5aW50ZXIocnRuZXRbLCAsIDNdLCBldGhtaW56bSkNCmRlc21hdFs4LCAxICsgNl0gPC0gZmRlbnNpdHlpbnRlcihydG5ldFssICwgMV0sIG1pbm9yaXR5bSkNCmRlc21hdFs4LCAyICsgNl0gPC0gZmRlbnNpdHlpbnRlcihydG5ldFssICwgMl0sIG1pbm9yaXR5bSkNCmRlc21hdFs4LCAzICsgNl0gPC0gZmRlbnNpdHlpbnRlcihydG5ldFssICwgM10sIG1pbm9yaXR5bSkNCmRlc21hdFs5LCAxICsgNl0gPC0gZmRlbnNpdHlpbnRyYShydG5ldFssICwgMV0sIGxmdG0pDQpkZXNtYXRbOSwgMiArIDZdIDwtIGZkZW5zaXR5aW50cmEocnRuZXRbLCAsIDJdLCBsZnRtKQ0KZGVzbWF0WzksIDMgKyA2XSA8LSBmZGVuc2l0eWludHJhKHJ0bmV0WywgLCAzXSwgbGZ0bSkNCmRlc21hdFsxMCwgMSArIDZdIDwtIGZkZW5zaXR5aW50ZXIocnRuZXRbLCAsIDFdLCBsZnRtKQ0KZGVzbWF0WzEwLCAyICsgNl0gPC0gZmRlbnNpdHlpbnRlcihydG5ldFssICwgMl0sIGxmdG0pDQpkZXNtYXRbMTAsIDMgKyA2XSA8LSBmZGVuc2l0eWludGVyKHJ0bmV0WywgLCAzXSwgbGZ0bSkNCg0KY29sbmFtZXMoZGVzbWF0KSA8LSBjKCJmcmllbmRzIHcxIiwgImZyaWVuZHMgdzIiLCAiZnJpZW5kcyB3MyIsICJhdG1lbnRpb25zIHcxIiwgImF0bWVudGlvbnMgdzIiLCAiYXRtZW50aW9ucyB3MyIsIA0KICAgICJyZXR3ZWV0cyB3MSIsICJyZXR3ZWV0cyB3MiIsICJyZXR3ZWV0cyB3MyIpDQpyb3duYW1lcyhkZXNtYXQpIDwtIGMoInRvdGFsIiwgInNhbWUgc2V4IiwgImRpZmZlcmVudCBzZXgiLCAic2FtZSBwYXJ0eSIsICJkaWZmZXJlbnQgcGFydHkiLCAic2FtZSBldGhuaWNpdHkiLCANCiAgICAiZGlmZmVyZW50IGV0aG5pY2l0eSIsICJib3RoIG1pbm9yaXR5IiwgInNhbWUgYWdlICg8NikiLCAiZGlmZmVyZW50IGFnZSAoPjUpIikNCmRlc21hdA0KYGBgDQoNCmBgYHtyfQ0KbGlicmFyeShSU2llbmEpDQpteWVmZiA8LSBnZXRFZmZlY3RzKG15ZGF0YSkNCm15ZWZmDQpgYGANCg0KYGBge3J9DQpteWVmZl9tMSA8LSBteWVmZg0KbXllZmZfbTEgPC0gaW5jbHVkZUVmZmVjdHMobXllZmZfbTEsIHNhbWVYLCBpbnRlcmFjdGlvbjEgPSAicGFydGlqIiwgbmFtZSA9ICJydG5ldCIpDQpgYGANCg0KYGBge3IsIGV2YWw9RkFMU0V9DQojIEkgdXNlZCBhIHNlZWQgc28geW91IHdpbGwgcHJvYmFibHkgc2VlIHRoZSBzYW1lIHJlc3VsdHMNCm15YWxnb3JpdGhtIDwtIHNpZW5hQWxnb3JpdGhtQ3JlYXRlKHByb2puYW1lID0gInRlc3QiLCBzZWVkID0gMzQ1NjU0KQ0KYGBgDQpgYGB7ciwgZXZhbD1GQUxTRX0NCiMgdG8gc3BlZWQgdGhpbmdzIHVwIGEgYml0LCBJIGFtIHVzaW5nIG1vcmUgY29yZXMuDQphbnNNMSA8LSBzaWVuYTA3KG15YWxnb3JpdGhtLCBkYXRhID0gbXlkYXRhLCBlZmZlY3RzID0gbXllZmZfbTEsIHVzZUNsdXN0ZXIgPSBUUlVFLCBuYnJOb2RlcyA9IDQsIGluaXRDID0gVFJVRSwgDQogICAgYmF0Y2ggPSBUUlVFKQ0KYW5zTTFiIDwtIHNpZW5hMDcobXlhbGdvcml0aG0sIGRhdGEgPSBteWRhdGEsIHByZXZBbnMgPSBhbnNNMSwgZWZmZWN0cyA9IG15ZWZmX20xLCB1c2VDbHVzdGVyID0gVFJVRSwgDQogICAgbmJyTm9kZXMgPSA0LCBpbml0QyA9IFRSVUUsIGJhdGNoID0gVFJVRSkNCmFuc00xYyA8LSBzaWVuYTA3KG15YWxnb3JpdGhtLCBkYXRhID0gbXlkYXRhLCBwcmV2QW5zID0gYW5zTTFiLCBlZmZlY3RzID0gbXllZmZfbTEsIHVzZUNsdXN0ZXIgPSBUUlVFLCANCiAgICBuYnJOb2RlcyA9IDQsIGluaXRDID0gVFJVRSwgYmF0Y2ggPSBUUlVFKQ0KDQpzYXZlKGFuc00xLCBmaWxlID0gImFuc00xYS5SRGF0YSIpDQpzYXZlKGFuc00xYiwgZmlsZSA9ICJhbnNNMWIuUkRhdGEiKQ0Kc2F2ZShhbnNNMWMsIGZpbGUgPSAiYW5zTTFjLlJEYXRhIikNCg0KIyBUaGUgZXN0aW1hdGUgb2YgdGhlIHJldHdlYXRzIHdpdGhpbiB0aGUgc2FtZSBwYXJ0eSBpcyBwb3NpdGl2ZSBjb21wYXJlZCB0byB0aGUgZXN0aW1hdGUgb2YgdGhlIHJldHdlYXRzIGJldHdlZW4gZGlmZmVyZW50IHBhcnRpZXMuIFNvLCB0aGVyZSBpcyBzZWdyZWdhdGlvbiBhbG9uZyBwYXJ0eSBhZmZpbGlhdGlvbiBpbiB0aGUgcmV0d2VldCBuZXR3b3JrIGFtb25nIER1dGNoIE1Qcy4NCmBgYA0KDQojIyMgUmVzZWFyY2ggUXVlc3Rpb24gMg0KDQpgYGB7ciwgZXZhbD1GQUxTRX0NCm15ZWZmX20yIDwtIG15ZWZmDQpteWVmZl9tMiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZl9tMiwgc2FtZVgsIGludGVyYWN0aW9uMSA9ICJwYXJ0aWoiLCBpbnRlcmFjdGlvbjIgPSAidnJvdXciLCBpbnRlcmFjdGlvbjMgPSAibGZ0IiwgbmFtZSA9ICJydG5ldCIpDQoNCm15YWxnb3JpdGhtIDwtIHNpZW5hQWxnb3JpdGhtQ3JlYXRlKHByb2puYW1lID0gInRlc3QiLCBzZWVkID0gMzQ1NjU0KQ0KDQphbnNNMiA8LSBzaWVuYTA3KG15YWxnb3JpdGhtLCBkYXRhID0gbXlkYXRhLCBlZmZlY3RzID0gbXllZmZfbTIsIHVzZUNsdXN0ZXIgPSBUUlVFLCBuYnJOb2RlcyA9IDQsIGluaXRDID0gVFJVRSwgDQogICAgYmF0Y2ggPSBUUlVFKQ0KDQpzYXZlKGFuc00yLCBmaWxlID0gImFuc00yLlJEYXRhIikNCg0KbG9hZCgiYW5zTTIuUkRhdGEiKQ0KDQphbnNNMg0KDQojIEkgaGF2ZSBub3QgKHlldCkgc3VjY2VlZGVkIGluIGVzdGltYXRpbmcgdGhlIHJpZ2h0IG1vZGVsLiANCmBgYA0KDQojIyMgUmVzZWFyY2ggUXVlc3Rpb24gMw0KDQpgYGB7ciwgZXZhbD1GQUxTRX0NCm15ZWZmX20zIDwtIG15ZWZmDQpteWVmZl9tMyA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZl9tMiwgc2FtZVgsIGludGVyYWN0aW9uMSA9ICJwYXJ0aWoiLCBhZnN0YW5kLCBuYW1lID0gInJ0bmV0IikgDQoNCm15YWxnb3JpdGhtIDwtIHNpZW5hQWxnb3JpdGhtQ3JlYXRlKHByb2puYW1lID0gInRlc3QiLCBzZWVkID0gMzQ1NjU0KQ0KDQphbnNNMyA8LSBzaWVuYTA3KG15YWxnb3JpdGhtLCBkYXRhID0gbXlkYXRhLCBlZmZlY3RzID0gbXllZmZfbTIsIHVzZUNsdXN0ZXIgPSBUUlVFLCBuYnJOb2RlcyA9IDQsIGluaXRDID0gVFJVRSwgDQogICAgYmF0Y2ggPSBUUlVFKQ0KDQpzYXZlKGFuc00zLCBmaWxlID0gImFuc00zLlJEYXRhIikNCg0KbG9hZCgiYW5zTTMuUkRhdGEiKQ0KDQphbnNNMw0KDQojIEkgaGF2ZSBub3QgKHlldCkgc3VjY2VlZGVkIGluIGVzdGltYXRpbmcgdGhlIHJpZ2h0IG1vZGVsLiANCmBgYA0KDQoNCg0KDQo=</div>
 
 
 </div>
