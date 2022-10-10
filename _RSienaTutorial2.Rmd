@@ -1,0 +1,184 @@
+# Practicing with RSiena II (Consequences)
+
+https://www.jochemtolsma.nl/courses/complete-networks/socio7/#2-1-modelling-node-evolution
+
+<br>
+
+## Before you start
+
+```{r}
+# install.packages("installr")  #you  first install packages
+require(installr)  #then you will need to activate packages. 
+updateR()  #run the function to start the update process
+```
+
+```{r}
+### Author: DAPHNE JANSSEN### Lastmod: 05-10-2022###
+
+# cleanup workspace
+rm(list = ls())
+```
+
+```{r}
+library(RSiena)
+library(sna)
+library(ape)
+library(network)
+```
+
+```{r}
+# fMoran.I:
+fMoran.I <- function(x, weight, scaled = FALSE, na.rm = FALSE, alternative = "two.sided", rowstandardize = TRUE) {
+    if (rowstandardize) {
+        if (dim(weight)[1] != dim(weight)[2]) 
+            stop("'weight' must be a square matrix")
+        n <- length(x)
+        if (dim(weight)[1] != n) 
+            stop("'weight' must have as many rows as observations in 'x'")
+        ei <- -1/(n - 1)
+        nas <- is.na(x)
+        if (any(nas)) {
+            if (na.rm) {
+                x <- x[!nas]
+                n <- length(x)
+                weight <- weight[!nas, !nas]
+            } else {
+                warning("'x' has missing values: maybe you wanted to set na.rm = TRUE?")
+                return(list(observed = NA, expected = ei, sd = NA, p.value = NA))
+            }
+        }
+        ROWSUM <- rowSums(weight)
+        ROWSUM[ROWSUM == 0] <- 1
+        weight <- weight/ROWSUM
+        s <- sum(weight)
+        m <- mean(x)
+        y <- x - m
+        cv <- sum(weight * y %o% y)
+        v <- sum(y^2)
+        obs <- (n/s) * (cv/v)
+        if (scaled) {
+            i.max <- (n/s) * (sd(rowSums(weight) * y)/sqrt(v/(n - 1)))
+            obs <- obs/i.max
+        }
+        S1 <- 0.5 * sum((weight + t(weight))^2)
+        S2 <- sum((apply(weight, 1, sum) + apply(weight, 2, sum))^2)
+        s.sq <- s^2
+        k <- (sum(y^4)/n)/(v/n)^2
+        sdi <- sqrt((n * ((n^2 - 3 * n + 3) * S1 - n * S2 + 3 * s.sq) - k * (n * (n - 1) * S1 - 2 * n * 
+            S2 + 6 * s.sq))/((n - 1) * (n - 2) * (n - 3) * s.sq) - 1/((n - 1)^2))
+        alternative <- match.arg(alternative, c("two.sided", "less", "greater"))
+        pv <- pnorm(obs, mean = ei, sd = sdi)
+        if (alternative == "two.sided") 
+            pv <- if (obs <= ei) 
+                2 * pv else 2 * (1 - pv)
+        if (alternative == "greater") 
+            pv <- 1 - pv
+        list(observed = obs, expected = ei, sd = sdi, p.value = pv)
+    } else {
+        if (dim(weight)[1] != dim(weight)[2]) 
+            stop("'weight' must be a square matrix")
+        n <- length(x)
+        if (dim(weight)[1] != n) 
+            stop("'weight' must have as many rows as observations in 'x'")
+        ei <- -1/(n - 1)
+        nas <- is.na(x)
+        if (any(nas)) {
+            if (na.rm) {
+                x <- x[!nas]
+                n <- length(x)
+                weight <- weight[!nas, !nas]
+            } else {
+                warning("'x' has missing values: maybe you wanted to set na.rm = TRUE?")
+                return(list(observed = NA, expected = ei, sd = NA, p.value = NA))
+            }
+        }
+        # ROWSUM <- rowSums(weight) ROWSUM[ROWSUM == 0] <- 1 weight <- weight/ROWSUM
+        s <- sum(weight)
+        m <- mean(x)
+        y <- x - m
+        cv <- sum(weight * y %o% y)
+        v <- sum(y^2)
+        obs <- (n/s) * (cv/v)
+        if (scaled) {
+            i.max <- (n/s) * (sd(rowSums(weight) * y)/sqrt(v/(n - 1)))
+            obs <- obs/i.max
+        }
+        S1 <- 0.5 * sum((weight + t(weight))^2)
+        S2 <- sum((apply(weight, 1, sum) + apply(weight, 2, sum))^2)
+        s.sq <- s^2
+        k <- (sum(y^4)/n)/(v/n)^2
+        sdi <- sqrt((n * ((n^2 - 3 * n + 3) * S1 - n * S2 + 3 * s.sq) - k * (n * (n - 1) * S1 - 2 * n * 
+            S2 + 6 * s.sq))/((n - 1) * (n - 2) * (n - 3) * s.sq) - 1/((n - 1)^2))
+        alternative <- match.arg(alternative, c("two.sided", "less", "greater"))
+        pv <- pnorm(obs, mean = ei, sd = sdi)
+        if (alternative == "two.sided") 
+            pv <- if (obs <= ei) 
+                2 * pv else 2 * (1 - pv)
+        if (alternative == "greater") 
+            pv <- 1 - pv
+        list(observed = obs, expected = ei, sd = sdi, p.value = pv)
+    }
+    
+    
+}
+```
+
+```{r}
+# fanscsv:
+fanscsv <- function(ans = ans, filename = "ans.csv", write = TRUE) {
+    ans1_mat <- matrix(NA, nrow = length(ans$effects[, 2]), ncol = 3)
+    row.names(ans1_mat) <- ans$effects[, 2]
+    ans1_mat[, 1] <- (ans$theta)
+    ans1_mat[, 2] <- (ans$se)
+    ans1_mat[, 3] <- (ans$tconv)
+    ans1_mat <- rbind(ans1_mat, c(ans$tconv.max))
+    row.names(ans1_mat)[length(row.names(ans1_mat))] <- "Overall maximum convergence ratio:"
+    colnames(ans1_mat) <- c("Estimate", "Standard Error", "Convergence t-ratio")
+    print(ans1_mat)
+    if (write) {
+        write.csv(ans1_mat, filename)
+    }
+}
+```
+
+
+## Data
+
+```{r}
+load("beh_data.RData")  #change to your working directory
+str(ExData, 1)
+str(ExData$depvars, 1)
+```
+
+
+## Descriptive statistics in simmilarity in behaviour
+
+### Moran’s autocorrelation for outgoing ties: RSiena build-in dataset
+
+```{r}
+library(network)
+friend.data.w1 <- s501
+friend.data.w2 <- s502
+friend.data.w3 <- s503
+drink <- s50a
+smoke <- s50s
+
+net1 <- network::as.network(friend.data.w1)
+net2 <- network::as.network(friend.data.w2)
+net3 <- network::as.network(friend.data.w3)
+
+# nacf does not row standardize!
+snam1 <- nacf(net1, drink[, 1], type = "moran", neighborhood.type = "out", demean = TRUE)
+snam1[2]  #the first order matrix is stored in second list-element
+```
+
+```{r}
+geodistances <- geodist(net1, count.paths = TRUE)
+geodistances <- geodistances$gdist
+
+# first define a nb based on distance 1.
+weights1 <- geodistances == 1
+
+# this function rowstandardizes by default
+ape::Moran.I(drink[, 1], scaled = FALSE, weight = weights1, na.rm = TRUE)
+```

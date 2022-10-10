@@ -1685,3 +1685,20 @@ eval:  alcohol ego                                  0.0332
 eval:  alcohol ego x alcohol alter                  0.1153
 
 Total computation time 32.98 seconds.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 05/10/2022 11:00:27
+New results follow.
+-----------------------------------
+
+RSiena version 1.3.0.1 (02 mei 21)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Random initialization of random number stream.
+Current random number seed is 336646.

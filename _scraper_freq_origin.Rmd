@@ -1,0 +1,288 @@
+
+Laat je data in met je achternamen. 
+Let even op dat je met de volledige achternaam begint. zie kleine aanpassing in _scraping_cs.rmd. 
+```{r}
+load("cs_df_s1b.RData")
+cs_df %>% mutate(lastname=last_name) -> cs_df
+lastname_df <- cs_df
+```
+
+We moeten de namen in het juiste format zetten. 
+
+Dus niet "van der meer", maar: "meer, van der". 
+
+Dan verwijder ik dubbele achternamen. 
+```{r}
+#voorvoegsels correct zetten voor scraper
+voorvoegsels <- c("'t ", "d' ", "de ", "de la ", "den ", "del ", "der ", "des ", "el ", "el- ", "in 't ", "la ", "le ", "les ", "op den ", "ten ", "ter ", "tes ", "van ", "van 't ", "van de " , "van der ", "van den ", "von der ", "op den ", "ul ") 
+
+for (i in 1: length(lastname_df$lastname)) {
+  if (sum(str_detect(lastname_df$lastname[i], voorvoegsels))>0) {
+    last <-  as.character(str_split(lastname_df$lastname[i], pattern=" ", simplify = TRUE))
+    last <- last[length(last)]
+    first <- as.character(unlist(strsplit(lastname_df$lastname[i], split=last, fixed=TRUE)))
+    lastname_df$lastname[i] <- paste(last, ", ", first, sep="")
+  }
+}
+
+#dubbele namen verwijderen. let op dubbele namen met voorvoegsel worden niet gecleaned. TO DO 
+for (i in 1: length(lastname_df$lastname)) {
+  if (!sum(str_detect(lastname_df$lastname[i], voorvoegsels))>0) {
+    lastname_df$lastname[i] <- as.character(str_split(lastname_df$lastname[i], pattern=" ", n = 2, simplify = TRUE)[,1])
+    lastname_df$lastname[i] <- as.character(str_split(lastname_df$lastname[i], pattern="-", n = 2, simplify = TRUE)[,1])
+  }
+}
+
+lastname_df$lastname<- trimws(lastname_df$lastname, which = c("right"), whitespace = "[ \t\r\n]")
+lastname_df$lastname <- str_replace_all(lastname_df$lastname, " ", "%20") #html links houden niet van spaties. 
+
+lastname_df$np <- ""
+```
+ 
+
+```{r}
+# Load required packages
+
+if (!require("tidyverse", character.only = TRUE)) {
+  install.packages("tidyverse", dependencies = TRUE)
+  library(tidyverse, character.only = TRUE)
+}
+
+if (!require("rvest", character.only = TRUE)) {
+  install.packages("rvest", dependencies = TRUE)
+  library(rvest, character.only = TRUE)
+}
+
+# if (!require("polite", character.only = TRUE)) {
+#   install.packages("polite", dependencies = TRUE)
+#   library(polite, character.only = TRUE)
+# }
+#   
+# if (!require("xml2", character.only = TRUE)) {
+#   install.packages("xml2", dependencies = TRUE)
+#   library(polite, character.only = TRUE)
+# }
+```
+
+hier maken we de links voor de website. 
+```{r}
+# creating URLs: origin
+lastname_df$name_origin <- ifelse((lastname_df$np==""),
+                                paste0("https://www.cbgfamilienamen.nl/nfb/detail_naam.php?gba_naam=",
+                                       stringr::str_to_title(lastname_df[, c("lastname")]), 
+                                       "&gba_naam=",
+                                       stringr::str_to_title(lastname_df[, c("lastname")]),
+                                       "&nfd_naam=",
+                                       stringr::str_to_title(lastname_df[, c("lastname")]), 
+                                       "&info=analyse+en+verklaring&operator=eq&taal="), 
+                                paste0("https://www.cbgfamilienamen.nl/nfb/detail_naam.php?gba_naam=",
+                                       lastname_df[, c("np2")],
+                                       stringr::str_to_title(lastname_df[, c("lastname")]), 
+                                       "&gba_naam=",
+                                       lastname_df[, c("np2")],
+                                       stringr::str_to_title(lastname_df[, c("lastname")]), 
+                                       "&nfd_naam=",
+                                       stringr::str_to_title(lastname_df[, c("lastname")]),
+                                       "%2C+",
+                                       lastname_df[, c("np")],
+                                       "&info=analyse+en+verklaring&operator=eq&taal="))
+```
+
+hier slaan we alles op
+```{r}
+name_originl <- list()
+table_originl <- list()
+time <- 0.1
+```
+
+# crucical scrape loop
+kom voorlopig geen fouten tegen, toch alles alvast in een trycatch gezet. 
+let op dat ik niet netjes scrape. dus zonder functie 'polite' gezien de kleine aantallen in onze cursus, mag dat wmb wel. 
+```{r}
+
+for (i in 1:nrow(lastname_df)) {
+  print(i)
+  Sys.sleep(time)
+  tryCatch({ 
+    name_originl[[i]]  <- read_html(lastname_df[i, c("name_origin")])
+    table_originl[[i]] <- name_originl[[i]] %>% html_table()
+  }, 
+    warning = function(w) {
+        cat("WARNING:", conditionMessage(w), "\n") #WARNING message
+    },
+    error=function(e){
+      err <- conditionMessage(e)
+      cat("Error:", conditionMessage(e), "\n") #ERROR message
+    }  
+  )
+}
+```
+
+en vanaf hier is het eigenlijk alleen maar opschonen. 
+```{r}
+origin_txt <- list()
+for (i in 1:length(name_originl)) {
+    origin_txt [[i]] <- name_originl[[i]] %>% html_text() %>% as.character()
+}
+
+```
+
+```{r}
+# Get out the relevant origin information from the xml lists
+origin_ln <- list()
+
+for (i in 1:length(name_originl)) {
+  origin_ln[[i]] <- name_originl[[i]] %>% html_nodes("div") %>% rvest::html_text()
+  origin_ln[[i]] <- origin_ln[[i]][[3]]
+}
+
+# Remove mess
+for (i in 1:length(origin_ln)) {
+  origin_ln[[i]] <- gsub("\\t", " ", origin_ln[[i]])
+  origin_ln[[i]] <- gsub("\\n", " ", origin_ln[[i]])
+}
+
+# Flatten nested structure of the origin information
+#origin_ln <- rbind(flatten(origin_ln))
+
+```
+
+
+```{r extracting-verklaring-kenmerken}
+
+# Detaching the names and origin info for easier data handling
+origin <- unlist(origin_ln)
+
+
+
+origin <- str_extract_all(origin, "varianten(.*?)©")
+
+# Origin information is usually mentioned after "verklaring" or "kenmerken"
+origin <- str_remove_all(origin, "varianten")
+origin <- str_remove_all(origin, "CBG Bronnen")
+origin <- str_remove_all(origin, "catalogus")
+origin <- str_remove_all(origin, "©")
+
+
+verklaring <- str_remove_all(origin, "kenmerken:(.*?)$")
+kenmerken <- str_extract_all(origin, "kenmerken:(.*?)$")
+kenmerken <- str_remove_all(kenmerken, "specifieke componenten:(.*?)$")
+sc <- str_extract_all(origin, "specifieke componenten:(.*?)$") # Not directly relevant to us, but does mean that the name has a webpage
+
+
+# Make into a neat dataframe with the names attached
+verklaring <- trimws(verklaring, which = "both")
+kenmerken <- trimws(kenmerken, which = "both")
+sc <- trimws(sc, which = "both")
+vk <- data.frame(cs_df$lastname, verklaring, kenmerken, sc)
+
+
+```
+
+
+
+# Separating names with Dutch & unknown origin
+Next, we identify those names for which no additional information was found. This is important to distinguish Dutch names from names with unknown origins.
+
+- Dutch names: no label indicating that the name is Dutch, but some other information available on name origin
+- Unknown names: web page cannot be found, so origin information is empty. 
+
+```{r origin-unknown}
+
+# Identify last names that could not be found
+vk <- vk %>%
+  mutate(verklaring = ifelse(verklaring=="", 0, verklaring), 
+         kenmerken = ifelse(kenmerken=="character(0)", 0, kenmerken),
+         sc = ifelse(sc=="character(0)", 0, sc),
+         no_info = nchar(verklaring) + nchar(kenmerken) + nchar(sc))
+
+vk <- vk %>%
+  mutate(no_info = ifelse(no_info==3, 1, 0), 
+         verklaring = ifelse(verklaring==0, NA, verklaring),
+         kenmerken = ifelse(kenmerken==0, NA, kenmerken))
+# If there is no text in verklaring or kenmerken, the name could not be found in the databases. 
+```
+
+
+# Extracting specific origin information
+There are three main ways to get information about the origin of last names:
+
+1) Under "kenmerken", last names are assigned clickable tags. These tags include unspecified foreign name tags ("andere taal"), as well as specific foreign origins of the name ("Franse naam", "Indische naam").
+-> origin1 + origin4
+
+2) Several names have more extensively written out stories behind the name, under "verklaring". A number of names contain detailed (either country-level or regional) origins, usually in the form of "De naam [xyz] is afkomstig uit [country]". 
+-> origin2 
+
+3) Some names have origin information under "verklaring" in the form of the linguistic origins of the name. This can be country specific (e.g. Chinese name), but it can also apply to multiple countries when the language is spoken in more than 1 countries (e.g. Spanish name). 
+-> origin3 
+
+```{r countries-extract}
+
+# Step 1: extracting origin tags from kenmerken
+vk <- vk %>%
+  mutate(origin1 = str_extract(kenmerken, "[:upper:]([:lower:]{2,}) naam"))
+
+# Note: sometimes multiple origins are mentioned. Currently, I only extract the first one. Otherwise, we should use str_extract_all. 
+
+
+
+# Step 2: extracting origin info from verklaring 
+vk <- vk %>%
+  mutate(origin2 = ifelse(as.numeric(str_detect(verklaring, "afkomstig uit")) == 1, 
+         str_remove(verklaring, ".*afkomstig uit"), NA))
+
+
+# Step 3: extracting additional origin info from verklaring
+vk <- vk %>%
+  mutate(origin3 = str_extract(verklaring, "[:upper:]([:lower:]{2,}) (achter)?(familie)?(beroeps)?naam"))
+
+
+
+# Finally, we clean up the origin information extracted above
+
+# Origin1: already neat
+vk$origin1 <- str_remove(vk$origin1, "Joodse naam") # can be Dutch & non-Dutch
+
+# Origin2: messy
+vk$origin2 <- str_remove(vk$origin2, "\\..*") # remove extra info in the following sentence 
+vk$origin2 <- str_remove(vk$origin2, "\\;.*") # remove extra info in the following sentence 
+vk$origin2 <- str_remove(vk$origin2, "\\(.*") # remove extra info in the following sentence 
+
+
+vk$dpg <- as.numeric(str_detect(vk$origin2, "(dorp)|(plaats)|(gemeente)|(graafschap)|(stad)|(deel)|(Friesland)")) # origin info too regional 
+vk <- vk %>% mutate(origin2 = ifelse((dpg==1), NA, origin2)) # removing regional origin info
+vk <- subset(vk, select = -dpg) # removing intermediate variable
+
+# Sometimes, there were multiple countries mentioned. Take only the first:
+vk$origin2 <- str_remove(vk$origin2, "\\,.*") # Only first
+vk$origin2 <- str_remove(vk$origin2, "\\s(en).*") # Only first 
+vk$origin2 <- str_remove(vk$origin2, "\\s(of).*") # Only first 
+
+
+# Origin3: pretty neat
+vk$origin3 <- str_remove(vk$origin3, "D(i)?e(ze)? (familie)?(achter)?(beroeps)?naam") # slipped through the regex
+vk$origin3 <- str_remove(vk$origin3, "Een (familie)?(achter)?(beroeps)?naam") # slipped through the regex
+vk$origin3 <- str_remove(vk$origin3, "Zijn (familie)?(achter)?(beroeps)?naam") # slipped through the regex
+vk$origin3 <- str_remove(vk$origin3, "Als (familie)?(achter)?(beroeps)?naam") # slipped through the regex
+vk$origin3 <- str_remove(vk$origin3, "Joodse (familie)?(achter)?naam")
+vk$origin3 <- str_remove(vk$origin3, "Bijbelse (familie)?(achter)?naam")
+
+
+# Setting empty origin variables to NA (Dutch or unfound foreign)
+vk <- vk %>%
+  mutate(origin1 = as.character(ifelse(origin1==""|origin1=="character(0)", NA, origin1)),
+         origin2 = as.character(ifelse(origin2==""|origin2=="character(0)", NA, origin2)),
+         origin3 = as.character(ifelse(origin3==""|origin3=="character(0)", NA, origin3)))
+
+
+
+# Finally, the tag "andere taal" was used to distinguish foreign names of unknown origin from known Dutch names. 
+vk <- vk %>%
+  mutate(origin4 = ifelse((as.numeric(str_detect(kenmerken, "andere taal"))==1), "non-Dutch", NA))
+
+
+```
+
+Ik zou alles waar `no_info` op 1 staat of waar `origin4` op "non-Dutch" staat coderen als buitenlands! 
+
+

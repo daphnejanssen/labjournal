@@ -78,7 +78,7 @@ myeff
 ans <- siena07(myalgorithm, data = mydata, effects = myeff)
 ```
 
-```{r}
+```{r, eval=FALSE}
 summary(ans)
 ```
 
@@ -401,15 +401,14 @@ save(ansM1c, file = "ansM1c.RData")
 
 <br>
 
+
 ### Research Question 2
 
 ```{r, eval=FALSE}
 myeff_m2 <- myeff
-myeff_m2 <- includeEffects(myeff_m2, sameX, interaction1 = "partij", interaction2 = "vrouw", interaction3 = "lft", name = "rtnet")
-
-myalgorithm <- sienaAlgorithmCreate(projname = "test", seed = 345654)
-
-ansM2 <- siena07(myalgorithm, data = mydata, effects = myeff_m2, useCluster = TRUE, nbrNodes = 4, initC = TRUE, 
+myeff_m2 <- includeEffects(myeff_m2, sameX, interaction1 = "vrouw", name = "rtnet")
+myeff_m2 <- includeEffects(myeff_m2, absDiffX, interaction1 = "lft", name = "rtnet")
+ansM2 <- siena07(myalgorithm, data = mydata, prevAns = ansM1, effects = myeff_m2, useCluster = TRUE, nbrNodes = 4, initC = TRUE, 
     batch = TRUE)
 
 save(ansM2, file = "ansM2.RData")
@@ -418,7 +417,8 @@ load("ansM2.RData")
 
 ansM2
 
-# I have not (yet) succeeded in estimating the right model. 
+summary(ansM2)
+
 ```
 
 <br>
@@ -426,6 +426,7 @@ ansM2
 ### Research Question 3
 
 ```{r, eval=FALSE}
+# I have not (yet) succeeded in estimating the right model.
 myeff_m3 <- myeff
 myeff_m3 <- includeEffects(myeff_m2, sameX, interaction1 = "partij", afstand, name = "rtnet") 
 
@@ -439,8 +440,6 @@ save(ansM3, file = "ansM3.RData")
 load("ansM3.RData")
 
 ansM3
-
-# I have not (yet) succeeded in estimating the right model. 
 ```
 
 

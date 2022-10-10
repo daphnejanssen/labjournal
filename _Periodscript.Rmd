@@ -1,0 +1,67 @@
+# network based on publications
+
+NATURALLY, THIS IS JUST AN EXAMPLE. fOR rSIENA, YOU NEED AT LEAST 3 NETWORKS. tHUS YOU HAVE TO TWEAK THE PERIOD AS YOU DEEM FIT. 
+
+```{r}
+library(stringr)
+
+#empty adjacency matrix for the years 2001-2010
+network2010_2013 <- matrix(NA, nrow=nrow(soc_df), ncol=nrow(soc_df))
+network2014_2017 <- matrix(NA, nrow=nrow(soc_df), ncol=nrow(soc_df))
+network2018_2021 <- matrix(NA, nrow=nrow(soc_df), ncol=nrow(soc_df))
+
+
+#select publications of the corresponding time era
+pubs_sel <- soc_df_publications %>%
+              mutate(author = tolower(author)) %>%
+              filter(year>=2010 & year<=2013)
+#fill the matrix
+for (ego in 1: nrow(soc_df)) {
+  name_ego <- soc_df$last_name[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[str_detect(pubs_sel$author, name_ego),] #publications of ego
+  for (alter in 1:nrow(soc_df)){
+    name_alter <- soc_df$last_name[alter] #which alter? 
+    network2010_2013[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1)  #did alter publish with ego
+  }
+}
+
+#select publications of the corresponding time era
+pubs_sel <- soc_df_publications %>%
+              mutate(author = tolower(author)) %>%
+              filter(year>=2014 & year<=2017)
+#fill the matrix
+for (ego in 1: nrow(soc_df)) {
+  name_ego <- soc_df$last_name[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[str_detect(pubs_sel$author, name_ego),] #publications of ego
+  for (alter in 1:nrow(soc_df)){
+    name_alter <- soc_df$last_name[alter] #which alter? 
+    network2014_2017[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1) #did alter publish with ego
+  }
+}
+
+#select publications of the corresponding time era
+pubs_sel <- soc_df_publications %>%
+              mutate(author = tolower(author)) %>%
+              filter(year>=2018 & year<=2021)
+#fill the matrix
+for (ego in 1: nrow(soc_df)) {
+  name_ego <- soc_df$last_name[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[str_detect(pubs_sel$author, name_ego),] #publications of ego
+  for (alter in 1:nrow(soc_df)){
+    name_alter <- soc_df$last_name[alter] #which alter? 
+    network2018_2021[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1) #did alter publish with ego
+  }
+}
+
+
+c(dim(network2010_2013),3)
+net_array <- array(data = c(network2010_2013, network2014_2017, network2018_2021), dim=c(dim(network2010_2013),3))
+
+net_array[1,1,1]
+```
+
+
+```{r}
+save(net_array, file="soc_net_array.RData")
+```
+

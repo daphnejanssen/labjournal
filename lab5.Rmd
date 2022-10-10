@@ -1,0 +1,573 @@
+---
+title: "Journal 5"
+#bibliography: references.bib
+author: "Daphne Janssen"
+---
+
+
+
+```{r, globalsettings, echo=FALSE, warning=FALSE, results='hide'}
+
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE)
+opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE, warning = FALSE, message = FALSE,comment = "#>", cache=TRUE, class.source=c("test"), class.output=c("test2"))
+options(width = 100)
+rgl::setupKnitr()
+
+
+
+colorize <- function(x, color) {sprintf("<span style='color: %s;'>%s</span>", color, x) }
+
+```
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(position = c('top', 'right'))
+#klippy::klippy(color = 'darkred')
+#klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
+```
+
+Last compiled on `r Sys.time()`
+
+<!---
+Last compiled on `r format(Sys.time(), '%B, %Y')`
+--->
+
+
+<br>
+
+----
+
+---
+
+# Practicing with (preparations for) RSiena analysis 
+
+<br>
+
+## Deviding a dataset in different periods (socdata)
+
+```{r}
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_df_s5.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_df_publications.RData")
+
+library(stringr)
+library(dplyr)
+
+#empty adjacency matrix for the years 2001-2010
+network2010_2013 <- matrix(NA, nrow=nrow(soc_df), ncol=nrow(soc_df))
+network2014_2017 <- matrix(NA, nrow=nrow(soc_df), ncol=nrow(soc_df))
+network2018_2021 <- matrix(NA, nrow=nrow(soc_df), ncol=nrow(soc_df))
+
+
+#select publications of the corresponding time era
+pubs_sel <- soc_df_publications %>%
+              mutate(author = tolower(author)) %>%
+              filter(year>=2010 & year<=2013)
+#fill the matrix
+for (ego in 1: nrow(soc_df)) {
+  name_ego <- soc_df$last_name[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[str_detect(pubs_sel$author, name_ego),] #publications of ego
+  for (alter in 1:nrow(soc_df)){
+    name_alter <- soc_df$last_name[alter] #which alter? 
+    network2010_2013[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1)  #did alter publish with ego
+  }
+}
+
+#select publications of the corresponding time era
+pubs_sel <- soc_df_publications %>%
+              mutate(author = tolower(author)) %>%
+              filter(year>=2014 & year<=2017)
+#fill the matrix
+for (ego in 1: nrow(soc_df)) {
+  name_ego <- soc_df$last_name[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[str_detect(pubs_sel$author, name_ego),] #publications of ego
+  for (alter in 1:nrow(soc_df)){
+    name_alter <- soc_df$last_name[alter] #which alter? 
+    network2014_2017[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1) #did alter publish with ego
+  }
+}
+
+#select publications of the corresponding time era
+pubs_sel <- soc_df_publications %>%
+              mutate(author = tolower(author)) %>%
+              filter(year>=2018 & year<=2021)
+#fill the matrix
+for (ego in 1: nrow(soc_df)) {
+  name_ego <- soc_df$last_name[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[str_detect(pubs_sel$author, name_ego),] #publications of ego
+  for (alter in 1:nrow(soc_df)){
+    name_alter <- soc_df$last_name[alter] #which alter? 
+    network2018_2021[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1) #did alter publish with ego
+  }
+}
+
+
+c(dim(network2010_2013),3)
+net_array <- array(data = c(network2010_2013, network2014_2017, network2018_2021), dim=c(dim(network2010_2013),3))
+
+net_array[1,1,1]
+```
+
+
+```{r}
+save(net_array, file="soc_net_array.RData")
+```
+
+<br>
+
+## Creating a plot for the different periods (socdata)
+
+```{r}
+net_array[,,1]
+
+class(net_array[,,1])
+```
+
+```{r}
+require(igraph)
+
+socmat <- as.matrix(net_array[,,1])
+socmat2 <- as.matrix(net_array[,,2])
+socmat3 <- as.matrix(net_array[,,3])
+
+class(socmat)
+
+socnet1 <- graph_from_adjacency_matrix(
+  socmat,
+  mode = c("undirected"),
+  weighted = NULL,
+  diag = FALSE,
+)
+
+socnet2 <- graph_from_adjacency_matrix(
+  socmat2,
+  mode = c("undirected"),
+  weighted = NULL,
+  diag = FALSE,
+)
+
+socnet3 <- graph_from_adjacency_matrix(
+  socmat3,
+  mode = c("undirected"),
+  weighted = NULL,
+  diag = FALSE,
+)
+
+class(socnet1)
+
+```
+
+```{r}
+
+as_adjacency_matrix(socnet1, type = "both", sparse = FALSE)
+
+as_adjacency_matrix(socnet1, type = "both", sparse = FALSE) == net_array[,,1]
+
+```
+
+```{r}
+plot(socnet1)
+plot(socnet2)
+plot(socnet3)
+```
+
+
+<br>
+
+## Chaning the plot to make it more insightful
+
+```{r}
+# Making the size of the nodes proportinal to the betweenness score
+V(socnet1)$size = betweenness(socnet1, normalized = T, directed = FALSE) * 60 + 10  
+plot(socnet1, mode = "undirected")
+V(socnet2)$size = betweenness(socnet2, normalized = T, directed = FALSE) * 60 + 10  
+plot(socnet2, mode = "undirected")
+V(socnet3)$size = betweenness(socnet3, normalized = T, directed = FALSE) * 60 + 10  
+plot(socnet3, mode = "undirected")
+```
+```{r}
+# Putting the information of socnet1 into a dataframe
+in_network <- data.frame(as_ids(V(socnet1)))
+
+# Giving the first column the name 'number'
+names(in_network)[1] <- "number"
+
+# Creating the object 'ru_nodes' with the names and total cites of the sociology staffmembers
+ru_nodes <- soc_df[, c("name", "total_cites")]
+
+# Adding a new variable to the dataset ru_nodes, called 'number' representing the numbers of the nodes
+ru_nodes$number <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36)
+
+# Combining in_network with ru_nodes, based on the numbers of the nodes
+in_network <- left_join(in_network, ru_nodes, by = c("number" = "number"))
+in_network$vcol <- ifelse(is.na(in_network$total_cites), "#E69F00", "#56B4E9")
+
+# Makig a plot with the color of the nodes defined by citation and the names of the sociology staff members
+plot(socnet1,
+     vertex.color = in_network$vcol,
+     vertex.label = in_network$name)
+```
+
+
+```{r}
+# Defining the colors of the nodes by gender
+soc_df$gcol <- ifelse(soc_df$gender == "male", "coral1", "cyan4")
+plot(socnet1,
+     vertex.color = soc_df$gcol,
+     vertex.label = soc_df$name)
+
+```
+
+```{r}
+# Making a few changes to the plot to make it more easy to derive information from it
+plot(socnet1,
+     vertex.color = soc_df$gcol,
+     vertex.label = soc_df$name,
+     vertex.size = 10,  
+     vertex.frame.color = "gray",  
+     vertex.label.color = "black",  
+     vertex.label.family = "Helvetica", 
+     vertex.label.cex = 0.7,  
+     vertex.label.dist = 0.8,  
+     edge.curved = 0.2,  
+     edge.arrow.size = 0.5) 
+```
+```{r}
+# Adapting the node size to the number of citations
+in_network$total_cites <- as.numeric(in_network$total_cites)
+
+# There's made a mistake in the scraping of the data of Mustafa, who has a Master of Science and 8955 citations. 
+plot(socnet1,
+     vertex.color = soc_df$gcol,
+     vertex.label = soc_df$name,
+     vertex.size = ifelse(!is.na(in_network$total_cites), log(in_network$total_cites), 2),
+     vertex.frame.color = "gray",  
+     vertex.label.color = "black",  
+     vertex.label.family = "Helvetica", 
+     vertex.label.cex = 0.7,  
+     vertex.label.dist = 0.8,  
+     edge.curved = 0.2,  
+     edge.arrow.size = 0.5) 
+```
+
+
+
+<br>
+
+## Descriptive statistics
+
+```{r}
+# number of nodes: all networks consist of 36 nodes, or individuals.
+vcount(socnet1)
+vcount(socnet2)
+vcount(socnet3)
+
+# number of edges: the number of edges increases for each wave.
+ecount(socnet1)
+ecount(socnet2)
+ecount(socnet3)
+
+# degree: on average, the number of undirected relations for each node increases for each wave.
+degree(socnet1)
+degree(socnet2)
+degree(socnet3)
+
+# transitivity: the number of nodes with a (high) transitivity index increases for each wave.
+transitivity(socnet1, type = c("localundirected"), isolates = c("NaN", "zero"))
+transitivity(socnet2, type = c("localundirected"), isolates = c("NaN", "zero"))
+transitivity(socnet3, type = c("localundirected"), isolates = c("NaN", "zero"))
+
+# betweennessL the amount of nodes that act as bridges increases for each wave. 
+igraph::betweenness(socnet1, directed = FALSE)
+igraph::betweenness(socnet2, directed = FALSE)
+igraph::betweenness(socnet3, directed = FALSE)
+```
+
+```{r}
+# diad-census: the amount of (mutual) diads increases for each wave.
+dyad.census(socnet1)
+dyad.census(socnet2)
+dyad.census(socnet3)
+```
+
+```{r}
+# triad-census: the amount of triads increases for each wave.
+igraph::triad.census(socnet1)
+sna::triad.census(socmat)
+igraph::triad.census(socnet2)
+sna::triad.census(socmat2)
+igraph::triad.census(socnet3)
+sna::triad.census(socmat3)
+```
+
+```{r}
+# global transitivity: the global transitivity increases from wave 1 to wave 2, and decreases from wave 2 to wave 3. 
+igraph::transitivity(socnet1, type = "global")
+sna::gtrans(socmat)
+
+triad_socnet1 <- data.frame(sna::triad.census(socmat))
+
+transitivity_socnet1 <- (3 * triad_socnet1$X300)/(triad_socnet1$X201 + 3 * triad_socnet1$X300)
+transitivity_socnet1
+
+igraph::transitivity(socnet2, type = "global")
+sna::gtrans(socmat2)
+
+triad_socnet2 <- data.frame(sna::triad.census(socmat2))
+
+transitivity_socnet2 <- (3 * triad_socnet2$X300)/(triad_socnet2$X201 + 3 * triad_socnet2$X300)
+transitivity_socnet2
+
+igraph::transitivity(socnet3, type = "global")
+sna::gtrans(socmat3)
+
+triad_socnet3 <- data.frame(sna::triad.census(socmat3))
+
+transitivity_socnet3 <- (3 * triad_socnet3$X300)/(triad_socnet3$X201 + 3 * triad_socnet3$X300)
+transitivity_socnet3
+```
+
+```{r}
+# Histogram of the number of co-authorship degrees
+hist(igraph::degree(socnet1, mode="out"), xlab="degree", main="histogram of co-authorship degrees")
+```
+
+```{r, eval=FALSE}
+# Visualisation of the gendercomposition of the three waves
+library(ggplot2)
+# Most basic bar chart
+ggplot(soc_df, aes(x = factor(gender))) +
+    geom_bar()
+
+ggplot(soc_df, aes(factor(gender),
+        fill = factor(gender))) +
+    geom_bar()
+
+
+ggplot(soc_df, aes(x = factor(gender))) + 
+           geom_bar(stat="identity", width=0.8) +
+           geom_text(aes(label=paste0(freq,"%")), vjust=1.5, colour="white")
+```
+
+```{r, eval=FALSE}
+# Trying to show the gender segregation in the publication networks
+
+ls()
+names(soc_df)
+table(soc_df$gender)
+
+is.numeric(soc_df$gender)
+
+gendnum = recode(soc_df$gender, "male"=1, "female"=2)
+gennum = ifelse(soc_df$gender=="male", 1, 2)
+
+soc_df$gender <- character(soc_df$gender)
+
+
+
+
+soc_df$gennum <- ifelse(soc_df$gender=="male", 1, 2)
+
+soc_df$percent_gender <- table(soc_df$gennum/n * 100)
+
+n <- nrow(survey)  # Number of students
+(percent_gender <- table(survey$gender)/n * 100)
+```
+
+
+```{r, eval=FALSE}
+# Another attempt to show the gender segregation in the publication networks
+
+# density: observed relations divided by possible relations
+fdensity <- function(x) {
+    # x is your nomination network make sure diagonal cells are NA
+    diag(x) <- NA
+    # take care of RSiena structural zeros, set as missing.
+    x[x == 10] <- NA
+    sum(x == 1, na.rm = T)/(sum(x == 1 | x == 0, na.rm = T))
+}
+
+# calculate intragroup density
+fdensityintra <- function(x, A) {
+    # A is matrix indicating whether nodes in dyad have same node attributes
+    diag(x) <- NA
+    x[x == 10] <- NA
+    diag(A) <- NA
+    sum(x == 1 & A == 1, na.rm = T)/(sum((x == 1 | x == 0) & A == 1, na.rm = T))
+}
+
+# calculate intragroup density
+fdensityinter <- function(x, A) {
+    # A is matrix indicating whether nodes in dyad have same node attributes
+    diag(x) <- NA
+    x[x == 10] <- NA
+    diag(A) <- NA
+    sum(x == 1 & A != 1, na.rm = T)/(sum((x == 1 | x == 0) & A != 1, na.rm = T))
+}
+
+# construct dyad characteristic whether nodes are similar/homogenous
+fhomomat <- function(x) {
+    # x is a vector of node-covariate
+    xmat <- matrix(x, nrow = length(x), ncol = length(x))
+    xmatt <- t(xmat)
+    xhomo <- xmat == xmatt
+    return(xhomo)
+}
+
+# a function to calculate all valid dyads.
+fndyads <- function(x) {
+    diag(x) <- NA
+    x[x == 10] <- NA
+    (sum((x == 1 | x == 0), na.rm = T))
+}
+
+# a function to calculate all valid intragroupdyads.
+fndyads2 <- function(x, A) {
+    diag(x) <- NA
+    x[x == 10] <- NA
+    diag(A) <- NA
+    (sum((x == 1 | x == 0) & A == 1, na.rm = T))
+}
+
+
+fscolnet <- function(network, ccovar) {
+    # Calculate coleman on network level:
+    # https://reader.elsevier.com/reader/sd/pii/S0378873314000239?token=A42F99FF6E2B750436DD2CB0DB7B1F41BDEC16052A45683C02644DAF88215A3379636B2AA197B65941D6373E9E2EE413
+    
+    fhomomat <- function(x) {
+        xmat <- matrix(x, nrow = length(x), ncol = length(x))
+        xmatt <- t(xmat)
+        xhomo <- xmat == xmatt
+        return(xhomo)
+    }
+    
+    fsumintra <- function(x, A) {
+        # A is matrix indicating whether nodes constituting dyad have same characteristics
+        diag(x) <- NA
+        x[x == 10] <- NA
+        diag(A) <- NA
+        sum(x == 1 & A == 1, na.rm = T)
+    }
+    
+    # expecation w*=sum_g sum_i (ni((ng-1)/(N-1)))
+    network[network == 10] <- NA
+    ni <- rowSums(network, na.rm = T)
+    ng <- NA
+    for (i in 1:length(ccovar)) {
+        ng[i] <- table(ccovar)[rownames(table(ccovar)) == ccovar[i]]
+    }
+    N <- length(ccovar)
+    wexp <- sum(ni * ((ng - 1)/(N - 1)), na.rm = T)
+    
+    # wgg1 how many intragroup ties
+    w <- fsumintra(network, fhomomat(ccovar))
+    
+    Scol_net <- ifelse(w >= wexp, (w - wexp)/(sum(ni, na.rm = T) - wexp), (w - wexp)/wexp)
+    return(Scol_net)
+}
+
+
+# construct dyad similarity matrix
+gender_m <- fhomomat(gender)
+
+
+# make object to store results
+desmat <- matrix(NA, nrow=4, ncol=1)
+
+as.vector(socmat2)
+
+# use functions
+desmat[1, 1] <- fdensity(socmat2)
+desmat[2, 1] <- fdensityintra(socmat2, gender_m)
+desmat[3, 1] <- fdensityinter(socmat2, gender_m)
+desmat[4, 1] <- fscolnet(socmat2, gender)
+
+colnames(desmat) <- c("Publication network")
+rownames(desmat) <- c("total density", "same gender density", "different gender density", "Coleman's homophily index")
+
+knitr::kable(desmat, digits=3, "html", caption="Gender segregation in publication network") %>% 
+  kableExtra::kable_styling(bootstrap_options = c("striped", "hover"))
+
+```
+
+
+<br>
+
+## RSiena analysis
+
+```{r}
+# Results: the density decreases over time, which implies that people with publications have higher degree centrality than people with no publications. Higher degree centrality of the ego does predict publication ties of the ego. Homophily in gender does not predict publication ties. The amount of publications of the ego does predict publication ties. 
+
+#start with clean workspace 
+rm(list=ls())
+
+#load dataobjects
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_net_array.RData")
+#load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_collabs.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_staff_cit.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_df_s5.RData")
+
+library(RSiena)
+library(tidyr)
+
+#dependent
+net <- sienaDependent(net_array)
+
+### Step 1: define data
+gender <- as.numeric(soc_df$gender=="female")
+gender <- coCovar(gender)
+ncollabs <- (soc_df$ncollabs)
+ncollabs <- coCovar(ncollabs)
+
+
+
+pubsw1 <- pubsw2 <- pubsw3 <- pubsw4 <- NA
+
+for (i in 1:length(soc_df$gs_id)) {
+  pubsw1[i] <- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) & soc_staff_cit$year>=2010 & soc_staff_cit$year<=2012,])
+  pubsw2[i] <- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) & soc_staff_cit$year>=2013 & soc_staff_cit$year<=2015,])
+  pubsw3[i] <- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) & soc_staff_cit$year>=2016 & soc_staff_cit$year<=2018,])
+  pubsw4[i] <- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) & soc_staff_cit$year>=2019 & soc_staff_cit$year<=2021,])
+}
+
+pub_df <- as.matrix(data.frame(pubsw1, pubsw2, pubsw3, pubsw4))
+
+pubs <- varCovar(pub_df)
+
+#year first pub
+soc_staff_cit %>% group_by(gs_id) %>%
+  mutate(pub_first = min(year)) %>%
+  select(c("gs_id", "pub_first")) %>%
+  distinct(gs_id, pub_first, .keep_all = TRUE) -> firstpub_df
+
+soc_df <- left_join(soc_df, firstpub_df)
+
+#if no publication yet, set pub_first op 2023
+soc_df %>% mutate(pub_first = replace_na(pub_first, 2023)) -> soc_df
+
+pub_first <-  coCovar(soc_df$pub_first)
+
+mydata <- sienaDataCreate(net, gender, ncollabs, pubs, pub_first)
+
+### Step 2: create effects structure
+myeff <- getEffects(mydata)
+effectsDocumentation(myeff)
+
+### Step 3: get initial description
+print01Report(mydata, modelname = "soc_init")
+
+### Step4: specify model
+myeff <- includeEffects(myeff, outAct)
+myeff <- includeEffects(myeff, sameX, interaction1 = "gender")
+myeff <- includeEffects(myeff, egoX, interaction1 = "pubs")
+
+### Step5 estimate
+myAlgorithm <- sienaAlgorithmCreate(projname = "soc_init")
+(ans <- siena07(myAlgorithm, data = mydata, effects = myeff))
+# (the outer parentheses lead to printing the obtained result on the screen) if necessary, estimate
+# further
+(ans <- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans))
+```
+
+
+

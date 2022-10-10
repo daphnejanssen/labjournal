@@ -1,0 +1,1865 @@
+---
+title: "Data"
+#bibliography: references.bib
+author: "Daphne Janssen"
+---
+
+
+
+```{r, globalsettings, echo=FALSE, warning=FALSE, results='hide'}
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE)
+opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE, warning = FALSE, message = FALSE,comment = "#>", cache=TRUE, class.source=c("test"), class.output=c("test2"))
+options(width = 100)
+rgl::setupKnitr()
+
+
+
+colorize <- function(x, color) {sprintf("<span style='color: %s;'>%s</span>", color, x) }
+
+```
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(position = c('top', 'right'))
+#klippy::klippy(color = 'darkred')
+#klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
+```
+
+Last compiled on `r Sys.time()`
+
+<!---
+Last compiled on `r format(Sys.time(), '%B, %Y')`
+--->
+
+<br>
+
+----
+
+# Datasrcaping Sociology staff RU
+
+## getting started
+
+```{r}
+#start with clean workspace 
+rm(list=ls())
+getwd()
+```
+
+## packages
+```{r}
+#install.packages("data.table") 
+library(data.table) # mainly for faster data handling
+library(tidyverse) # I assume you already installed this one!
+# install.packages("httr") # we don't need this for now
+# require(httr)
+#install.packages("xml2")
+require(xml2)
+#install.packages("rvest")
+require(rvest)
+#install.packages("devtools")
+require(devtools)
+# Note we're doing something different here. We're installing a *latest* version directly from GitHub
+# This is because the released version of this packages contains some errors!
+#devtools::install_github("jkeirstead/scholar") 
+
+
+require(scholar)
+
+#define workdirectory, note the double *backslashes* if you're on windows
+# setwd("/yourpathhere)"
+```
+
+## save webpage with staff names 
+
+```{r}
+# Let's first get the staff page read_html is a function that simply extracts html webpages and
+# puts them in xml format
+soc_staff <- read_html("https://www.ru.nl/sociology/research/staff/")
+
+#head(soc_staff)
+#class(soc_staff)
+```
+
+## from xml to nice df of names
+
+### selecting the table with names
+
+```{r}
+soc_staff <- soc_staff %>%
+    rvest::html_nodes("body") %>%
+    xml2::xml_find_all("//td") %>%
+    rvest::html_text()
+```
+
+### selecting only the odd rowes with the names
+```{r}
+fodd <- function(x) {
+  #what is x, x is a vector
+ x%%2 != 0 
+}
+
+nstaf <- length(soc_staff)
+
+soc_names <- soc_staff[fodd(1:nstaf)] 
+head(soc_names)
+
+```
+
+### selecting only the even rowes with the expertise
+```{r}
+soc_experts <- soc_staff[!fodd(1:nstaf)]
+head(soc_experts)
+```
+
+### combining names and expertise in soc_df 
+```{r}
+soc_df <- data.frame(cbind(soc_names, soc_experts))  
+```
+
+
+## Cleaning the dataset  
+
+### delete rows without name info
+```{r}
+# inspect again, and remove the rows we don't need (check for yourself to be certain!)
+
+delrows <- which(soc_df$soc_names == "Staff:" | soc_df$soc_names == "PhD:" | soc_df$soc_names == "External PhD:" |
+    soc_df$soc_names == "Guest researchers:" | soc_df$soc_names == "Other researchers:")
+
+soc_df <- soc_df[-delrows, ]
+```
+
+### cleaning names a bit  
+```{r}
+# Last name seems to be everything before the comma
+soc_df$last_name <- gsub(",.*$", "", soc_df$soc_names)
+
+# first name is everything between brackets
+soc_df$first_name <- as.character(str_extract_all(soc_df$soc_names, "(?<=\\().+?(?=\\))", simplify = TRUE))
+```
+
+```{r}
+soc_df$last_name <- gsub(" J. \\(Jansje\\) van MSc", "", soc_df$last_name)
+soc_df$first_name <- tolower(soc_df$first_name)  # everything to lower!
+soc_df$last_name <- tolower(soc_df$last_name)
+```
+
+```{r}
+# trimws looses all spacing before and after (if you specify 'both') a character string
+soc_df$last_name <- trimws(soc_df$last_name, which = c("both"), whitespace = "[ \t\r\n]")
+soc_df$first_name <- trimws(soc_df$first_name, which = c("both"), whitespace = "[ \t\r\n]")
+
+soc_df$first_name <- as.character(str_split(soc_df$first_name, pattern=" ", n = 2, simplify = TRUE)[,1])
+soc_df$first_name <- as.character(str_split(soc_df$first_name, pattern="-", n = 2, simplify = TRUE)[,1])
+
+#removing strange characters
+soc_df$first_name <- iconv(soc_df$first_name, from = 'UTF-8', to = 'ASCII//TRANSLIT')
+
+soc_df$soc_experts <- trimws(soc_df$soc_experts, which = c("both"), whitespace = "[ \t\r\n]")
+soc_df$soc_names <- trimws(soc_df$soc_names, which = c("both"), whitespace = "[ \t\r\n]")
+soc_df$first_name
+```
+
+```{r}
+save(soc_df, file="soc_df_s1.RData")
+```
+
+
+### adding gender to dataset
+
+#### fgender
+
+```{r, eval=FALSE}
+fgender <- function(firstname_df, me, file=NULL) {
+
+####################################
+# Author: Bas Hofstra, Anne Maaike Mulders, Jochem Tolsma
+# DAte:   13-10-2021, last edit: 22-09-2022
+# Tasks:  - assign gender baed on name
+#         - Adapted from Rense Corten code April 2021
+####################################
+
+
+#Input: 
+#  - firstname_df: a data.frame with a column named firstname  
+#  - me: a character vector introducing yourself: e.g. "J Tolsma, Radboud University"
+#  - file: location and name of file to be saved. 
+  
+#------------------------------------------------------------------------------------
+# Load required packages
+
+if (!require("tidyverse", character.only = TRUE)) {
+  install.packages("tidyverse", dependencies = TRUE)
+  library(tidyverse, character.only = TRUE)
+}
+
+if (!require("rvest", character.only = TRUE)) {
+  install.packages("rvest", dependencies = TRUE)
+  library(rvest, character.only = TRUE)
+}
+
+if (!require("polite", character.only = TRUE)) {
+  install.packages("polite", dependencies = TRUE)
+  library(polite, character.only = TRUE)
+}
+
+
+
+# make links to scrape
+firstname_df$name_url <- paste0("https://www.meertens.knaw.nl/nvb/naam/is/", firstname_df[, c("firstname")])
+
+
+
+#------------------------------------------------------------------------------------
+### 2: introduce to server ###
+
+# Introduce myself to the server
+session <- bow("https://www.meertens.knaw.nl/nvb/naam/is", user_agent = me , delay = 1)
+
+
+#------------------------------------------------------------------------------------
+### 3: make function to get table from ###
+  fnames <- function(link){ 
+    name_session <-nod(session, path = link)
+    name_page <- scrape(name_session) 
+    return(name_page)
+  }
+  
+name_list <- list()
+table_list <- list()
+firstname_df$gender <- NA
+
+  for (i in 1:nrow(firstname_df)) {
+    print(i)
+    name_list[[i]] <- fnames(firstname_df[i, c("name_url")])
+    # extract name frequency table and gender info
+    table_list[[i]] <- name_list[[i]] %>% html_table()
+    
+    table_list[[i]][[1]][table_list[[i]][[1]]=="--"] <- "0"
+    
+    if (as.numeric(table_list[[i]][[1]]$X3[2]) > as.numeric(table_list[[i]][[1]]$X3[6])) {
+      firstname_df$gender[i] <- "male" } else {
+        firstname_df$gender[i] <- "female"
+      }
+    
+    if (!is.null(file)) (save(firstname_df, file=file))
+    
+    }
+  return(firstname_df)
+}
+```
+
+#### gender to soc_df
+```{r, eval=FALSE}
+soc_df %>% mutate(firstname=first_name) -> soc_df
+
+soc_df$firstname
+soc_df <- fgender(soc_df, me="Jochem Tolsma, RU/RUG")
+```
+
+```{r, eval=FALSE}
+save(soc_df, file="soc_df_s2.RData")
+```
+
+```{r, echo=FALSE}
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_df_s2.RData")
+```
+
+
+### adding some other data manually
+
+#### affiliation
+```{r}
+# set affiliation to radboud, comes in handy for querying google scholar
+soc_df$affiliation <- "radboud university"
+```
+
+
+## let harvest data from google scholar
+
+### fixing a bug in the get_scholar_id function. 
+
+```{r, eval=FALSE}
+#require(scholar)
+
+get_scholar_id_fix <- function (last_name = "", first_name = "", affiliation = NA)
+{
+  if (!any(nzchar(c(first_name, last_name))))
+    stop("At least one of first and last name must be specified!")
+  site <- getOption("scholar_site")
+  url <- paste0(site, "/citations?view_op=search_authors&mauthors=",
+                first_name, "+", last_name, "&hl=en&oi=ao")
+  page <- get_scholar_resp(url)
+  if (is.null(page))
+    return(NA)
+  aa <- httr::content(page, as = "text")
+  # added by Bas Hofstra: bugfix for IDs that have a dash ("-")
+  ids <- substring(aa, regexpr(";user=", aa))
+  ids <- substr(ids, 1, 19) # error prone, but unsure how to solve otherwise
+  # if (nchar(stringr::str_extract_all(string = aa, pattern = ";user=[[:alnum:]]+[[:punct:]]")[[1]][1]) < 18) {
+  #   ids <- stringr::str_extract_all(string = aa, pattern = ";user=[[:alnum:]]+[[:punct:]]+[[:alnum:]]+[[:punct:]]")
+  # } else {
+  #   ids <- stringr::str_extract_all(string = aa, pattern = ";user=[[:alnum:]]+[[:punct:]]")
+  # }
+  if (length(unlist(ids)) == 0) {
+    message("No Scholar ID found.")
+    return(NA)
+  }
+  ids <- ids %>% unlist %>% gsub(";user=|[[:punct:]]$", "",
+                                 .) %>% unique
+  if (length(ids) > 1) {
+    profiles <- lapply(ids, scholar::get_profile)
+    if (is.na(affiliation)) {
+      x_profile <- profiles[[1]]
+      warning("Selecting first out of ", length(profiles),
+              " candidate matches.")
+    }
+    else {
+      which_profile <- sapply(profiles, function(x) {
+        stringr::str_count(string = x$affiliation, pattern = stringr::coll(affiliation,
+                                                                           ignore_case = TRUE))
+      })
+      if (all(which_profile == 0)) {
+        warning("No researcher found at the indicated affiliation.")
+        return(NA)
+      }
+      else {
+        x_profile <- profiles[[which(which_profile !=
+                                       0)]]
+      }
+    }
+  }
+  else {
+    x_profile <- scholar::get_profile(id = ids)
+  }
+  return(x_profile$id)
+}
+```
+
+### scholars id. 
+
+Don't forget to check manually if everything is okay. 
+
+We make an important decisson here. we remove staff members without scholar ids. perhaps a bit strange for our RSiena analysis later. I mean, we can include isolates
+
+YOU MAY NEED TO ADD AN TRYCATCH TO THIS LOOP AS WELL TO AVOID TIME OUT ERRORS, SEE THE NEXT LOOP BELOW
+```{r, eval=FALSE}
+
+soc_df$gs_id <- ""
+
+for (i in 1:nrow(soc_df)) {
+  print(i)
+  time <- runif(1, 0, 1)
+  Sys.sleep(time)
+
+  tryCatch({
+     soc_df[i,c("gs_id")] <- get_scholar_id_fix(last_name = soc_df[i, c("last_name")], # so search on last_name of staff (third column)
+                                             first_name = soc_df[i, c("first_name")],  # search on first_name of staff (fourth column)
+                                             affiliation = soc_df[i,c("affiliation")]) # search on affiliation of each staff (fifth column)
+
+    }, error=function(e){cat("ERROR :", conditionMessage(e), "\n")}) # continue on error, but print the error
+  }
+
+# remove those without pubs from the df
+# seems we're left with about 34 sociology staff members!
+soc_df_copy <- soc_df #just to also have the data with staff without scholar_id
+soc_df <- soc_df[!soc_df$gs_id == "", ]
+
+```
+
+```{r, eval=FALSE}
+save(soc_df, file="soc_df_s3.RData")
+save(soc_df_copy, file="soc_df_copy.RData")
+```
+
+```{r, echo=FALSE}
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_df_s3.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_df_copy.RData")
+```
+
+
+
+## publications and profiles
+
+We save the publications and info of the scholar profiles in new objects. 
+
+This was the original chunck but due to time-out errors I needed to tweak this. 
+```{r}
+# soc_list_profiles <- list()  # first we create an empty list that we then fill up with the for loop
+# soc_list_publications <- list()
+# 
+# for (i in 1:nrow(soc_df)) {
+#     print(i)
+#     time <- runif(1, 0, 1)
+#     Sys.sleep(time)
+# 
+#     # note how you call different elements in a list '[[]]', fill in the i-th element
+#     soc_list_profiles[[i]] <- get_profile(soc_df[i, c("gs_id")])  # Note how we call row i (remember how to call rows in a DF/Matrix) and then the associated scholar id
+#     soc_list_publications[[i]] <- get_publications(soc_df[i, c("gs_id")])
+#     soc_list_publications[[i]][, c("gs_id")] <- soc_df[i, c("gs_id")]  # note that we again attach an id
+#     # so both functions here call the entire profile and pubs for an author, based on google
+#     # scholar ids
+# 
+# }
+# 
+# 
+# #soc_list_publications
+# # Notice how fast the data blow up! The 34 RU sociology scholars publish ~3000 papers
+# soc_df_publications2 <- bind_rows(soc_list_publications)
+```
+
+
+```{r, eval=FALSE}
+soc_list_profiles <- list()  # first we create an empty list that we then fill up with the for loop
+soc_list_publications <- list()
+
+time <- 1 # I placed the waiting time outside the loop
+i <- 1 # Our loop iterator is now a variable. This means I can change it within a while loop. Using a for loop you cant change your iterator in the loop itself. 
+
+while (i <= nrow(soc_df)) {
+    print(i)
+    Sys.sleep(time)
+
+   
+    tryCatch({
+    #In this part of the tryCatch function you put all the stuff you want to do in the loop.
+    # note how you call different elements in a list '[[]]', fill in the i-th element
+    soc_list_profiles[[i]] <- get_profile(soc_df[i, c("gs_id")])  # Note how we call row i (remember how to call rows in a DF/Matrix) and then the associated scholar id
+    soc_list_publications[[i]] <- get_publications(soc_df[i, c("gs_id")])
+    soc_list_publications[[i]][, c("gs_id")] <- soc_df[i, c("gs_id")]  # note that we again attach an id
+    # so both functions here call the entire profile and pubs for an author, based on google
+    # scholar ids
+    i <- i + 1 #IMPORTANT, YOU NEED TO TELL THE WHILE LOOP THAT YOUR ITERATOR HAS TO BE INCREASED
+    },
+      warning = function(w) {
+        cat("WARNING:", conditionMessage(w), "\n") #WARNING message
+        i <<- i + 1}, #BUT WE DO WANT TO CONTINUE. NOTE THE DOUBLE << THIS IS BECAUSE I WANT TO CHANGE A VARIABLE WHICH EXISTS OUTSIDE THE WARNING FUNCTION
+      error =function(e) {
+        time <<- min(time *10, 3600*2)
+        cat("Error:", conditionMessage(e), "\n") #ERROR message
+        cat("sleep time:", time,  "\n")
+        cat("ik zit in loop", i)
+        #AFTER THE NEW SLEEP TIME, WE TRY AGAIN, WE THEREFORE DO NOT UPDATE i. ideally you also want to have some break option. And maybe you also want to save your data when you hit a time out error. 
+      })
+   
+ 
+}
+```
+
+
+```{r, eval=FALSE}
+# Notice how fast the data blow up! The 34 RU sociology scholars publish ~3000 papers
+soc_df_publications <- bind_rows(soc_list_publications)
+```
+
+
+```{r, eval=FALSE}
+save(soc_df_publications, file="soc_df_publications.RData")
+save(soc_list_profiles, file= "soc_list_profiles.RData")
+```
+
+```{r, echo=FALSE}
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_df_publications.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_list_profiles.RData")
+```
+
+
+### put the info of the profiles in our data set of staff members soc_df
+
+Please note, I got an error with the original script (as in the book) so needed to tweak things a little. 
+```{r, eval=FALSE}
+soc_profiles_df <- list()
+
+
+for (i in 1:length(soc_list_profiles)) {
+    # soc_profiles_df[[i]] <- data.frame(t(unlist(soc_list_profiles[[i]][1:8]))) #some annyoing
+    # data handling
+  if (!is.null(soc_list_profiles[[i]])) {
+    soc_profiles_df[[i]] <- unlist(soc_list_profiles[[i]][1:8])
+    soc_profiles_df[[i]] <- data.frame(soc_profiles_df[[i]])
+    soc_profiles_df[[i]] <- t(soc_profiles_df[[i]])
+    row.names(soc_profiles_df[[i]]) <- NULL
+    soc_profiles_df[[i]] <- data.frame(soc_profiles_df[[i]])
+  }
+}
+
+#soc_profiles_df
+
+soc_profiles_df2 <- bind_rows(soc_profiles_df)
+soc_df <- left_join(soc_df, soc_profiles_df2, by = c(gs_id = "id"))  # merge data with soc_df
+soc_df  # notice all the new information we were able to get from the scholar profiles!
+
+```
+
+
+```{r, eval=FALSE}
+save(soc_df, file="soc_df_s4.RData")
+```
+
+```{r, echo=FALSE}
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_df_s4.RData")
+```
+
+## citation history
+
+```{r, eval=FALSE}
+# get citation history of a scholar
+soc_staff_cit <- list()
+
+
+time <- 1 # I placed the waiting time outside the loop
+i <- 1 # Our loop iterator is now a variable. This means I can change it within a while loop. Using a for loop you cant change your iterator in the loop itself. 
+
+while (i <= nrow(soc_df)) {
+    print(i)
+    Sys.sleep(time)
+
+    tryCatch({
+      soc_staff_cit[[i]] <- get_citation_history(soc_df[i, c("gs_id")])
+        if (nrow(soc_staff_cit[[i]]) > 0) {
+          soc_staff_cit[[i]][, c("gs_id")] <- soc_df[i, c("gs_id")]  # again attach the gs_id as third column
+        }
+    i <- i + 1
+    },
+      warning = function(w) {
+        cat("WARNING:", conditionMessage(w), "\n") #WARNING message
+        i <<- i + 1}, #BUT WE DO WANT TO CONTINUE. NOTE THE DOUBLE << THIS IS BECAUSE I WANT TO CHANGE A VARIABLE WHICH EXISTS OUTSIDE THE WARNING FUNCTION
+      error =function(e) {
+        time <<- min(time *10, 3600*2)
+        cat("Error:", conditionMessage(e), "\n") #ERROR message
+        cat("sleep time:", time,  "\n")
+        cat("ik zit in loop", i)
+        #AFTER THE NEW SLEEP TIME, WE TRY AGAIN, WE THEREFORE DO NOT UPDATE i. ideally you also want to have some break option. And maybe you also want to save your data when you hit a time out error. 
+      })
+
+    
+}
+soc_staff_cit <- bind_rows(soc_staff_cit)
+```
+
+
+```{r, eval=FALSE}
+save(soc_staff_cit, file="soc_staff_cit.RData")
+```
+
+```{r, echo=FALSE}
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_staff_cit.RData")
+```
+```
+
+## collaborators
+
+PLEASE NOTE, I AM ONLY COLLECTING INFORMATION ON WHO WORKS TOGETHER WITH WHOM WITHIN THE DEPARTMENT!!!
+
+IF YOU WANT TO COLLECT MORE COLLABORATORS, PLEASE DO SO. bUT THESE WILL NOT BE NODES IN YOUR rSIENA MODEL LATER. tHUS YOU MAY USE THESE TO CONSTRUCT EGO-LEVEL COVARIATES!! 
+
+### fcolabs
+
+```{r, eval=FALSE}
+require(rvest)
+require(xml2)
+require(tidyverse)
+
+# function to get collaborators and names from GS profiles
+fcollabs <- function(gsid, lookforcollabs) {
+
+  htmlpage1 <- read_html(paste0("https://scholar.google.nl/citations?user=", gsid, "&hl=en")) # so we paste the google scholar id
+  profilename <- htmlpage1 %>% html_nodes(xpath = "//*/div[@id='gsc_prf_in']") %>% html_text() # we extract the profile name of that google scholar page
+  profilecollabs1 <- as.data.frame(0) # empty df necessary for later
+  profilecollabs2 <- as.data.frame(0) # empty df necessary for later
+
+  if (lookforcollabs == 1) { # so if you want to look for collabs, set function to 1
+
+    htmlpage2 <- read_html(paste0("https://scholar.google.com/citations?view_op=list_colleagues&hl=en&user=", gsid)) # so we paste the google scholar id
+    profilecollabs1 <-  htmlpage2 %>% html_nodes(css="h3") %>% html_text() # get names
+    profilecollabs1 <-  as.data.frame(profilecollabs1)
+
+    profilecollabs2 <- htmlpage2 %>% html_nodes("a") %>% html_attr("href") # get the link
+    profilecollabs2 <- profilecollabs2[seq_along(profilecollabs2) %% 2 > 0]
+    profilecollabs2 <- substring(profilecollabs2, 23)
+
+  }
+  if (nrow(profilecollabs1)>1) { # if there ARE collabs
+
+    profilecollabs1 <- as.data.frame(profilecollabs1) # we want to...
+    profilecollabs2 <-  as.data.frame(profilecollabs2)
+    profilecollabs1[,c("coauth_id")] <- profilecollabs2[,1]
+
+    profilecollabs1[,c("gs_id")] <- gsid #... add gs_ids of focal GS profile
+    profilecollabs1[,c("name")] <- profilename #...and the the profile name of GS profile attached
+
+    names(profilecollabs1)[1] <- "coauth"
+
+  } else {
+    profilecollabs1 <- as.data.frame(cbind(gsid, profilename)) # if NOT looking for collabs...
+    names(profilecollabs1) <- c("gs_id", "name") #...we only attach gs_id and profilename
+
+  }
+  return(profilecollabs1)
+
+}
+
+
+
+```
+
+```{r, eval=FALSE}
+# input a google scholar id and a 1 (if you want to find collabs) or 0 (only extracting names)
+
+soc_collabs <- list()
+
+
+time <- 1 
+i <- 1 
+while (i <= nrow(soc_df)) {
+    print(i)
+    Sys.sleep(time)
+    tryCatch({
+      soc_collabs[[i]] <- fcollabs(soc_df[i, c("gs_id")], 1)
+      i <- i + 1
+    },
+      warning = function(w) {
+        cat("WARNING:", conditionMessage(w), "\n") #WARNING message
+        i <<- i + 1}, #BUT WE DO WANT TO CONTINUE. NOTE THE DOUBLE << THIS IS BECAUSE I WANT TO CHANGE A VARIABLE WHICH EXISTS OUTSIDE THE WARNING FUNCTION
+      error =function(e) {
+        time <<- min(time *10, 3600*2)
+        cat("Error:", conditionMessage(e), "\n") #ERROR message
+        cat("sleep time:", time,  "\n")
+        cat("ik zit in loop", i)
+        #AFTER THE NEW SLEEP TIME, WE TRY AGAIN, WE THEREFORE DO NOT UPDATE i. ideally you also want to have some break option. And maybe you also want to save your data when you hit a time out error. 
+      })
+
+    
+}
+
+
+
+
+
+# for (i in 1:nrow(soc_df)) {
+#     print(i)
+#     time <- runif(1, 0, 1)
+#     Sys.sleep(time)
+# }
+
+for (i in 1:length(soc_collabs)) {
+  soc_df$ncollabs[i] <- nrow(soc_collabs[[i]]) 
+}
+
+soc_collabs2 <- bind_rows(soc_collabs)  # bind rows, get the unique ones!
+soc_collabs_unique <- unique(soc_collabs2[, c("gs_id")]) 
+soc_collabs_unique <- soc_collabs_unique[!is.na(soc_collabs_unique)]
+#save(soc_collabs, file = "addfiles/soc_df_collabs1.RData")  # you notice this takes a while, so we save the data here
+```
+
+```{r, eval=FALSE}
+save(soc_collabs, file="soc_collabs.RData")
+save(soc_collabs2, file="soc_collabs2.RData")
+save(soc_collabs_unique, file="soc_collabs_uniques.RData")
+save(soc_df, file="soc_df_s5.RData")
+```
+
+```{r, echo=FALSE}
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_collabs.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_collabs2.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_collabs_uniques.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_df_s5.RData")
+```
+
+
+## Scraping ethnicity
+
+```{r, eval=FALSE}
+load("soc_df_s5.RData")
+soc_df_6 %>% mutate(lastname=last_name) -> soc_df_6
+lastname_df <- soc_df_6
+```
+
+```{r, eval=FALSE}
+#voorvoegsels correct zetten voor scraper
+voorvoegsels <- c("'t ", "d' ", "de ", "de la ", "den ", "del ", "der ", "des ", "el ", "el- ", "in 't ", "la ", "le ", "les ", "op den ", "ten ", "ter ", "tes ", "van ", "van 't ", "van de " , "van der ", "van den ", "von der ", "op den ", "ul ") 
+
+for (i in 1: length(lastname_df$lastname)) {
+  if (sum(str_detect(lastname_df$lastname[i], voorvoegsels))>0) {
+    last <-  as.character(str_split(lastname_df$lastname[i], pattern=" ", simplify = TRUE))
+    last <- last[length(last)]
+    first <- as.character(unlist(strsplit(lastname_df$lastname[i], split=last, fixed=TRUE)))
+    lastname_df$lastname[i] <- paste(last, ", ", first, sep="")
+  }
+}
+
+#dubbele namen verwijderen. let op dubbele namen met voorvoegsel worden niet gecleaned. TO DO 
+for (i in 1: length(lastname_df$lastname)) {
+  if (!sum(str_detect(lastname_df$lastname[i], voorvoegsels))>0) {
+    lastname_df$lastname[i] <- as.character(str_split(lastname_df$lastname[i], pattern=" ", n = 2, simplify = TRUE)[,1])
+    lastname_df$lastname[i] <- as.character(str_split(lastname_df$lastname[i], pattern="-", n = 2, simplify = TRUE)[,1])
+  }
+}
+
+lastname_df$lastname<- trimws(lastname_df$lastname, which = c("right"), whitespace = "[ \t\r\n]")
+lastname_df$lastname <- str_replace_all(lastname_df$lastname, " ", "%20") #html links houden niet van spaties. 
+
+lastname_df$np <- ""
+```
+ 
+
+```{r, eval=FALSE}
+# Load required packages
+
+if (!require("tidyverse", character.only = TRUE)) {
+  install.packages("tidyverse", dependencies = TRUE)
+  library(tidyverse, character.only = TRUE)
+}
+
+if (!require("rvest", character.only = TRUE)) {
+  install.packages("rvest", dependencies = TRUE)
+  library(rvest, character.only = TRUE)
+}
+
+# if (!require("polite", character.only = TRUE)) {
+#   install.packages("polite", dependencies = TRUE)
+#   library(polite, character.only = TRUE)
+# }
+#   
+# if (!require("xml2", character.only = TRUE)) {
+#   install.packages("xml2", dependencies = TRUE)
+#   library(polite, character.only = TRUE)
+# }
+```
+
+hier maken we de links voor de website. 
+```{r, eval=FALSE}
+# creating URLs: origin
+lastname_df$name_origin <- ifelse((lastname_df$np==""),
+                                paste0("https://www.cbgfamilienamen.nl/nfb/detail_naam.php?gba_naam=",
+                                       stringr::str_to_title(lastname_df[, c("lastname")]), 
+                                       "&gba_naam=",
+                                       stringr::str_to_title(lastname_df[, c("lastname")]),
+                                       "&nfd_naam=",
+                                       stringr::str_to_title(lastname_df[, c("lastname")]), 
+                                       "&info=analyse+en+verklaring&operator=eq&taal="), 
+                                paste0("https://www.cbgfamilienamen.nl/nfb/detail_naam.php?gba_naam=",
+                                       lastname_df[, c("np2")],
+                                       stringr::str_to_title(lastname_df[, c("lastname")]), 
+                                       "&gba_naam=",
+                                       lastname_df[, c("np2")],
+                                       stringr::str_to_title(lastname_df[, c("lastname")]), 
+                                       "&nfd_naam=",
+                                       stringr::str_to_title(lastname_df[, c("lastname")]),
+                                       "%2C+",
+                                       lastname_df[, c("np")],
+                                       "&info=analyse+en+verklaring&operator=eq&taal="))
+```
+
+hier slaan we alles op
+```{r, eval=FALSE}
+name_originl <- list()
+table_originl <- list()
+time <- 0.1
+```
+
+## crucical scrape loop
+kom voorlopig geen fouten tegen, toch alles alvast in een trycatch gezet. 
+let op dat ik niet netjes scrape. dus zonder functie 'polite' gezien de kleine aantallen in onze cursus, mag dat wmb wel. 
+```{r, eval=FALSE}
+
+for (i in 1:nrow(lastname_df)) {
+  print(i)
+  Sys.sleep(time)
+  tryCatch({ 
+    name_originl[[i]]  <- read_html(lastname_df[i, c("name_origin")])
+    table_originl[[i]] <- name_originl[[i]] %>% html_table()
+  }, 
+    warning = function(w) {
+        cat("WARNING:", conditionMessage(w), "\n") #WARNING message
+    },
+    error=function(e){
+      err <- conditionMessage(e)
+      cat("Error:", conditionMessage(e), "\n") #ERROR message
+    }  
+  )
+}
+```
+
+en vanaf hier is het eigenlijk alleen maar opschonen. 
+```{r, eval=FALSE}
+origin_txt <- list()
+for (i in 1:length(name_originl)) {
+    origin_txt [[i]] <- name_originl[[i]] %>% html_text() %>% as.character()
+}
+
+```
+
+```{r, eval=FALSE}
+# Get out the relevant origin information from the xml lists
+origin_ln <- list()
+
+for (i in 1:length(name_originl)) {
+  origin_ln[[i]] <- name_originl[[i]] %>% html_nodes("div") %>% rvest::html_text()
+  origin_ln[[i]] <- origin_ln[[i]][[3]]
+}
+
+# Remove mess
+for (i in 1:length(origin_ln)) {
+  origin_ln[[i]] <- gsub("\\t", " ", origin_ln[[i]])
+  origin_ln[[i]] <- gsub("\\n", " ", origin_ln[[i]])
+}
+
+# Flatten nested structure of the origin information
+#origin_ln <- rbind(flatten(origin_ln))
+
+```
+
+
+```{r, eval=FALSE}
+
+# Detaching the names and origin info for easier data handling
+origin <- unlist(origin_ln)
+
+
+
+origin <- str_extract_all(origin, "varianten(.*?)©")
+
+# Origin information is usually mentioned after "verklaring" or "kenmerken"
+origin <- str_remove_all(origin, "varianten")
+origin <- str_remove_all(origin, "CBG Bronnen")
+origin <- str_remove_all(origin, "catalogus")
+origin <- str_remove_all(origin, "©")
+
+
+verklaring <- str_remove_all(origin, "kenmerken:(.*?)$")
+kenmerken <- str_extract_all(origin, "kenmerken:(.*?)$")
+kenmerken <- str_remove_all(kenmerken, "specifieke componenten:(.*?)$")
+sc <- str_extract_all(origin, "specifieke componenten:(.*?)$") # Not directly relevant to us, but does mean that the name has a webpage
+
+
+# Make into a neat dataframe with the names attached
+verklaring <- trimws(verklaring, which = "both")
+kenmerken <- trimws(kenmerken, which = "both")
+sc <- trimws(sc, which = "both")
+vk <- data.frame(cs_df$lastname, verklaring, kenmerken, sc)
+
+
+```
+
+
+
+## Separating names with Dutch & unknown origin
+Next, we identify those names for which no additional information was found. This is important to distinguish Dutch names from names with unknown origins.
+
+- Dutch names: no label indicating that the name is Dutch, but some other information available on name origin
+- Unknown names: web page cannot be found, so origin information is empty. 
+
+```{r, eval=FALSE}
+# Identify last names that could not be found
+vk <- vk %>%
+  mutate(verklaring = ifelse(verklaring=="", 0, verklaring), 
+         kenmerken = ifelse(kenmerken=="character(0)", 0, kenmerken),
+         sc = ifelse(sc=="character(0)", 0, sc),
+         no_info = nchar(verklaring) + nchar(kenmerken) + nchar(sc))
+
+vk <- vk %>%
+  mutate(no_info = ifelse(no_info==3, 1, 0), 
+         verklaring = ifelse(verklaring==0, NA, verklaring),
+         kenmerken = ifelse(kenmerken==0, NA, kenmerken))
+# If there is no text in verklaring or kenmerken, the name could not be found in the databases. 
+```
+
+
+## Extracting specific origin information
+There are three main ways to get information about the origin of last names:
+
+1) Under "kenmerken", last names are assigned clickable tags. These tags include unspecified foreign name tags ("andere taal"), as well as specific foreign origins of the name ("Franse naam", "Indische naam").
+-> origin1 + origin4
+
+2) Several names have more extensively written out stories behind the name, under "verklaring". A number of names contain detailed (either country-level or regional) origins, usually in the form of "De naam [xyz] is afkomstig uit [country]". 
+-> origin2 
+
+3) Some names have origin information under "verklaring" in the form of the linguistic origins of the name. This can be country specific (e.g. Chinese name), but it can also apply to multiple countries when the language is spoken in more than 1 countries (e.g. Spanish name). 
+-> origin3 
+
+```{r, eval=FALSE}
+
+# Step 1: extracting origin tags from kenmerken
+vk <- vk %>%
+  mutate(origin1 = str_extract(kenmerken, "[:upper:]([:lower:]{2,}) naam"))
+
+# Note: sometimes multiple origins are mentioned. Currently, I only extract the first one. Otherwise, we should use str_extract_all. 
+
+
+
+# Step 2: extracting origin info from verklaring 
+vk <- vk %>%
+  mutate(origin2 = ifelse(as.numeric(str_detect(verklaring, "afkomstig uit")) == 1, 
+         str_remove(verklaring, ".*afkomstig uit"), NA))
+
+
+# Step 3: extracting additional origin info from verklaring
+vk <- vk %>%
+  mutate(origin3 = str_extract(verklaring, "[:upper:]([:lower:]{2,}) (achter)?(familie)?(beroeps)?naam"))
+
+
+
+# Finally, we clean up the origin information extracted above
+
+# Origin1: already neat
+vk$origin1 <- str_remove(vk$origin1, "Joodse naam") # can be Dutch & non-Dutch
+
+# Origin2: messy
+vk$origin2 <- str_remove(vk$origin2, "\\..*") # remove extra info in the following sentence 
+vk$origin2 <- str_remove(vk$origin2, "\\;.*") # remove extra info in the following sentence 
+vk$origin2 <- str_remove(vk$origin2, "\\(.*") # remove extra info in the following sentence 
+
+
+vk$dpg <- as.numeric(str_detect(vk$origin2, "(dorp)|(plaats)|(gemeente)|(graafschap)|(stad)|(deel)|(Friesland)")) # origin info too regional 
+vk <- vk %>% mutate(origin2 = ifelse((dpg==1), NA, origin2)) # removing regional origin info
+vk <- subset(vk, select = -dpg) # removing intermediate variable
+
+# Sometimes, there were multiple countries mentioned. Take only the first:
+vk$origin2 <- str_remove(vk$origin2, "\\,.*") # Only first
+vk$origin2 <- str_remove(vk$origin2, "\\s(en).*") # Only first 
+vk$origin2 <- str_remove(vk$origin2, "\\s(of).*") # Only first 
+
+
+# Origin3: pretty neat
+vk$origin3 <- str_remove(vk$origin3, "D(i)?e(ze)? (familie)?(achter)?(beroeps)?naam") # slipped through the regex
+vk$origin3 <- str_remove(vk$origin3, "Een (familie)?(achter)?(beroeps)?naam") # slipped through the regex
+vk$origin3 <- str_remove(vk$origin3, "Zijn (familie)?(achter)?(beroeps)?naam") # slipped through the regex
+vk$origin3 <- str_remove(vk$origin3, "Als (familie)?(achter)?(beroeps)?naam") # slipped through the regex
+vk$origin3 <- str_remove(vk$origin3, "Joodse (familie)?(achter)?naam")
+vk$origin3 <- str_remove(vk$origin3, "Bijbelse (familie)?(achter)?naam")
+
+
+# Setting empty origin variables to NA (Dutch or unfound foreign)
+vk <- vk %>%
+  mutate(origin1 = as.character(ifelse(origin1==""|origin1=="character(0)", NA, origin1)),
+         origin2 = as.character(ifelse(origin2==""|origin2=="character(0)", NA, origin2)),
+         origin3 = as.character(ifelse(origin3==""|origin3=="character(0)", NA, origin3)))
+
+
+
+# Finally, the tag "andere taal" was used to distinguish foreign names of unknown origin from known Dutch names. 
+vk <- vk %>%
+  mutate(origin4 = ifelse((as.numeric(str_detect(kenmerken, "andere taal"))==1), "non-Dutch", NA))
+
+
+```
+
+Ik zou alles waar `no_info` op 1 staat of waar `origin4` op "non-Dutch" staat coderen als buitenlands! 
+
+
+
+# Datasrcaping Computing science staff RU
+
+## getting started
+
+```{r, eval=FALSE}
+#start with clean workspace 
+rm(list=ls())
+getwd()
+```
+
+## packages
+```{r, eval=FALSE}
+#install.packages("data.table") 
+library(data.table) # mainly for faster data handling
+library(tidyverse) # I assume you already installed this one!
+# install.packages("httr") # we don't need this for now
+# require(httr)
+#install.packages("xml2")
+require(xml2)
+#install.packages("rvest")
+require(rvest)
+#install.packages("devtools")
+require(devtools)
+# Note we're doing something different here. We're installing a *latest* version directly from GitHub
+# This is because the released version of this packages contains some errors!
+#devtools::install_github("jkeirstead/scholar") 
+
+
+require(scholar)
+
+#define workdirectory, note the double *backslashes* if you're on windows
+# setwd("/yourpathhere)"
+```
+
+## save webpage with staff names 
+
+```{r, eval=FALSE}
+# Let's first get the staff page read_html is a function that simply extracts html webpages and
+# puts them in xml format
+cs_staff <- read_html("https://www.cs.ru.nl/staff/index.html")
+
+#head(soc_staff)
+#class(soc_staff)
+```
+
+## from xml to nice df of names
+
+### selecting the table with names
+
+```{r, eval=FALSE}
+cs_staff <- cs_staff %>%
+    rvest::html_nodes("body") %>%
+    xml2::xml_find_all("//a") %>%
+    rvest::html_text()
+```
+
+
+```{r, eval=FALSE}
+Encoding(cs_staff) <- "UTF-8"
+cs_staff <- iconv(cs_staff, from="UTF-8", to="LATIN1")
+require(stringi)
+cs_staff <- stri_trans_general(cs_staff, id = "Latin-ASCII")
+
+check <- NA
+
+for (i in 1:length(cs_staff)) {
+  check[i] <- str_length(cs_staff[i]) > 1
+}
+
+cs_staff2 <- cs_staff[check]
+cs_staff <- cs_staff2
+```
+
+
+### names in df
+```{r, eval=FALSE}
+cs_df <- data.frame(cs_staff)  
+```
+
+Perhaps, you want to save `cs_df`. 
+
+## Cleaning the dataset  
+
+### cleaning names a bit  
+```{r, eval=FALSE}
+require(stringr)
+# Last name seems to be everything after ) 
+cs_df$last_name <-as.character(str_split(cs_df$cs_staff, pattern="\\)", n = 2, simplify = TRUE)[,2])
+
+# first name is everything between brackets
+cs_df$first_name <- as.character(str_extract_all(cs_df$cs_staff, "(?<=\\().+?(?=\\))", simplify = TRUE))
+```
+
+```{r, eval=FALSE}
+cs_df$first_name <- tolower(cs_df$first_name)  # everything to lower!
+cs_df$last_name <- tolower(cs_df$last_name)
+```
+
+Please note I updated below to loose double names
+```{r, eval=FALSE}
+# trimws looses all spacing before and after (if you specify 'both') a character string
+cs_df$last_name <- trimws(cs_df$last_name, which = c("both"), whitespace = "[ \t\r\n]")
+cs_df$first_name <- trimws(cs_df$first_name, which = c("both"), whitespace = "[ \t\r\n]")
+
+cs_df$first_name <- as.character(str_split(cs_df$first_name, pattern=" ", n = 2, simplify = TRUE)[,1])
+cs_df$first_name <- as.character(str_split(cs_df$first_name, pattern="-", n = 2, simplify = TRUE)[,1])
+
+#cs_df$last_name <- as.character(str_split(cs_df$last_name, pattern=" ", n = 2, simplify = TRUE)[,1])
+#cs_df$last_name <- as.character(str_split(cs_df$last_name, pattern="-", n = 2, simplify = TRUE)[,1])
+
+
+#cs_df$soc_names <- trimws(cs_df$soc_names, which = c("both"), whitespace = "[ \t\r\n]")
+cs_df$last_name
+```
+
+
+```{r, eval=FALSE}
+save(cs_df, file="cs_df_s1b.RData")
+```
+
+
+### adding gender to dataset
+
+#### fgender
+
+
+```{r, eval=FALSE}
+fgender <- function(firstname_df, me, file=NULL) {
+
+####################################
+# Author: Bas Hofstra, Anne Maaike Mulders, Jochem Tolsma
+# DAte:   13-10-2021, last edit: 22-09-2022
+# Tasks:  - assign gender baed on name
+#         - Adapted from Rense Corten code April 2021
+####################################
+
+
+#Input: 
+#  - firstname_df: a data.frame with a column named firstname  and gender!
+#  - me: a character vector introducing yourself: e.g. "J Tolsma, Radboud University"
+#  - file: location and name of file to be saved. 
+  
+#------------------------------------------------------------------------------------
+# Load required packages
+
+if (!require("tidyverse", character.only = TRUE)) {
+  install.packages("tidyverse", dependencies = TRUE)
+  library(tidyverse, character.only = TRUE)
+}
+
+if (!require("rvest", character.only = TRUE)) {
+  install.packages("rvest", dependencies = TRUE)
+  library(rvest, character.only = TRUE)
+}
+
+if (!require("polite", character.only = TRUE)) {
+  install.packages("polite", dependencies = TRUE)
+  library(polite, character.only = TRUE)
+}
+
+
+
+# make links to scrape
+firstname_df$name_url <- paste0("https://www.meertens.knaw.nl/nvb/naam/is/", firstname_df[, c("firstname")])
+
+
+
+#------------------------------------------------------------------------------------
+### 2: introduce to server ###
+
+# Introduce myself to the server
+session <- bow("https://www.meertens.knaw.nl/nvb/naam/is", user_agent = me , delay = 1)
+
+
+#------------------------------------------------------------------------------------
+### 3: make function to get table from ###
+  fnames <- function(link){ 
+    name_session <-nod(session, path = link)
+    name_page <- scrape(name_session) 
+    return(name_page)
+  }
+  
+name_list <- list()
+table_list <- list()
+
+
+  for (i in 1:nrow(firstname_df)) {
+    print(i)
+    if (!(is.na(firstname_df$gender))) next
+    name_list[[i]] <- fnames(firstname_df[i, c("name_url")])
+    # extract name frequency table and gender info
+    if (length(name_list[[i]] %>% html_table())>0) {
+      
+      table_list[[i]] <- name_list[[i]] %>% html_table()
+      table_list[[i]][[1]][table_list[[i]][[1]]=="--"] <- "0"
+      if (as.numeric(table_list[[i]][[1]]$X3[2]) > as.numeric(table_list[[i]][[1]]$X3[6])) {
+        firstname_df$gender[i] <- "male" } else {
+          firstname_df$gender[i] <- "female"
+        }
+    }
+    if (!is.null(file)) (save(firstname_df, file=file))
+    
+    }
+  return(firstname_df)
+}
+```
+
+
+#### gender to cs_df
+```{r, eval=FALSE}
+cs_df %>% mutate(firstname=first_name) -> cs_df
+cs_df$gender <- NA
+```
+
+
+```{r, eval=FALSE}
+cs_df$firstname
+cs_df <- fgender(cs_df, me="Jochem Tolsma, RU/RUG", file="tempgender_cs_d2.RData")
+
+```
+
+```{r, eval=FALSE}
+save(cs_df, file="cs_df_s2b.RData") #genderized last. 
+```
+
+### adding some other data manually
+
+#### affiliation
+```{r, eval=FALSE}
+# set affiliation to radboud, comes in handy for querying google scholar
+cs_df$affiliation <- "radboud university"  
+```
+
+#### other stuff
+
+to do
+
+## let harvest data from google scholar
+
+### fixing a bug in the get_scholar_id function. 
+
+```{r, eval=FALSE}
+#require(scholar)
+
+get_scholar_id_fix <- function (last_name = "", first_name = "", affiliation = NA)
+{
+  if (!any(nzchar(c(first_name, last_name))))
+    stop("At least one of first and last name must be specified!")
+  site <- getOption("scholar_site")
+  url <- paste0(site, "/citations?view_op=search_authors&mauthors=",
+                first_name, "+", last_name, "&hl=en&oi=ao")
+  page <- get_scholar_resp(url)
+  if (is.null(page))
+    return(NA)
+  aa <- httr::content(page, as = "text")
+  # added by Bas Hofstra: bugfix for IDs that have a dash ("-")
+  ids <- substring(aa, regexpr(";user=", aa))
+  ids <- substr(ids, 1, 19) # error prone, but unsure how to solve otherwise
+  # if (nchar(stringr::str_extract_all(string = aa, pattern = ";user=[[:alnum:]]+[[:punct:]]")[[1]][1]) < 18) {
+  #   ids <- stringr::str_extract_all(string = aa, pattern = ";user=[[:alnum:]]+[[:punct:]]+[[:alnum:]]+[[:punct:]]")
+  # } else {
+  #   ids <- stringr::str_extract_all(string = aa, pattern = ";user=[[:alnum:]]+[[:punct:]]")
+  # }
+  if (length(unlist(ids)) == 0) {
+    message("No Scholar ID found.")
+    return(NA)
+  }
+  ids <- ids %>% unlist %>% gsub(";user=|[[:punct:]]$", "",
+                                 .) %>% unique
+  if (length(ids) > 1) {
+    profiles <- lapply(ids, scholar::get_profile)
+    if (is.na(affiliation)) {
+      x_profile <- profiles[[1]]
+      warning("Selecting first out of ", length(profiles),
+              " candidate matches.")
+    }
+    else {
+      which_profile <- sapply(profiles, function(x) {
+        stringr::str_count(string = x$affiliation, pattern = stringr::coll(affiliation,
+                                                                           ignore_case = TRUE))
+      })
+      if (all(which_profile == 0)) {
+        warning("No researcher found at the indicated affiliation.")
+        return(NA)
+      }
+      else {
+        x_profile <- profiles[[which(which_profile !=
+                                       0)]]
+      }
+    }
+  }
+  else {
+    x_profile <- scholar::get_profile(id = ids)
+  }
+  return(x_profile$id)
+}
+```
+
+### scholars id. 
+
+Don't forget to check manually if everything is okay. 
+
+We make an important decisson here. we remove staff members without scholar ids. perhaps a bit strange for our RSiena analysis later. I mean, we can include isolates
+
+YOU MAY NEED TO ADD AN TRYCATCH TO THIS LOOP AS WELL TO AVOID TIME OUT ERRORS, SEE THE NEXT LOOP BELOW
+```{r, eval=FALSE}
+cs_df$gs_id <- "" #don't make it empty everytime you run scrape! 
+```
+
+
+```{r, eval=FALSE}
+time <- .1 # I placed the waiting time outside the loop
+i <- 1 # Our loop iterator is now a variable. This means I can change it within a while loop. Using a for loop you cant change your iterator in the loop itself.
+```
+
+
+```{r, eval=FALSE}
+while (i <= nrow(cs_df)) {
+  print(i)
+ 
+  Sys.sleep(time)
+
+  tryCatch({
+     if (cs_df[i,c("gs_id")]=="") {
+       cs_df[i,c("gs_id")] <- get_scholar_id_fix(last_name = cs_df[i, c("last_name")], first_name = cs_df[i, c("first_name")],affiliation = cs_df[i,c("affiliation")])
+      i <- i + 1
+      time <- 1 #reset time if succesfull 
+     }
+    }, 
+    warning = function(w) {
+        cat("WARNING:", conditionMessage(w), "\n") #WARNING message
+        cs_df[i,c("gs_id")] <<- NA
+        i <<- i + 1
+        time <<- 1 #reset time if succesfull 
+        }, #BUT WE DO WANT TO CONTINUE. NOTE THE DOUBLE << THIS IS BECAUSE I WANT TO CHANGE A VARIABLE WHICH EXISTS OUTSIDE THE WARNING FUNCTION
+    error=function(e){
+      err <- conditionMessage(e)
+      if (stringr::str_detect(err, "Google is rate limiting you")) {
+        time <<- min(time + 10, 3600*2)
+        cat("Error:", conditionMessage(e), "\n") #ERROR message
+        cat("sleep time:", time,  "\n")
+        cat("ik zit in loop", i)
+      } else {
+        cat("ERROR :", conditionMessage(e), "\n") # continue on error, but print the error
+        i <<- i + 1
+        }
+      })
+}
+```
+
+
+```{r, eval=FALSE}
+# remove those without pubs from the df
+# seems we're left with about 34 sociology staff members!
+cs_df_copy <- cs_df #just to also have the data with staff without scholar_id
+cs_df <- cs_df[!cs_df$gs_id == "", ] 
+cs_df <- cs_df[!is.na(cs_df$gs_id), ] 
+```
+
+
+```{r, eval=FALSE}
+save(cs_df, file="cs_df_s3.RData")
+save(cs_df_copy, file="cs_df_copy.RData")
+
+```
+
+## publications and profiles
+
+We save the publications and info of the scholar profiles in new objects. 
+```{r, eval=FALSE}
+soc_list_profiles <- list()  # first we create an empty list that we then fill up with the for loop
+soc_list_publications <- list()
+```
+
+
+```{r, eval=FALSE}
+time <- .1 # I placed the waiting time outside the loop
+i <- 1 # Our loop iterator is now a variable. This means I can change it within a while loop. Using a for loop you cant change your iterator in the loop itself.
+```
+
+
+```{r, eval=FALSE}
+while (i <= nrow(cs_df)) {
+    print(i)
+    Sys.sleep(time)
+
+   
+    tryCatch({
+    #In this part of the tryCatch function you put all the stuff you want to do in the loop.
+    # note how you call different elements in a list '[[]]', fill in the i-th element
+    soc_list_profiles[[i]] <- get_profile(cs_df[i, c("gs_id")])  # Note how we call row i (remember how to call rows in a DF/Matrix) and then the associated scholar id
+    soc_list_publications[[i]] <- get_publications(cs_df[i, c("gs_id")])
+    soc_list_publications[[i]][, c("gs_id")] <- cs_df[i, c("gs_id")]  # note that we again attach an id
+    # so both functions here call the entire profile and pubs for an author, based on google
+    # scholar ids
+    i <- i + 1 #IMPORTANT, YOU NEED TO TELL THE WHILE LOOP THAT YOUR ITERATOR HAS TO BE INCREASED
+    time <- .1
+    },
+      warning = function(w) {
+        cat("WARNING:", conditionMessage(w), "\n") #WARNING message
+        i <<- i + 1
+        }, #BUT WE DO WANT TO CONTINUE. NOTE THE DOUBLE << THIS IS BECAUSE I WANT TO CHANGE A VARIABLE WHICH EXISTS OUTSIDE THE WARNING FUNCTION
+      error =function(e) {
+        time <<- min(time + 10, 3600*2)
+        cat("Error:", conditionMessage(e), "\n") #ERROR message
+        cat("sleep time:", time,  "\n")
+        cat("ik zit in loop", i)
+        #AFTER THE NEW SLEEP TIME, WE TRY AGAIN, WE THEREFORE DO NOT UPDATE i. ideally you also want to have some break option. And maybe you also want to save your data when you hit a time out error. 
+      })
+   
+ 
+}
+```
+
+
+```{r, eval=FALSE}
+cs_df_publications <- bind_rows(soc_list_publications)
+cs_list_profiles <- soc_list_profiles
+```
+
+
+```{r, eval=FALSE}
+save(cs_df_publications, file="cs_df_publications.RData")
+save(cs_list_profiles, file= "cs_list_profiles.RData")
+```
+
+
+
+### put the info of the profiles in our data set of staff members cs_df
+
+Please note, I got an error with the original script (as in the book) so needed to tweak things a little. 
+```{r, eval=FALSE}
+cs_profiles_df <- list()
+
+
+for (i in 1:length(cs_list_profiles)) {
+    # soc_profiles_df[[i]] <- data.frame(t(unlist(soc_list_profiles[[i]][1:8]))) #some annyoing
+    # data handling
+  if (!is.null(cs_list_profiles[[i]])) {
+    cs_profiles_df[[i]] <- unlist(cs_list_profiles[[i]][1:8])
+    cs_profiles_df[[i]] <- data.frame(cs_profiles_df[[i]])
+    cs_profiles_df[[i]] <- t(cs_profiles_df[[i]])
+    row.names(cs_profiles_df[[i]]) <- NULL
+    cs_profiles_df[[i]] <- data.frame(cs_profiles_df[[i]])
+  }
+}
+
+#soc_profiles_df
+
+cs_profiles_df2 <- bind_rows(cs_profiles_df)
+cs_df <- left_join(cs_df, cs_profiles_df2, by = c(gs_id = "id"))  # merge data with cs_df
+cs_df  # notice all the new information we were able to get from the scholar profiles!
+
+```
+
+
+```{r, eval=FALSE}
+save(cs_df, file="cs_df_s4.RData")
+
+```
+
+
+## citation history
+
+```{r, eval=FALSE}
+# get citation history of a scholar
+cs_staff_cit <- list()
+```
+
+
+```{r, eval=FALSE}
+time <- .1 # I placed the waiting time outside the loop
+i <- 1 # Our loop iterator is now a variable. This means I can change it within a while loop. Using a for loop you cant change your iterator in the loop itself.
+```
+
+
+```{r, eval=FALSE}
+while (i <= nrow(cs_df)) {
+    print(i)
+    Sys.sleep(time)
+
+    tryCatch({
+      cs_staff_cit[[i]] <- get_citation_history(cs_df[i, c("gs_id")])
+        if (nrow(cs_staff_cit[[i]]) > 0) {
+          cs_staff_cit[[i]][, c("gs_id")] <- cs_df[i, c("gs_id")]  # again attach the gs_id as third column
+        }
+    i <- i + 1
+    time <- .1
+    },
+      warning = function(w) {
+        cat("WARNING:", conditionMessage(w), "\n") #WARNING message
+        i <<- i + 1}, #BUT WE DO WANT TO CONTINUE. NOTE THE DOUBLE << THIS IS BECAUSE I WANT TO CHANGE A VARIABLE WHICH EXISTS OUTSIDE THE WARNING FUNCTION
+      error =function(e) {
+        time <<- min(time + 10, 3600*2)
+        cat("Error:", conditionMessage(e), "\n") #ERROR message
+        cat("sleep time:", time,  "\n")
+        cat("ik zit in loop", i)
+        #AFTER THE NEW SLEEP TIME, WE TRY AGAIN, WE THEREFORE DO NOT UPDATE i. ideally you also want to have some break option. And maybe you also want to save your data when you hit a time out error. 
+      })
+
+    
+}
+cs_staff_cit <- bind_rows(cs_staff_cit)
+```
+
+
+```{r, eval=FALSE}
+save(cs_staff_cit, file="cs_staff_cit.RData")
+
+```
+
+
+## collaborators
+
+PLEASE NOTE, I AM ONLY COLLECTING INFORMATION ON WHO WORKS TOGETHER WITH WHOM WITHIN THE DEPARTMENT!!!
+
+IF YOU WANT TO COLLECT MORE COLLABORATORS, PLEASE DO SO. bUT THESE WILL NOT BE NODES IN YOUR rSIENA MODEL LATER. tHUS YOU MAY USE THESE TO CONSTRUCT EGO-LEVEL COVARIATES!! 
+
+### fcolabs
+
+```{r, eval=FALSE}
+require(rvest)
+require(xml2)
+require(tidyverse)
+
+# function to get collaborators and names from GS profiles
+fcollabs <- function(gsid, lookforcollabs) {
+
+  htmlpage1 <- read_html(paste0("https://scholar.google.nl/citations?user=", gsid, "&hl=en")) # so we paste the google scholar id
+  profilename <- htmlpage1 %>% html_nodes(xpath = "//*/div[@id='gsc_prf_in']") %>% html_text() # we extract the profile name of that google scholar page
+  profilecollabs1 <- as.data.frame(0) # empty df necessary for later
+  profilecollabs2 <- as.data.frame(0) # empty df necessary for later
+
+  if (lookforcollabs == 1) { # so if you want to look for collabs, set function to 1
+
+    htmlpage2 <- read_html(paste0("https://scholar.google.com/citations?view_op=list_colleagues&hl=en&user=", gsid)) # so we paste the google scholar id
+    profilecollabs1 <-  htmlpage2 %>% html_nodes(css="h3") %>% html_text() # get names
+    profilecollabs1 <-  as.data.frame(profilecollabs1)
+
+    profilecollabs2 <- htmlpage2 %>% html_nodes("a") %>% html_attr("href") # get the link
+    profilecollabs2 <- profilecollabs2[seq_along(profilecollabs2) %% 2 > 0]
+    profilecollabs2 <- substring(profilecollabs2, 23)
+
+  }
+  if (nrow(profilecollabs1)>1) { # if there ARE collabs
+
+    profilecollabs1 <- as.data.frame(profilecollabs1) # we want to...
+    profilecollabs2 <-  as.data.frame(profilecollabs2)
+    profilecollabs1[,c("coauth_id")] <- profilecollabs2[,1]
+
+    profilecollabs1[,c("gs_id")] <- gsid #... add gs_ids of focal GS profile
+    profilecollabs1[,c("name")] <- profilename #...and the the profile name of GS profile attached
+
+    names(profilecollabs1)[1] <- "coauth"
+
+  } else {
+    profilecollabs1 <- as.data.frame(cbind(gsid, profilename)) # if NOT looking for collabs...
+    names(profilecollabs1) <- c("gs_id", "name") #...we only attach gs_id and profilename
+
+  }
+  return(profilecollabs1)
+
+}
+
+
+
+```
+
+```{r, eval=FALSE}
+# input a google scholar id and a 1 (if you want to find collabs) or 0 (only extracting names)
+
+cs_collabs <- list()
+```
+
+
+```{r, eval=FALSE}
+time <- .1 
+i <- 1
+```
+
+
+```{r, eval=FALSE}
+while (i <= nrow(cs_df)) {
+    print(i)
+    Sys.sleep(time)
+    tryCatch({
+      cs_collabs[[i]] <- fcollabs(cs_df[i, c("gs_id")], 1)
+      i <- i + 1
+      time <- .1
+    },
+      warning = function(w) {
+        cat("WARNING:", conditionMessage(w), "\n") #WARNING message
+        i <<- i + 1}, #BUT WE DO WANT TO CONTINUE. NOTE THE DOUBLE << THIS IS BECAUSE I WANT TO CHANGE A VARIABLE WHICH EXISTS OUTSIDE THE WARNING FUNCTION
+      error =function(e) {
+        time <<- min(time + 10, 3600*2)
+        cat("Error:", conditionMessage(e), "\n") #ERROR message
+        cat("sleep time:", time,  "\n")
+        cat("ik zit in loop", i)
+        #AFTER THE NEW SLEEP TIME, WE TRY AGAIN, WE THEREFORE DO NOT UPDATE i. ideally you also want to have some break option. And maybe you also want to save your data when you hit a time out error. 
+      })
+
+    
+}
+```
+
+
+```{r, eval=FALSE}
+
+for (i in 1:length(cs_collabs)) {
+  cs_df$ncollabs[i] <- nrow(cs_collabs[[i]]) 
+}
+
+cs_collabs2 <- bind_rows(cs_collabs)  # bind rows, get the unique ones!
+cs_collabs_unique <- unique(cs_collabs2[, c("gs_id")]) 
+cs_collabs_unique <- cs_collabs_unique[!is.na(cs_collabs_unique)]
+#save(cs_collabs, file = "addfiles/cs_df_collabs1.RData")  # you notice this takes a while, so we save the data here
+```
+
+```{r, eval=FALSE}
+save(cs_collabs, file="cs_collabs.RData")
+save(cs_collabs2, file="cs_collabs2.RData")
+save(cs_collabs_unique, file="cs_collabs_uniques.RData")
+save(cs_df, file="cs_df_s5.RData")
+
+```
+
+
+## Scraping ethnicity
+
+```{r, eval=FALSE}
+load("cs_df_s1b.RData")
+cs_df %>% mutate(lastname=last_name) -> cs_df
+lastname_df <- cs_df
+```
+
+We moeten de namen in het juiste format zetten. 
+
+Dus niet "van der meer", maar: "meer, van der". 
+
+Dan verwijder ik dubbele achternamen. 
+```{r, eval=FALSE}
+#voorvoegsels correct zetten voor scraper
+voorvoegsels <- c("'t ", "d' ", "de ", "de la ", "den ", "del ", "der ", "des ", "el ", "el- ", "in 't ", "la ", "le ", "les ", "op den ", "ten ", "ter ", "tes ", "van ", "van 't ", "van de " , "van der ", "van den ", "von der ", "op den ", "ul ") 
+
+for (i in 1: length(lastname_df$lastname)) {
+  if (sum(str_detect(lastname_df$lastname[i], voorvoegsels))>0) {
+    last <-  as.character(str_split(lastname_df$lastname[i], pattern=" ", simplify = TRUE))
+    last <- last[length(last)]
+    first <- as.character(unlist(strsplit(lastname_df$lastname[i], split=last, fixed=TRUE)))
+    lastname_df$lastname[i] <- paste(last, ", ", first, sep="")
+  }
+}
+
+#dubbele namen verwijderen. let op dubbele namen met voorvoegsel worden niet gecleaned. TO DO 
+for (i in 1: length(lastname_df$lastname)) {
+  if (!sum(str_detect(lastname_df$lastname[i], voorvoegsels))>0) {
+    lastname_df$lastname[i] <- as.character(str_split(lastname_df$lastname[i], pattern=" ", n = 2, simplify = TRUE)[,1])
+    lastname_df$lastname[i] <- as.character(str_split(lastname_df$lastname[i], pattern="-", n = 2, simplify = TRUE)[,1])
+  }
+}
+
+lastname_df$lastname<- trimws(lastname_df$lastname, which = c("right"), whitespace = "[ \t\r\n]")
+lastname_df$lastname <- str_replace_all(lastname_df$lastname, " ", "%20") #html links houden niet van spaties. 
+
+lastname_df$np <- ""
+```
+ 
+
+```{r, eval=FALSE}
+# Load required packages
+
+if (!require("tidyverse", character.only = TRUE)) {
+  install.packages("tidyverse", dependencies = TRUE)
+  library(tidyverse, character.only = TRUE)
+}
+
+if (!require("rvest", character.only = TRUE)) {
+  install.packages("rvest", dependencies = TRUE)
+  library(rvest, character.only = TRUE)
+}
+
+# if (!require("polite", character.only = TRUE)) {
+#   install.packages("polite", dependencies = TRUE)
+#   library(polite, character.only = TRUE)
+# }
+#   
+# if (!require("xml2", character.only = TRUE)) {
+#   install.packages("xml2", dependencies = TRUE)
+#   library(polite, character.only = TRUE)
+# }
+```
+
+hier maken we de links voor de website. 
+```{r, eval=FALSE}
+# creating URLs: origin
+lastname_df$name_origin <- ifelse((lastname_df$np==""),
+                                paste0("https://www.cbgfamilienamen.nl/nfb/detail_naam.php?gba_naam=",
+                                       stringr::str_to_title(lastname_df[, c("lastname")]), 
+                                       "&gba_naam=",
+                                       stringr::str_to_title(lastname_df[, c("lastname")]),
+                                       "&nfd_naam=",
+                                       stringr::str_to_title(lastname_df[, c("lastname")]), 
+                                       "&info=analyse+en+verklaring&operator=eq&taal="), 
+                                paste0("https://www.cbgfamilienamen.nl/nfb/detail_naam.php?gba_naam=",
+                                       lastname_df[, c("np2")],
+                                       stringr::str_to_title(lastname_df[, c("lastname")]), 
+                                       "&gba_naam=",
+                                       lastname_df[, c("np2")],
+                                       stringr::str_to_title(lastname_df[, c("lastname")]), 
+                                       "&nfd_naam=",
+                                       stringr::str_to_title(lastname_df[, c("lastname")]),
+                                       "%2C+",
+                                       lastname_df[, c("np")],
+                                       "&info=analyse+en+verklaring&operator=eq&taal="))
+```
+
+hier slaan we alles op
+```{r, eval=FALSE}
+name_originl <- list()
+table_originl <- list()
+time <- 0.1
+```
+
+## crucical scrape loop
+kom voorlopig geen fouten tegen, toch alles alvast in een trycatch gezet. 
+let op dat ik niet netjes scrape. dus zonder functie 'polite' gezien de kleine aantallen in onze cursus, mag dat wmb wel. 
+```{r, eval=FALSE}
+for (i in 1:nrow(lastname_df)) {
+  print(i)
+  Sys.sleep(time)
+  tryCatch({ 
+    name_originl[[i]]  <- read_html(lastname_df[i, c("name_origin")])
+    table_originl[[i]] <- name_originl[[i]] %>% html_table()
+  }, 
+    warning = function(w) {
+        cat("WARNING:", conditionMessage(w), "\n") #WARNING message
+    },
+    error=function(e){
+      err <- conditionMessage(e)
+      cat("Error:", conditionMessage(e), "\n") #ERROR message
+    }  
+  )
+}
+```
+
+en vanaf hier is het eigenlijk alleen maar opschonen. 
+```{r, eval=FALSE}
+origin_txt <- list()
+for (i in 1:length(name_originl)) {
+    origin_txt [[i]] <- name_originl[[i]] %>% html_text() %>% as.character()
+}
+
+```
+
+```{r, eval=FALSE}
+# Get out the relevant origin information from the xml lists
+origin_ln <- list()
+
+for (i in 1:length(name_originl)) {
+  origin_ln[[i]] <- name_originl[[i]] %>% html_nodes("div") %>% rvest::html_text()
+  origin_ln[[i]] <- origin_ln[[i]][[3]]
+}
+
+# Remove mess
+for (i in 1:length(origin_ln)) {
+  origin_ln[[i]] <- gsub("\\t", " ", origin_ln[[i]])
+  origin_ln[[i]] <- gsub("\\n", " ", origin_ln[[i]])
+}
+
+# Flatten nested structure of the origin information
+#origin_ln <- rbind(flatten(origin_ln))
+
+```
+
+
+```{r, eval=FALSE}
+
+# Detaching the names and origin info for easier data handling
+origin <- unlist(origin_ln)
+
+
+
+origin <- str_extract_all(origin, "varianten(.*?)©")
+
+# Origin information is usually mentioned after "verklaring" or "kenmerken"
+origin <- str_remove_all(origin, "varianten")
+origin <- str_remove_all(origin, "CBG Bronnen")
+origin <- str_remove_all(origin, "catalogus")
+origin <- str_remove_all(origin, "©")
+
+
+verklaring <- str_remove_all(origin, "kenmerken:(.*?)$")
+kenmerken <- str_extract_all(origin, "kenmerken:(.*?)$")
+kenmerken <- str_remove_all(kenmerken, "specifieke componenten:(.*?)$")
+sc <- str_extract_all(origin, "specifieke componenten:(.*?)$") # Not directly relevant to us, but does mean that the name has a webpage
+
+
+# Make into a neat dataframe with the names attached
+verklaring <- trimws(verklaring, which = "both")
+kenmerken <- trimws(kenmerken, which = "both")
+sc <- trimws(sc, which = "both")
+vk <- data.frame(cs_df$lastname, verklaring, kenmerken, sc)
+
+
+```
+
+
+
+## Separating names with Dutch & unknown origin
+Next, we identify those names for which no additional information was found. This is important to distinguish Dutch names from names with unknown origins.
+
+- Dutch names: no label indicating that the name is Dutch, but some other information available on name origin
+- Unknown names: web page cannot be found, so origin information is empty. 
+
+```{r, eval=FALSE}
+
+# Identify last names that could not be found
+vk <- vk %>%
+  mutate(verklaring = ifelse(verklaring=="", 0, verklaring), 
+         kenmerken = ifelse(kenmerken=="character(0)", 0, kenmerken),
+         sc = ifelse(sc=="character(0)", 0, sc),
+         no_info = nchar(verklaring) + nchar(kenmerken) + nchar(sc))
+
+vk <- vk %>%
+  mutate(no_info = ifelse(no_info==3, 1, 0), 
+         verklaring = ifelse(verklaring==0, NA, verklaring),
+         kenmerken = ifelse(kenmerken==0, NA, kenmerken))
+# If there is no text in verklaring or kenmerken, the name could not be found in the databases. 
+```
+
+
+## Extracting specific origin information
+There are three main ways to get information about the origin of last names:
+
+1) Under "kenmerken", last names are assigned clickable tags. These tags include unspecified foreign name tags ("andere taal"), as well as specific foreign origins of the name ("Franse naam", "Indische naam").
+-> origin1 + origin4
+
+2) Several names have more extensively written out stories behind the name, under "verklaring". A number of names contain detailed (either country-level or regional) origins, usually in the form of "De naam [xyz] is afkomstig uit [country]". 
+-> origin2 
+
+3) Some names have origin information under "verklaring" in the form of the linguistic origins of the name. This can be country specific (e.g. Chinese name), but it can also apply to multiple countries when the language is spoken in more than 1 countries (e.g. Spanish name). 
+-> origin3 
+
+```{r, eval=FALSE}
+
+# Step 1: extracting origin tags from kenmerken
+vk <- vk %>%
+  mutate(origin1 = str_extract(kenmerken, "[:upper:]([:lower:]{2,}) naam"))
+
+# Note: sometimes multiple origins are mentioned. Currently, I only extract the first one. Otherwise, we should use str_extract_all. 
+
+
+
+# Step 2: extracting origin info from verklaring 
+vk <- vk %>%
+  mutate(origin2 = ifelse(as.numeric(str_detect(verklaring, "afkomstig uit")) == 1, 
+         str_remove(verklaring, ".*afkomstig uit"), NA))
+
+
+# Step 3: extracting additional origin info from verklaring
+vk <- vk %>%
+  mutate(origin3 = str_extract(verklaring, "[:upper:]([:lower:]{2,}) (achter)?(familie)?(beroeps)?naam"))
+
+
+
+# Finally, we clean up the origin information extracted above
+
+# Origin1: already neat
+vk$origin1 <- str_remove(vk$origin1, "Joodse naam") # can be Dutch & non-Dutch
+
+# Origin2: messy
+vk$origin2 <- str_remove(vk$origin2, "\\..*") # remove extra info in the following sentence 
+vk$origin2 <- str_remove(vk$origin2, "\\;.*") # remove extra info in the following sentence 
+vk$origin2 <- str_remove(vk$origin2, "\\(.*") # remove extra info in the following sentence 
+
+
+vk$dpg <- as.numeric(str_detect(vk$origin2, "(dorp)|(plaats)|(gemeente)|(graafschap)|(stad)|(deel)|(Friesland)")) # origin info too regional 
+vk <- vk %>% mutate(origin2 = ifelse((dpg==1), NA, origin2)) # removing regional origin info
+vk <- subset(vk, select = -dpg) # removing intermediate variable
+
+# Sometimes, there were multiple countries mentioned. Take only the first:
+vk$origin2 <- str_remove(vk$origin2, "\\,.*") # Only first
+vk$origin2 <- str_remove(vk$origin2, "\\s(en).*") # Only first 
+vk$origin2 <- str_remove(vk$origin2, "\\s(of).*") # Only first 
+
+
+# Origin3: pretty neat
+vk$origin3 <- str_remove(vk$origin3, "D(i)?e(ze)? (familie)?(achter)?(beroeps)?naam") # slipped through the regex
+vk$origin3 <- str_remove(vk$origin3, "Een (familie)?(achter)?(beroeps)?naam") # slipped through the regex
+vk$origin3 <- str_remove(vk$origin3, "Zijn (familie)?(achter)?(beroeps)?naam") # slipped through the regex
+vk$origin3 <- str_remove(vk$origin3, "Als (familie)?(achter)?(beroeps)?naam") # slipped through the regex
+vk$origin3 <- str_remove(vk$origin3, "Joodse (familie)?(achter)?naam")
+vk$origin3 <- str_remove(vk$origin3, "Bijbelse (familie)?(achter)?naam")
+
+
+# Setting empty origin variables to NA (Dutch or unfound foreign)
+vk <- vk %>%
+  mutate(origin1 = as.character(ifelse(origin1==""|origin1=="character(0)", NA, origin1)),
+         origin2 = as.character(ifelse(origin2==""|origin2=="character(0)", NA, origin2)),
+         origin3 = as.character(ifelse(origin3==""|origin3=="character(0)", NA, origin3)))
+
+
+
+# Finally, the tag "andere taal" was used to distinguish foreign names of unknown origin from known Dutch names. 
+vk <- vk %>%
+  mutate(origin4 = ifelse((as.numeric(str_detect(kenmerken, "andere taal"))==1), "non-Dutch", NA))
+
+
+```
+
+Ik zou alles waar `no_info` op 1 staat of waar `origin4` op "non-Dutch" staat coderen als buitenlands! 
+
+
