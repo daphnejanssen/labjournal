@@ -1,0 +1,355 @@
+---
+title: "RSiena"
+#bibliography: references.bib
+author: "Daphne Janssen"
+---
+
+
+
+```{r, globalsettings, echo=FALSE, warning=FALSE, results='hide'}
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE)
+opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE, warning = FALSE, message = FALSE,comment = "#>", cache=TRUE, class.source=c("test"), class.output=c("test2"))
+options(width = 100)
+rgl::setupKnitr()
+
+
+
+colorize <- function(x, color) {sprintf("<span style='color: %s;'>%s</span>", color, x) }
+
+```
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(position = c('top', 'right'))
+#klippy::klippy(color = 'darkred')
+#klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
+```
+
+Last compiled on `r Sys.time()`
+
+<!---
+Last compiled on `r format(Sys.time(), '%B, %Y')`
+--->
+
+<br>
+
+----
+
+# RSiena analysis Sociology staff RU
+
+
+## Preparations
+```{r}
+# Starting with a clean workspace 
+rm(list=ls())
+```
+
+```{r}
+# Requiring packages 
+library(data.table) 
+library(tidyverse) 
+require(stringi)
+require(RSiena)
+```
+
+```{r}
+# Loading dataobjects
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\soc_net_array.RData")
+#load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_collabs.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_staff_cit.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\soc_df.RData")
+```
+
+```{r}
+# Selecting the dependent variable
+net <- sienaDependent(net_soc_array)
+?sienaDependent
+```
+
+<br>
+
+## Step 1: define data
+```{r}
+# Gender
+gender <- as.numeric(soc_df$gender=="female")
+gender <- coCovar(gender)
+```
+
+```{r}
+# Ethnicity
+dutch <- as.numeric(soc_df$dutch==1)
+dutch <- coCovar(dutch)
+```
+
+```{r}
+# Number of collaborators
+#ncollabs <- soc_df$ncollabs
+#ncollabs <- coCovar(ncollabs)
+
+#class(ncollabs)
+```
+
+```{r}
+# Publications per wave for each staff computing science staff member
+pubsw1 <- pubsw2 <- pubsw3 <- NA
+
+for (i in 1:length(soc_df$gs_id)) {
+  pubsw1[i] <- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) & soc_staff_cit$year>=2016 & soc_staff_cit$year<=2017,])
+  pubsw2[i] <- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) & soc_staff_cit$year>=2018 & soc_staff_cit$year<=2019,])
+  pubsw3[i] <- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) & soc_staff_cit$year>=2020 & soc_staff_cit$year<=2022,])
+}
+
+pub_df <- as.matrix(data.frame(pubsw1, pubsw2, pubsw3))
+
+pubs <- varCovar(pub_df)
+```
+
+```{r}
+# Year first publication
+soc_staff_cit %>% group_by(gs_id) %>%
+  mutate(pub_first = min(year)) %>%
+  select(c("gs_id", "pub_first")) %>%
+  distinct(gs_id, pub_first, .keep_all = TRUE) -> firstpub_df
+
+soc_df <- left_join(soc_df, firstpub_df)
+
+#if no publication yet, set pub_first op 2023
+soc_df %>% mutate(pub_first = replace_na(pub_first, 2023)) -> soc_df
+
+pub_first <-  coCovar(soc_df$pub_first)
+
+mydata <- sienaDataCreate(net, gender, dutch, pubs, pub_first)
+```
+
+<br>
+
+## Step 2: create effects structure
+```{r}
+myeff <- getEffects(mydata)
+effectsDocumentation(myeff)
+```
+
+<br>
+
+## Step 3: get initial description
+```{r}
+print01Report(mydata, modelname = "C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_init")
+```
+
+<br>
+
+## Step 4: specify model
+```{r}
+myeff <- includeEffects(myeff, density)
+myeff <- includeEffects(myeff, isolateNet)
+myeff <- includeEffects(myeff, transTrip)
+myeff <- includeEffects(myeff, transTies)
+myeff <- includeEffects(myeff, egoPlusAltX)
+myeff <- includeEffects(myeff, sameX, interaction1 = "gender")
+myeff <- includeEffects(myeff, sameX, interaction1 = "dutch")
+myeff <- includeEffects(myeff, egoX, interaction1 = "pub_first")
+myeff <- includeEffects(myeff, egoX, interaction1 = "gender")
+myeff <- includeEffects(myeff, egoX, interaction1 = "dutch")
+```
+
+```{r}
+# Possible structural effects:
+# density
+# transTrip, transTies, gwesp, 
+# inPop, outAct, inAct of outPop, 
+# isolateNet
+# degPlus of egoPlusAltX
+```
+
+<br>
+
+## Step 5: estimate
+```{r}
+myAlgorithm <- sienaAlgorithmCreate(projname = "soc_init")
+```
+
+```{r, eval=FALSE}
+(ans6 <- siena07(myAlgorithm, data = mydata, effects = myeff))
+# (the outer parentheses lead to printing the obtained result on the screen) if necessary, estimate
+# further
+# (ans <- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans))
+
+save(ans6, file="C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_model1")
+```
+
+```{r, echo=FALSE}
+#load("C:\\Users\\Daphn\\Documenten\\labjournal\\soc_init.txt")
+  
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_model1")
+```
+
+![](results/soc_init.txt){#id .class width=100% height=200px}
+
+
+<br>
+
+
+# RSiena analysis Computing science staff RU
+
+<br>
+
+## Preparations
+```{r}
+# Starting with a clean workspace 
+rm(list=ls())
+```
+
+```{r}
+# Requiring packages 
+library(data.table) 
+library(tidyverse) 
+require(stringi)
+require(RSiena)
+```
+
+```{r}
+# Loading dataobjects
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\comp_net_array.RData")
+load("C:\\Users\\Daphn\\Documenten\\pubnets\\Data\\names_staff_cit_v20221006.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\comp_df.RData")
+```
+
+```{r}
+# Selecting the dependent variable
+net <- sienaDependent(net_comp_array)
+?sienaDependent
+```
+
+<br>
+
+## Step 1: define data
+```{r}
+# Gender
+gender <- as.numeric(comp_df$gender=="female")
+gender <- coCovar(gender)
+```
+
+```{r}
+# Ethnicity
+dutch <- as.numeric(comp_df$dutch==1)
+dutch <- coCovar(dutch)
+```
+
+```{r}
+# Number of collaborators
+#ncollabs <- comp_df$ncollabs
+#ncollabs <- coCovar(ncollabs)
+
+#class(ncollabs)
+```
+
+```{r}
+# Creating a dataset with information on the google scholar id's, publications and citations of each computing science staff member 
+
+names_staff_cit %>%
+  filter(names_staff_cit$gs_id %in% comp_df$gs_id) -> comp_staff_cit
+
+# Removing duplicates
+sel <- (duplicated.data.frame(comp_staff_cit))
+
+comp_staff_cit %>% 
+  filter(!sel) -> comp_staff_cit
+```
+
+```{r}
+# Publications per wave for each staff computing science staff member
+pubsw1 <- pubsw2 <- pubsw3 <- NA
+
+for (i in 1:length(comp_df$gs_id)) {
+  pubsw1[i] <- nrow(comp_staff_cit[(comp_staff_cit$gs_id == comp_df$gs_id[i]) & comp_staff_cit$year>=2016 & comp_staff_cit$year<=2017,])
+  pubsw2[i] <- nrow(comp_staff_cit[(comp_staff_cit$gs_id == comp_df$gs_id[i]) & comp_staff_cit$year>=2018 & comp_staff_cit$year<=2019,])
+  pubsw3[i] <- nrow(comp_staff_cit[(comp_staff_cit$gs_id == comp_df$gs_id[i]) & comp_staff_cit$year>=2020 & comp_staff_cit$year<=2022,])
+}
+
+pub_df <- as.matrix(data.frame(pubsw1, pubsw2, pubsw3))
+
+pubs <- varCovar(pub_df)
+```
+
+```{r}
+# Year of first publication
+comp_staff_cit %>% group_by(gs_id) %>%
+  mutate(pub_first = min(year)) %>%
+  select(c("gs_id", "pub_first")) %>%
+  distinct(gs_id, pub_first, .keep_all = TRUE) -> firstpub_df
+
+comp_df <- left_join(comp_df, firstpub_df)
+
+#if no publication yet, set pub_first op 2023
+comp_df %>% mutate(pub_first = replace_na(pub_first, 2023)) -> comp_df
+
+pub_first <-  coCovar(comp_df$pub_first)
+
+mydata <- sienaDataCreate(net, gender, dutch, pubs, pub_first)
+```
+
+<br>
+
+## Step 2: create effects structure
+```{r}
+
+myeff <- getEffects(mydata)
+effectsDocumentation(myeff)
+```
+
+<br>
+
+## Step 3: get initial description
+```{r}
+print01Report(mydata, modelname = "C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_init")
+```
+
+<br>
+
+## Step 4: specify model
+```{r}
+myeff <- includeEffects(myeff, density)
+myeff <- includeEffects(myeff, isolateNet)
+myeff <- includeEffects(myeff, transTrip)
+myeff <- includeEffects(myeff, transTies)
+myeff <- includeEffects(myeff, egoPlusAltX)
+myeff <- includeEffects(myeff, sameX, interaction1 = "gender")
+myeff <- includeEffects(myeff, sameX, interaction1 = "dutch")
+myeff <- includeEffects(myeff, egoX, interaction1 = "pub_first")
+myeff <- includeEffects(myeff, egoX, interaction1 = "gender")
+myeff <- includeEffects(myeff, egoX, interaction1 = "dutch")
+```
+
+```{r}
+# Possible structural effects:
+# density
+# transTrip, transTies, gwesp, 
+# inPop, outAct, inAct of outPop, 
+# isolateNet
+# degPlus of egoPlusAltX
+```
+
+<br>
+
+## Step 5: estimate
+```{r}
+myAlgorithm <- sienaAlgorithmCreate(projname = "comp_init")
+```
+
+```{r, eval=FALSE}
+(ans1 <- siena07(myAlgorithm, data = mydata, effects = myeff))
+# (the outer parentheses lead to printing the obtained result on the screen) if necessary, estimate
+# further
+# (ans <- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans))
+
+save(ans1, file="C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_model1")
+```
+
+```{r, echo=FALSE}
+#load("C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_init")
+  
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_model1")
+```
+
+![](results/comp_init.txt){#id .class width=100% height=200px}

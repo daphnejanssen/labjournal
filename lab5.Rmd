@@ -174,7 +174,7 @@ plot(socnet3)
 
 <br>
 
-## Chaning the plot to make it more insightful
+## Changing the plot to make it more insightful
 
 ```{r}
 # Making the size of the nodes proportinal to the betweenness score
@@ -336,17 +336,13 @@ hist(igraph::degree(socnet1, mode="out"), xlab="degree", main="histogram of co-a
 # Visualisation of the gendercomposition of the three waves
 library(ggplot2)
 # Most basic bar chart
-ggplot(soc_df, aes(x = factor(gender))) +
+#ggplot(soc_df, aes(x = factor(gender))) +
+#    geom_bar()
+
+ggplot(soc_df, aes(factor(gender), fill = factor(gender))) +
     geom_bar()
 
-ggplot(soc_df, aes(factor(gender),
-        fill = factor(gender))) +
-    geom_bar()
 
-
-ggplot(soc_df, aes(x = factor(gender))) + 
-           geom_bar(stat="identity", width=0.8) +
-           geom_text(aes(label=paste0(freq,"%")), vjust=1.5, colour="white")
 ```
 
 ```{r, eval=FALSE}

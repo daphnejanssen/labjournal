@@ -1,0 +1,466 @@
+---
+title: "Journal 5"
+#bibliography: references.bib
+author: "Daphne Janssen"
+---
+
+
+
+```{r, globalsettings, echo=FALSE, warning=FALSE, results='hide'}
+
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE)
+opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE, warning = FALSE, message = FALSE,comment = "#>", cache=TRUE, class.source=c("test"), class.output=c("test2"))
+options(width = 100)
+rgl::setupKnitr()
+
+
+
+colorize <- function(x, color) {sprintf("<span style='color: %s;'>%s</span>", color, x) }
+
+```
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(position = c('top', 'right'))
+#klippy::klippy(color = 'darkred')
+#klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
+```
+
+Last compiled on `r Sys.time()`
+
+<!---
+Last compiled on `r format(Sys.time(), '%B, %Y')`
+--->
+
+
+<br>
+
+----
+
+---
+
+# First version complete journal
+
+<br>
+
+## Array, descriptive statistiscs and plot Sociology
+
+<br>
+
+### Creating an array
+```{r}
+# start with clean workspace 
+rm(list=ls())
+getwd()
+```
+
+```{r}
+# loading packages
+library(data.table) 
+library(tidyverse) 
+require(stringi)
+require(RSiena)
+```
+
+```{r}
+# loading data
+
+load("C:\\Users\\Daphn\\Documenten\\pubnets\\data\\names_df2_v20220106.RData")
+
+load("C:\\Users\\Daphn\\Documenten\\pubnets\\data\\names_df_publications_v20221006.RData")
+```
+
+```{r}
+# selecting the sociology sample
+
+#wrong gs_id (just by eye-balling)
+deselect <- c(24,25, 34,35)
+
+names_df %>% 
+  filter(affiliation=="Radboud University") %>%
+  filter(field=="sociology") %>% 
+  filter(!(id %in% deselect)) -> soc_df
+
+names_df_publications %>% 
+  filter(gs_id %in% soc_df$gs_id) -> socpub_df
+  
+soc_df %>% 
+  select(c("gs_id", "lastname")) %>%
+  right_join(socpub_df) -> socpub_df
+
+rm(names_df)  
+rm(names_df_publications)  
+rm(deselect)
+```
+
+```{r}
+# Cleaning the names a bit
+soc_df$lastname_pubs <- as.character(str_split(soc_df$lastname, pattern=",", n = 2, simplify = TRUE)[,1]) 
+
+socpub_df$author <- tolower(socpub_df$author)
+
+```
+
+```{r}
+# Saving the data in a descriptives folder
+save(soc_df, file="C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\soc_df.RData")
+save(socpub_df, file="C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\socpub_df.RData")
+```
+
+```{r}
+# Network based on publications
+network2016_2017 <- matrix(NA, nrow=nrow(soc_df), ncol=nrow(soc_df))
+network2018_2019 <- matrix(NA, nrow=nrow(soc_df), ncol=nrow(soc_df))
+network2020_2022 <- matrix(NA, nrow=nrow(soc_df), ncol=nrow(soc_df))
+```
+
+```{r}
+#select publications of the corresponding time era
+pubs_sel <- socpub_df %>%
+    filter(year>=2016 & year<=2017)
+
+# to do: we gebruiken nu str_detect, maar wrs moeten we een exact match gebruiken. 
+
+#fill the matrix
+for (ego in 1: nrow(soc_df)) {
+  name_ego <- soc_df$lastname_pubs[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[pubs_sel$gs_id==soc_df$gs_id[ego],] #selecteer de publicaties van ego
+  for (alter in 1:nrow(soc_df)){
+    name_alter <- soc_df$last_name[alter] #which alter? 
+    network2016_2017[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1)  #did alter publish with ego
+  }
+}
+```
+
+```{r}
+#select publications of the corresponding time era
+pubs_sel <- socpub_df %>%
+    filter(year>=2018 & year<=2019)
+
+# to do: we gebruiken nu str_detect, maar wrs moeten we een exact match gebruiken. 
+
+#fill the matrix
+for (ego in 1: nrow(soc_df)) {
+  name_ego <- soc_df$lastname_pubs[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[pubs_sel$gs_id==soc_df$gs_id[ego],] #selecteer de publicaties van ego
+  for (alter in 1:nrow(soc_df)){
+    name_alter <- soc_df$last_name[alter] #which alter? 
+    network2018_2019[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1)  #did alter publish with ego
+  }
+}
+```
+
+```{r}
+#select publications of the corresponding time era
+pubs_sel <- socpub_df %>%
+    filter(year>=2020 & year<=2022)
+
+# to do: we gebruiken nu str_detect, maar wrs moeten we een exact match gebruiken. 
+
+#fill the matrix
+for (ego in 1: nrow(soc_df)) {
+  name_ego <- soc_df$lastname_pubs[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[pubs_sel$gs_id==soc_df$gs_id[ego],] #selecteer de publicaties van ego
+  for (alter in 1:nrow(soc_df)){
+    name_alter <- soc_df$last_name[alter] #which alter? 
+    network2020_2022[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1)  #did alter publish with ego
+  }
+}
+```
+
+```{r}
+# Putting all adjacency matrices in an array 
+net_soc_array <- array(data = c(network2016_2017, network2018_2019, network2020_2022), dim=c(dim(network2020_2022),3))
+```
+
+```{r}
+# Saving the array
+save(net_soc_array, file="C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\soc_net_array.RData")
+```
+
+<br>
+
+### Descriptive statistics
+
+```{r}
+# Start with a clean workspace 
+rm(list=ls())
+getwd()
+```
+
+```{r}
+# Loading packages
+library(data.table) 
+library(tidyverse) 
+require(stringi)
+require(RSiena)
+require(igraph)
+```
+
+```{r}
+# Loading dataobjects
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\soc_net_array.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\soc_df.RData")
+```
+
+```{r}
+# Degrees
+net1 <- net_soc_array[ ,, 1]
+diag(net1) <- 0
+degree <- rowSums(net1)
+hist(degree)
+
+net2 <- net_soc_array[ ,, 2]
+diag(net2) <- 0
+degree <- rowSums(net2)
+hist(degree)
+
+net3 <- net_soc_array[ ,, 3]
+diag(net3) <- 0
+degree <- rowSums(net3)
+hist(degree)
+```
+
+```{r}
+# Igraph object 
+net1_g <- igraph::graph_from_adjacency_matrix(net1, mode = c("undirected"))
+plot(net1_g)
+
+igraph::degree(net1_g)
+igraph::dyad.census(net1_g)
+igraph::triad.census(net1_g)
+igraph::edge_density(net1_g)
+
+sum(igraph::degree(net1_g))
+
+net2_g <- igraph::graph_from_adjacency_matrix(net2, mode = c("undirected"))
+plot(net2_g)
+
+igraph::degree(net2_g)
+igraph::dyad.census(net2_g)
+igraph::triad.census(net2_g)
+igraph::edge_density(net2_g)
+
+sum(igraph::degree(net2_g))
+
+net3_g <- igraph::graph_from_adjacency_matrix(net3, mode = c("undirected"))
+plot(net3_g)
+
+igraph::degree(net3_g)
+igraph::dyad.census(net3_g)
+igraph::triad.census(net3_g)
+igraph::edge_density(net3_g)
+
+sum(igraph::degree(net3_g))
+```
+
+```{r}
+# Correcting for publications which are not present for both authors
+net1 <- net_soc_array[,,1]
+net1 <- net1 + t(net1)
+net1[net1==2] <- 1
+
+net2 <- net_soc_array[,,2]
+net2 <- net2 + t(net2)
+net2[net2==2] <- 1
+
+net3 <- net_soc_array[,,3]
+net3 <- net3 + t(net3)
+net3[net3==2] <- 1
+```
+
+```{r}
+# Defining functions
+
+# density: observed relations divided by possible relations
+fdensity <- function(x) {
+    # x is your nomination network make sure diagonal cells are NA
+    diag(x) <- NA
+    # take care of RSiena structural zeros, set as missing.
+    x[x == 10] <- NA
+    sum(x == 1, na.rm = T)/(sum(x == 1 | x == 0, na.rm = T))
+}
+
+# calculate intragroup density
+fdensityintra <- function(x, A) {
+    # A is matrix indicating whether nodes in dyad have same node attributes
+    diag(x) <- NA
+    x[x == 10] <- NA
+    diag(A) <- NA
+    sum(x == 1 & A == 1, na.rm = T)/(sum((x == 1 | x == 0) & A == 1, na.rm = T))
+}
+
+# calculate intragroup density
+fdensityinter <- function(x, A) {
+    # A is matrix indicating whether nodes in dyad have same node attributes
+    diag(x) <- NA
+    x[x == 10] <- NA
+    diag(A) <- NA
+    sum(x == 1 & A != 1, na.rm = T)/(sum((x == 1 | x == 0) & A != 1, na.rm = T))
+}
+
+# construct dyadcharacteristic whether nodes are similar/homogenous
+fhomomat <- function(x) {
+    # x is a vector of node-covariate
+    xmat <- matrix(x, nrow = length(x), ncol = length(x))
+    xmatt <- t(xmat)
+    xhomo <- xmat == xmatt
+    return(xhomo)
+}
+```
+
+```{r}
+fdensity(net1)
+fdensity(net2)
+fdensity(net3)
+
+net_soc_array <- array(data = c(net1, net2, net3), dim=c(dim(net1),3))
+```
+#### Gender segregation
+
+```{r}
+# Creating a matrix for the same gender 
+gender_m <-  fhomomat(soc_df$gender)
+```
+
+```{r}
+# Calculating intragroup density
+fdensityintra(x=net1, A=gender_m) 
+fdensityintra(x=net2, A=gender_m) 
+fdensityintra(x=net3, A=gender_m) 
+```
+
+```{r}
+# Only selecting women
+selectie <- soc_df$gender=="female"
+```
+
+```{r}
+# Calculating the density for men and women seperately (intergroup density)
+fdensity(net1[selectie,selectie])
+fdensity(net2[selectie,selectie])
+fdensity(net3[selectie,selectie])
+
+fdensity(net1[!selectie,!selectie])
+fdensity(net2[!selectie,!selectie])
+fdensity(net3[!selectie,!selectie])
+```
+
+
+<br>
+
+## RSiena analysis Sociology
+
+```{r}
+# Starting with a clean workspace 
+rm(list=ls())
+```
+
+```{r}
+# Loading dataobjects
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\soc_net_array.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_collabs.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_staff_cit.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\soc_df.RData")
+
+```
+
+```{r}
+# Requiring packages 
+library(RSiena)
+library(tidyr)
+```
+
+```{r}
+# Selecting the dependent variable
+net <- sienaDependent(net_soc_array)
+?sienaDependent
+
+```
+
+```{r}
+### Step 1: define data
+gender <- as.numeric(soc_df$gender=="female")
+gender <- coCovar(gender)
+
+dutch <- as.numeric(soc_df$dutch==1)
+dutch <- coCovar(dutch)
+
+#ncollabs <- soc_df$ncollabs
+#ncollabs <- coCovar(ncollabs)
+
+#class(ncollabs)
+
+pubsw1 <- pubsw2 <- pubsw3 <- NA
+
+for (i in 1:length(soc_df$gs_id)) {
+  pubsw1[i] <- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) & soc_staff_cit$year>=2016 & soc_staff_cit$year<=2017,])
+  pubsw2[i] <- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) & soc_staff_cit$year>=2018 & soc_staff_cit$year<=2019,])
+  pubsw3[i] <- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) & soc_staff_cit$year>=2020 & soc_staff_cit$year<=2022,])
+}
+
+pub_df <- as.matrix(data.frame(pubsw1, pubsw2, pubsw3))
+
+pubs <- varCovar(pub_df)
+```
+
+```{r}
+# Creating variable for year first publication
+soc_staff_cit %>% group_by(gs_id) %>%
+  mutate(pub_first = min(year)) %>%
+  select(c("gs_id", "pub_first")) %>%
+  distinct(gs_id, pub_first, .keep_all = TRUE) -> firstpub_df
+
+soc_df <- left_join(soc_df, firstpub_df)
+
+#if no publication yet, set pub_first op 2023
+soc_df %>% mutate(pub_first = replace_na(pub_first, 2023)) -> soc_df
+
+pub_first <-  coCovar(soc_df$pub_first)
+
+mydata <- sienaDataCreate(net, gender, dutch, pubs, pub_first)
+```
+
+```{r}
+### Step 2: create effects structure
+myeff <- getEffects(mydata)
+effectsDocumentation(myeff)
+```
+
+```{r}
+### Step 3: get initial description
+print01Report(mydata, modelname = "Results/soc_init")
+```
+
+```{r}
+### Step4: specify model
+myeff <- includeEffects(myeff, outAct)
+myeff <- includeEffects(myeff, degPlus)
+myeff <- includeEffects(myeff, egoPlusAltX)
+myeff <- includeEffects(myeff, sameX, interaction1 = "gender")
+myeff <- includeEffects(myeff, sameX, interaction1 = "dutch")
+myeff <- includeEffects(myeff, egoX, interaction1 = "pub_first")
+myeff <- includeEffects(myeff, egoX, interaction1 = "gender")
+myeff <- includeEffects(myeff, egoX, interaction1 = "dutch")
+```
+
+```{r}
+### Step5 estimate
+myAlgorithm <- sienaAlgorithmCreate(projname = "soc_init")
+```
+
+```{r, eval=FALSE}
+(ans <- siena07(myAlgorithm, data = mydata, effects = myeff))
+# (the outer parentheses lead to printing the obtained result on the screen) if necessary, estimate
+# further
+# (ans <- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans))
+
+save(ans, file="Results/soc_model")
+```
+
+```{r, echo=FALSE}
+#load("Results/soc_init")
+load("Results/soc_model")
+```
+

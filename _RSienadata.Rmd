@@ -1,0 +1,25 @@
+
+#load data
+```{r}
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\names_df")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\names_df_publications")
+```
+
+
+
+#sample selection
+
+```{r}
+names_df %>%
+  filter(affiliation=="Radboud University") %>%
+  filter(field=="sociology") -> soc_df
+
+names_df_publications %>%
+  filter(gs_id %in% soc_df$gs_id) -> socpub_df
+
+soc_df %>%
+  select(c("gs_id", "lastname")) %>%
+  right_join(socpub_df) -> socpub_df
+
+```
+

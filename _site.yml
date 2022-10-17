@@ -22,6 +22,8 @@ navbar:
         href: lab4.html
       - text: "Week 5"
         href: lab5.html
+      - text: "week 6"
+        href: lab6.html
     - text: "Research Question"
       menu:
       - text: "Week 1"
@@ -30,6 +32,8 @@ navbar:
         href: RQWeek2.html
       - text: "Week 4"
         href: RQWeek4.html
+      - text: "Week 6"
+        href: RQWeek6.html
     - text: "Final report"
       menu: 
       - text: "Introduction and Research Question"
@@ -38,6 +42,10 @@ navbar:
         href: Homeworkw2DATA.html
       - text: "Data - Scraping"
         href: Homeworkw4DATASCRAPE.html
+      - text: "Data - Descriptive statistics"
+        href: Homeworkw6DESCRIPTIVES.html
+      - text: "RSiena analysis"
+        href: Homeworkw6RSIENA.html
         
         # here, other .Rmds can be added
 
