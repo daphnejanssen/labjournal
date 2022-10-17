@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Daphne Janssen" />
+
+
+<title>Introduction</title>
+
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/clipboard-1.7.1/clipboard.min.js"></script>
+<link href="site_libs/primer-tooltips-1.4.0/build.css" rel="stylesheet" />
+<link href="site_libs/klippy-0.0.0.9500/css/klippy.min.css" rel="stylesheet" />
+<script src="site_libs/klippy-0.0.0.9500/js/klippy.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="tweaks.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    My journal
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lab1.html">Week 1</a>
+    </li>
+    <li>
+      <a href="lab2.html">Week 2</a>
+    </li>
+    <li>
+      <a href="lab3.html">Week 3</a>
+    </li>
+    <li>
+      <a href="lab4.html">Week 4</a>
+    </li>
+    <li>
+      <a href="lab5.html">Week 5</a>
+    </li>
+    <li>
+      <a href="lab6.html">week 6</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Research Question
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="RQWeek1.html">Week 1</a>
+    </li>
+    <li>
+      <a href="RQWeek2.html">Week 2</a>
+    </li>
+    <li>
+      <a href="RQWeek4.html">Week 4</a>
+    </li>
+    <li>
+      <a href="RQWeek6.html">Week 6</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Final report
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Homeworkw6INTRO.html">Introduction and Research Question</a>
+    </li>
+    <li>
+      <a href="Homeworkw6THEORY.html">Theory</a>
+    </li>
+    <li>
+      <a href="Homeworkw6DATA.html">Data - Description</a>
+    </li>
+    <li>
+      <a href="Homeworkw4DATASCRAPE.html">Data - Scraping</a>
+    </li>
+    <li>
+      <a href="Homeworkw6DESCRIPTIVES.html">Data - Descriptive statistics</a>
+    </li>
+    <li>
+      <a href="Homeworkw6RSIENA.html">RSiena analysis</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/JochemTolsma/labjournal">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Introduction</h1>
+<h4 class="author">Daphne Janssen</h4>
+
+</div>
+
+
+<script>
+  addClassKlippyTo("pre.r, pre.markdown");
+  addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
+</script>
+<p>Last compiled on 2022-10-17 18:35:19</p>
+<!---
+Last compiled on oktober, 2022
+--->
+<p><br></p>
+<hr />
+<div id="introduction" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p><br></p>
+<p>For a long time, up to the present day, women have been
+underrepresented in STEM (science, technology, engineering and
+mathematics) studies and professions. According to the website
+<em>stemwomen.com</em>, the gap between men and women taking STEM
+courses is widest in computer sciences and engingeering &amp;
+technology: 19 percent of students are women, compared to 81 percent who
+are men.</p>
+<p>Because of the gender gap, men are overrepresented in STEM research
+and are more likely to hold senior positions in STEM occupations.
+Research shows that men are more likely to be authors of prestigious
+journals in the STEM field, compared to women (Holman, Stuart-Fox &amp;
+Hauser, 2018). Also, Holman et al. (2018) estimated that STEM journals
+invite men to submit papers about twice as often, compared to women.
+These findings demonstrate that the STEM gender gap has far-reaching
+consequences and it is unlikely to narrow on its own.</p>
+<p>From the literature, it appears that networks are a central factor in
+gender inequality in obtaining leading scientific positions (Kegen,
+2013) and that co-authorship is highly relevant to promotion and
+productivity (Collins &amp; Steffen-Fluhr, 2019). Based on this, it can
+be reasoned that gender inequality within the STEM field stems from
+gender homophily in collaborations for publications. Conversely, gender
+inequality may be reduced by a change in publication networks of men and
+women . To learn more about some specific underlying factors of the
+current gender gap, with the aim of contributing to a decrease in gender
+inequality within STEM, this paper will focus on the impact of social
+network characteristics of male and female scientists at Radboud
+University. Based on the above I derived the following <strong>research
+question(s)</strong>:</p>
+<p><em>1) To what extent does the application of the gender homophily
+principle to the publication network of male and female scientists at
+Radboud University within Sociology and Computer Science change between
+2016 and 2022?</em></p>
+<p><em>2) To what extent is there a difference in the application of the
+gender homophily principle to the publication network of male and female
+scientists at Radboud University, between Sociology and Computing
+science?</em></p>
+<p><em>3) To what extent do structural network effects influence the
+difference in gender homophily in the publication network of male and
+female scientists at Radboud University, within Sociology and Computing
+science?</em></p>
+<p><br></p>
+<p><em>Additional text: By looking into the differences in co-authorship
+patterns among men and women within the social sciences and the
+scientific field of STEM, it becomes possible to investigate the role of
+ties in gender inequality within science. A social network perspective
+is of crucial value to thoroughly investigate the role of ties, more
+specifically the severeness of the homophily principle, for the academic
+gender gap. This perspective allows for investigating the way the
+specific manifestations of gender inequality in ties works their way to
+the surface through ties. I would like to contribute to the current
+scientific field concerning gender differences in social networks within
+STEM, by investigating to what extent men and women differ in who they
+collaborate with, and to what extent this differs between sociology and
+engineering within three Dutch universities.</em></p>
+<p><br></p>
+<p><strong>Articles:</strong></p>
+<p>Collins, R., &amp; Steffen-Fluhr, N. (2019). Hidden patterns: Using
+social network analysis to track career trajectories of women STEM
+faculty. <em>Equality, Diversity and Inclusion: An International
+Journal.</em> <a href="https://doi.org/10.1108/EDI-09-2017-0183"
+class="uri">https://doi.org/10.1108/EDI-09-2017-0183</a></p>
+<p><em>More to add…</em></p>
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkludHJvZHVjdGlvbiINCiNiaWJsaW9ncmFwaHk6IHJlZmVyZW5jZXMuYmliDQphdXRob3I6ICJEYXBobmUgSmFuc3NlbiINCi0tLQ0KDQoNCg0KYGBge3IsIGdsb2JhbHNldHRpbmdzLCBlY2hvPUZBTFNFLCB3YXJuaW5nPUZBTFNFLCByZXN1bHRzPSdoaWRlJ30NCmxpYnJhcnkoa25pdHIpDQoNCmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkNCm9wdHNfY2h1bmskc2V0KHRpZHkub3B0cz1saXN0KHdpZHRoLmN1dG9mZj0xMDApLHRpZHk9VFJVRSwgd2FybmluZyA9IEZBTFNFLCBtZXNzYWdlID0gRkFMU0UsY29tbWVudCA9ICIjPiIsIGNhY2hlPVRSVUUsIGNsYXNzLnNvdXJjZT1jKCJ0ZXN0IiksIGNsYXNzLm91dHB1dD1jKCJ0ZXN0MiIpKQ0Kb3B0aW9ucyh3aWR0aCA9IDEwMCkNCnJnbDo6c2V0dXBLbml0cigpDQoNCg0KDQpjb2xvcml6ZSA8LSBmdW5jdGlvbih4LCBjb2xvcikge3NwcmludGYoIjxzcGFuIHN0eWxlPSdjb2xvcjogJXM7Jz4lczwvc3Bhbj4iLCBjb2xvciwgeCkgfQ0KDQpgYGANCg0KYGBge3Iga2xpcHB5LCBlY2hvPUZBTFNFLCBpbmNsdWRlPVRSVUV9DQprbGlwcHk6OmtsaXBweShwb3NpdGlvbiA9IGMoJ3RvcCcsICdyaWdodCcpKQ0KI2tsaXBweTo6a2xpcHB5KGNvbG9yID0gJ2RhcmtyZWQnKQ0KI2tsaXBweTo6a2xpcHB5KHRvb2x0aXBfbWVzc2FnZSA9ICdDbGljayB0byBjb3B5JywgdG9vbHRpcF9zdWNjZXNzID0gJ0RvbmUnKQ0KYGBgDQoNCkxhc3QgY29tcGlsZWQgb24gYHIgU3lzLnRpbWUoKWANCg0KPCEtLS0NCkxhc3QgY29tcGlsZWQgb24gYHIgZm9ybWF0KFN5cy50aW1lKCksICclQiwgJVknKWANCi0tLT4NCg0KPGJyPg0KDQotLS0tDQoNCiMgSW50cm9kdWN0aW9uICAgDQoNCjxicj4NCg0KRm9yIGEgbG9uZyB0aW1lLCB1cCB0byB0aGUgcHJlc2VudCBkYXksIHdvbWVuIGhhdmUgYmVlbiB1bmRlcnJlcHJlc2VudGVkIGluIFNURU0gKHNjaWVuY2UsIHRlY2hub2xvZ3ksIGVuZ2luZWVyaW5nIGFuZCBtYXRoZW1hdGljcykgc3R1ZGllcyBhbmQgcHJvZmVzc2lvbnMuIEFjY29yZGluZyB0byB0aGUgd2Vic2l0ZSAqc3RlbXdvbWVuLmNvbSosIHRoZSBnYXAgYmV0d2VlbiBtZW4gYW5kIHdvbWVuIHRha2luZyBTVEVNIGNvdXJzZXMgaXMgd2lkZXN0IGluIGNvbXB1dGVyIHNjaWVuY2VzIGFuZCBlbmdpbmdlZXJpbmcgJiB0ZWNobm9sb2d5OiAxOSBwZXJjZW50IG9mIHN0dWRlbnRzIGFyZSB3b21lbiwgY29tcGFyZWQgdG8gODEgcGVyY2VudCB3aG8gYXJlIG1lbi4gDQoNCkJlY2F1c2Ugb2YgdGhlIGdlbmRlciBnYXAsIG1lbiBhcmUgb3ZlcnJlcHJlc2VudGVkIGluIFNURU0gcmVzZWFyY2ggYW5kIGFyZSBtb3JlIGxpa2VseSB0byBob2xkIHNlbmlvciBwb3NpdGlvbnMgaW4gU1RFTSBvY2N1cGF0aW9ucy4gUmVzZWFyY2ggc2hvd3MgdGhhdCBtZW4gYXJlIG1vcmUgbGlrZWx5IHRvIGJlIGF1dGhvcnMgb2YgcHJlc3RpZ2lvdXMgam91cm5hbHMgaW4gdGhlIFNURU0gZmllbGQsIGNvbXBhcmVkIHRvIHdvbWVuIChIb2xtYW4sIFN0dWFydC1Gb3ggJiBIYXVzZXIsIDIwMTgpLiBBbHNvLCBIb2xtYW4gZXQgYWwuICgyMDE4KSBlc3RpbWF0ZWQgdGhhdCBTVEVNIGpvdXJuYWxzIGludml0ZSBtZW4gdG8gc3VibWl0IHBhcGVycyBhYm91dCB0d2ljZSBhcyBvZnRlbiwgY29tcGFyZWQgdG8gd29tZW4uIFRoZXNlIGZpbmRpbmdzIGRlbW9uc3RyYXRlIHRoYXQgdGhlIFNURU0gZ2VuZGVyIGdhcCBoYXMgZmFyLXJlYWNoaW5nIGNvbnNlcXVlbmNlcyBhbmQgaXQgaXMgdW5saWtlbHkgdG8gbmFycm93IG9uIGl0cyBvd24uIA0KDQpGcm9tIHRoZSBsaXRlcmF0dXJlLCBpdCBhcHBlYXJzIHRoYXQgbmV0d29ya3MgYXJlIGEgY2VudHJhbCBmYWN0b3IgaW4gZ2VuZGVyIGluZXF1YWxpdHkgaW4gb2J0YWluaW5nIGxlYWRpbmcgc2NpZW50aWZpYyBwb3NpdGlvbnMgKEtlZ2VuLCAyMDEzKSBhbmQgdGhhdCBjby1hdXRob3JzaGlwIGlzIGhpZ2hseSByZWxldmFudCB0byBwcm9tb3Rpb24gYW5kIHByb2R1Y3Rpdml0eSAoQ29sbGlucyAmIFN0ZWZmZW4tRmx1aHIsIDIwMTkpLiBCYXNlZCBvbiB0aGlzLCBpdCBjYW4gYmUgcmVhc29uZWQgdGhhdCBnZW5kZXIgaW5lcXVhbGl0eSB3aXRoaW4gdGhlIFNURU0gZmllbGQgc3RlbXMgZnJvbSBnZW5kZXIgaG9tb3BoaWx5IGluIGNvbGxhYm9yYXRpb25zIGZvciBwdWJsaWNhdGlvbnMuIENvbnZlcnNlbHksIGdlbmRlciBpbmVxdWFsaXR5IG1heSBiZSByZWR1Y2VkIGJ5IGEgY2hhbmdlIGluIHB1YmxpY2F0aW9uIG5ldHdvcmtzIG9mIG1lbiBhbmQgd29tZW4gLg0KVG8gbGVhcm4gbW9yZSBhYm91dCBzb21lIHNwZWNpZmljIHVuZGVybHlpbmcgZmFjdG9ycyBvZiB0aGUgY3VycmVudCBnZW5kZXIgZ2FwLCB3aXRoIHRoZSBhaW0gb2YgY29udHJpYnV0aW5nIHRvIGEgZGVjcmVhc2UgaW4gZ2VuZGVyIGluZXF1YWxpdHkgd2l0aGluIFNURU0sIHRoaXMgcGFwZXIgd2lsbCBmb2N1cyBvbiB0aGUgaW1wYWN0IG9mIHNvY2lhbCBuZXR3b3JrIGNoYXJhY3RlcmlzdGljcyBvZiBtYWxlIGFuZCBmZW1hbGUgc2NpZW50aXN0cyBhdCBSYWRib3VkIFVuaXZlcnNpdHkuIEJhc2VkIG9uIHRoZSBhYm92ZSBJIGRlcml2ZWQgdGhlIGZvbGxvd2luZyAqKnJlc2VhcmNoIHF1ZXN0aW9uKHMpKio6DQogIA0KKjEpIFRvIHdoYXQgZXh0ZW50IGRvZXMgdGhlIGFwcGxpY2F0aW9uIG9mIHRoZSBnZW5kZXIgaG9tb3BoaWx5IHByaW5jaXBsZSB0byB0aGUgcHVibGljYXRpb24gbmV0d29yayBvZiBtYWxlIGFuZCBmZW1hbGUgc2NpZW50aXN0cyBhdCBSYWRib3VkIFVuaXZlcnNpdHkgd2l0aGluIFNvY2lvbG9neSBhbmQgQ29tcHV0ZXIgU2NpZW5jZSBjaGFuZ2UgYmV0d2VlbiAyMDE2IGFuZCAyMDIyPyoNCg0KKjIpIFRvIHdoYXQgZXh0ZW50IGlzIHRoZXJlIGEgZGlmZmVyZW5jZSBpbiB0aGUgYXBwbGljYXRpb24gb2YgdGhlIGdlbmRlciBob21vcGhpbHkgcHJpbmNpcGxlIHRvIHRoZSBwdWJsaWNhdGlvbiBuZXR3b3JrIG9mIG1hbGUgYW5kIGZlbWFsZSBzY2llbnRpc3RzIGF0IFJhZGJvdWQgVW5pdmVyc2l0eSwgYmV0d2VlbiBTb2Npb2xvZ3kgYW5kIENvbXB1dGluZyBzY2llbmNlPyoNCg0KKjMpIFRvIHdoYXQgZXh0ZW50IGRvIHN0cnVjdHVyYWwgbmV0d29yayBlZmZlY3RzIGluZmx1ZW5jZSB0aGUgZGlmZmVyZW5jZSBpbiBnZW5kZXIgaG9tb3BoaWx5IGluIHRoZSBwdWJsaWNhdGlvbiBuZXR3b3JrIG9mIG1hbGUgYW5kIGZlbWFsZSBzY2llbnRpc3RzIGF0IFJhZGJvdWQgVW5pdmVyc2l0eSwgd2l0aGluIFNvY2lvbG9neSBhbmQgQ29tcHV0aW5nIHNjaWVuY2U/Kg0KDQoNCjxicj4NCg0KKkFkZGl0aW9uYWwgdGV4dDogQnkgbG9va2luZyBpbnRvIHRoZSBkaWZmZXJlbmNlcyBpbiBjby1hdXRob3JzaGlwIHBhdHRlcm5zIGFtb25nIG1lbiBhbmQgd29tZW4gd2l0aGluIHRoZSBzb2NpYWwgc2NpZW5jZXMgYW5kIHRoZSBzY2llbnRpZmljIGZpZWxkIG9mIFNURU0sIGl0IGJlY29tZXMgcG9zc2libGUgdG8gaW52ZXN0aWdhdGUgdGhlIHJvbGUgb2YgdGllcyBpbiBnZW5kZXIgaW5lcXVhbGl0eSB3aXRoaW4gc2NpZW5jZS4gQSBzb2NpYWwgbmV0d29yayBwZXJzcGVjdGl2ZSBpcyBvZiBjcnVjaWFsIHZhbHVlIHRvIHRob3JvdWdobHkgaW52ZXN0aWdhdGUgdGhlIHJvbGUgb2YgdGllcywgbW9yZSBzcGVjaWZpY2FsbHkgdGhlIHNldmVyZW5lc3Mgb2YgdGhlIGhvbW9waGlseSBwcmluY2lwbGUsIGZvciB0aGUgYWNhZGVtaWMgZ2VuZGVyIGdhcC4gVGhpcyBwZXJzcGVjdGl2ZSBhbGxvd3MgZm9yIGludmVzdGlnYXRpbmcgdGhlIHdheSB0aGUgc3BlY2lmaWMgbWFuaWZlc3RhdGlvbnMgb2YgZ2VuZGVyIGluZXF1YWxpdHkgaW4gdGllcyB3b3JrcyB0aGVpciB3YXkgdG8gdGhlIHN1cmZhY2UgdGhyb3VnaCB0aWVzLiBJIHdvdWxkIGxpa2UgdG8gY29udHJpYnV0ZSB0byB0aGUgY3VycmVudCBzY2llbnRpZmljIGZpZWxkIGNvbmNlcm5pbmcgZ2VuZGVyIGRpZmZlcmVuY2VzIGluIHNvY2lhbCBuZXR3b3JrcyB3aXRoaW4gU1RFTSwgYnkgaW52ZXN0aWdhdGluZyB0byB3aGF0IGV4dGVudCBtZW4gYW5kIHdvbWVuIGRpZmZlciBpbiB3aG8gdGhleSBjb2xsYWJvcmF0ZSB3aXRoLCBhbmQgdG8gd2hhdCBleHRlbnQgdGhpcyBkaWZmZXJzIGJldHdlZW4gc29jaW9sb2d5IGFuZCBlbmdpbmVlcmluZyB3aXRoaW4gdGhyZWUgRHV0Y2ggdW5pdmVyc2l0aWVzLioNCg0KDQo8YnI+DQoNCioqQXJ0aWNsZXM6KiogDQoNCkNvbGxpbnMsIFIuLCAmIFN0ZWZmZW4tRmx1aHIsIE4uICgyMDE5KS4gSGlkZGVuIHBhdHRlcm5zOiBVc2luZyBzb2NpYWwgbmV0d29yayBhbmFseXNpcyB0byB0cmFjayBjYXJlZXIgdHJhamVjdG9yaWVzIG9mIHdvbWVuIFNURU0gZmFjdWx0eS4gKkVxdWFsaXR5LCBEaXZlcnNpdHkgYW5kIEluY2x1c2lvbjogQW4gSW50ZXJuYXRpb25hbCBKb3VybmFsLiogaHR0cHM6Ly9kb2kub3JnLzEwLjExMDgvRURJLTA5LTIwMTctMDE4Mw0KDQoNCipNb3JlIHRvIGFkZC4uLioNCg==</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("Homeworkw6INTRO.Rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

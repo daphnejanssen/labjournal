@@ -37,9 +37,11 @@ navbar:
     - text: "Final report"
       menu: 
       - text: "Introduction and Research Question"
-        href: Homeworkw2INTRO.html
+        href: Homeworkw6INTRO.html
+      - text: "Theory"
+        href: Homeworkw6THEORY.html
       - text: "Data - Description"
-        href: Homeworkw2DATA.html
+        href: Homeworkw6DATA.html
       - text: "Data - Scraping"
         href: Homeworkw4DATASCRAPE.html
       - text: "Data - Descriptive statistics"

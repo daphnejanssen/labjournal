@@ -1,0 +1,64 @@
+---
+title: "Theory"
+#bibliography: references.bib
+author: "Daphne Janssen"
+---
+
+
+
+```{r, globalsettings, echo=FALSE, warning=FALSE, results='hide'}
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE)
+opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE, warning = FALSE, message = FALSE,comment = "#>", cache=TRUE, class.source=c("test"), class.output=c("test2"))
+options(width = 100)
+rgl::setupKnitr()
+
+
+
+colorize <- function(x, color) {sprintf("<span style='color: %s;'>%s</span>", color, x) }
+
+```
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(position = c('top', 'right'))
+#klippy::klippy(color = 'darkred')
+#klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
+```
+
+Last compiled on `r Sys.time()`
+
+<!---
+Last compiled on `r format(Sys.time(), '%B, %Y')`
+--->
+
+<br>
+
+----
+
+# Theory
+
+<br>
+
+It is known that there are gender differences in scientific collaborations, putting women at a disadvantage (Jadidi, Karimi, Lietz, & Wagner, 2018). This is an important aspect of gender inequality within STEM, but also more broadly within the scientific community. Previous research shows that women publish less scientific articles than men (Mathews & Andersen, 2001) and that women scientists contribute less to journal articles compared to the proportion they make up of the academic staff (Bird, 2011). This is problematic because academic publications are closely related to professional recognition and are an indication of a scientist’s scientific contribution (Mathews & Andersen, 2001). 
+
+The gender homophily principle plays an important role in the construction of these networks. However, the literature is inconsistent on whether this principle is more common among men than women (or vice versa).  While some studies find that because of the homophily principle, men in the field of STEM are more likely to collaborate with other men than with women, thus reducing the chances for women to be signalled (Collins & Steffen-Fluhr, 2019), other studies conclude that women practice more gender homophily (Jadidi et al., 2018). Ghiasi et al. (2015) find that engineers predominantly collaborate with men, contributing to scientific structures recognised by male dominance. Jadidi et al. (2018) further find that women are generally less likely to enter into collaborations that will lead to success and are more likely to be embedded in ego networks with structural holes. Based on this, the following hypotheses can be derived:
+
+<br>
+
+**H1:** Gender homophily in publications increased between 2016 and 2022 within both Sociology and Computing Science at Radboud University.
+
+**H2:** The gender homophily principle applies more strongly to Computing Science than to Sociology: here women publish more often with women and men more often with men.
+
+**H3:** When structural network effects are taken into account, the gender homophily principle still applies more strongly to publications within Computer Science than to publications within Sociology.
+
+
+<br>
+
+**Articles:** 
+
+Ghiasi, G., Larivière, V., & Sugimoto, C. R. (2015). On the compliance of women engineers with a gendered scientific system. *PloS one, 10*(12), e0145931. https://doi.org/10.1371/journal.pone.0145931
+
+Jadidi, M., Karimi, F., Lietz, H., & Wagner, C. (2018). Gender disparities in science? Dropout, productivity, collaborations and success of male and female computer scientists. *Advances in Complex Systems, 21*(3-4), 1750011. https://doi.org/10.1142/S0219525917500114
+
+*More to add...*

@@ -1,0 +1,69 @@
+---
+title: "Introduction"
+#bibliography: references.bib
+author: "Daphne Janssen"
+---
+
+
+
+```{r, globalsettings, echo=FALSE, warning=FALSE, results='hide'}
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE)
+opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE, warning = FALSE, message = FALSE,comment = "#>", cache=TRUE, class.source=c("test"), class.output=c("test2"))
+options(width = 100)
+rgl::setupKnitr()
+
+
+
+colorize <- function(x, color) {sprintf("<span style='color: %s;'>%s</span>", color, x) }
+
+```
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(position = c('top', 'right'))
+#klippy::klippy(color = 'darkred')
+#klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
+```
+
+Last compiled on `r Sys.time()`
+
+<!---
+Last compiled on `r format(Sys.time(), '%B, %Y')`
+--->
+
+<br>
+
+----
+
+# Introduction   
+
+<br>
+
+For a long time, up to the present day, women have been underrepresented in STEM (science, technology, engineering and mathematics) studies and professions. According to the website *stemwomen.com*, the gap between men and women taking STEM courses is widest in computer sciences and engingeering & technology: 19 percent of students are women, compared to 81 percent who are men. 
+
+Because of the gender gap, men are overrepresented in STEM research and are more likely to hold senior positions in STEM occupations. Research shows that men are more likely to be authors of prestigious journals in the STEM field, compared to women (Holman, Stuart-Fox & Hauser, 2018). Also, Holman et al. (2018) estimated that STEM journals invite men to submit papers about twice as often, compared to women. These findings demonstrate that the STEM gender gap has far-reaching consequences and it is unlikely to narrow on its own. 
+
+From the literature, it appears that networks are a central factor in gender inequality in obtaining leading scientific positions (Kegen, 2013) and that co-authorship is highly relevant to promotion and productivity (Collins & Steffen-Fluhr, 2019). Based on this, it can be reasoned that gender inequality within the STEM field stems from gender homophily in collaborations for publications. Conversely, gender inequality may be reduced by a change in publication networks of men and women .
+To learn more about some specific underlying factors of the current gender gap, with the aim of contributing to a decrease in gender inequality within STEM, this paper will focus on the impact of social network characteristics of male and female scientists at Radboud University. Based on the above I derived the following **research question(s)**:
+  
+*1) To what extent does the application of the gender homophily principle to the publication network of male and female scientists at Radboud University within Sociology and Computer Science change between 2016 and 2022?*
+
+*2) To what extent is there a difference in the application of the gender homophily principle to the publication network of male and female scientists at Radboud University, between Sociology and Computing science?*
+
+*3) To what extent do structural network effects influence the difference in gender homophily in the publication network of male and female scientists at Radboud University, within Sociology and Computing science?*
+
+
+<br>
+
+*Additional text: By looking into the differences in co-authorship patterns among men and women within the social sciences and the scientific field of STEM, it becomes possible to investigate the role of ties in gender inequality within science. A social network perspective is of crucial value to thoroughly investigate the role of ties, more specifically the severeness of the homophily principle, for the academic gender gap. This perspective allows for investigating the way the specific manifestations of gender inequality in ties works their way to the surface through ties. I would like to contribute to the current scientific field concerning gender differences in social networks within STEM, by investigating to what extent men and women differ in who they collaborate with, and to what extent this differs between sociology and engineering within three Dutch universities.*
+
+
+<br>
+
+**Articles:** 
+
+Collins, R., & Steffen-Fluhr, N. (2019). Hidden patterns: Using social network analysis to track career trajectories of women STEM faculty. *Equality, Diversity and Inclusion: An International Journal.* https://doi.org/10.1108/EDI-09-2017-0183
+
+
+*More to add...*
