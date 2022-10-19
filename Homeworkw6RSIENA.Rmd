@@ -141,6 +141,7 @@ print01Report(mydata, modelname = "C:\\Users\\Daphn\\Documenten\\labjournal\\Res
 
 ## Step 4: specify model
 ```{r}
+# TO DO: pubs variables invoegen --> welke??
 myeff <- includeEffects(myeff, density)
 myeff <- includeEffects(myeff, isolateNet)
 myeff <- includeEffects(myeff, transTrip)
