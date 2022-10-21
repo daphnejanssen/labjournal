@@ -551,7 +551,7 @@ fdensityintra <- function(x, A) {
     sum(x == 1 & A == 1, na.rm = T)/(sum((x == 1 | x == 0) & A == 1, na.rm = T))
 }
 
-# calculate intragroup density
+# calculate intergroup density
 fdensityinter <- function(x, A) {
     # A is matrix indicating whether nodes in dyad have same node attributes
     diag(x) <- NA
@@ -589,10 +589,17 @@ gender_m <-  fhomomat(soc_df$gender)
 ```
 
 ```{r}
-# Calculating intragroup density
+# Calculating intragroup density (binnen de groepen mannen/vrouwen)
 fdensityintra(x=net1, A=gender_m) 
 fdensityintra(x=net2, A=gender_m) 
 fdensityintra(x=net3, A=gender_m) 
+```
+
+```{r}
+# Calculating intergroup density
+fdensityinter(x=net1, A=gender_m) 
+fdensityinter(x=net2, A=gender_m) 
+fdensityinter(x=net3, A=gender_m) 
 ```
 
 ```{r}
@@ -609,6 +616,9 @@ fdensity(net3[selectie,selectie])
 fdensity(net1[!selectie,!selectie])
 fdensity(net2[!selectie,!selectie])
 fdensity(net3[!selectie,!selectie])
+```
+```{r}
+net1==net2
 ```
 
 
@@ -643,9 +653,14 @@ load("C:\\Users\\Daphn\\Documenten\\pubnets\\data\\names_df_publications_v202210
 
 ```{r}
 # selecting the computer science sample
+
+#wrong gs_id (just by eye-balling)
+deselect <- c(52, 95)
+
 names_df %>% 
   filter(affiliation=="Radboud University") %>%
-  filter(field=="computer science") -> comp_df
+  filter(field=="computer science") %>% 
+  filter(!(id %in% deselect)) -> comp_df
 
 names_df_publications %>% 
   filter(gs_id %in% comp_df$gs_id) -> comppub_df
@@ -657,6 +672,27 @@ comp_df %>%
 rm(names_df)  
 rm(names_df_publications)  
 ```
+```{r}
+# Assigning the respondents with a missing on the variable gender the value 'female' (based on the photo on their google scholar page)
+comp_df$gender[59] <- "female"
+
+comp_df$gender[106] <- "female"
+```
+
+```{r}
+# This crosstable shows to what extend the variables 'gender' and 'gender2' have comparable results. 7/113*100 = 93.8 percent.
+
+# TO DO: BETER OPSCHRIJVEN! 93.8 procent is hoog, dus dat zit goed. Maar we geven de Nederlande variabele de voorkeur en vullen daarom de NA's in door het geslacht op te zoeken, i.p.v. het in te vullen met de internationale variabele. 
+
+#install.packages("crosstable")
+require(crosstable)
+
+crosstable(comp_df, gender, by=gender2)
+```
+
+
+
+
 
 ```{r}
 # Cleaning the names a bit
@@ -801,24 +837,12 @@ save(net_comp_array, file="C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descr
 ### Descriptives based on array
 
 ```{r}
-# Start with a clean workspace 
-rm(list=ls())
-getwd()
-```
-
-```{r}
 # Loading packages
 library(data.table) 
 library(tidyverse) 
 require(stringi)
 require(RSiena)
 require(igraph)
-```
-
-```{r}
-# Loading dataobjects
-load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\comp_net_array.RData")
-load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\comp_df.RData")
 ```
 
 ```{r}
@@ -930,7 +954,10 @@ names(in_network)[1] <- "number"
 ru_nodes <- comp_df[, c("name", "total_cites")]
 
 # Adding a new variable to the dataset ru_nodes, called 'number' representing the numbers of the nodes
-ru_nodes$number <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61,	62,	63,	64,	65,	66,	67,	68,	69, 70,	71,	72,	73, 74,	75,	76,	77,	78,	79, 80,	81,	82,	83,	84,	85,	86,	87,	88,	89, 90,	91,	92,	93,	94,	95,	96,	97,	98,	99, 100, 101,	102, 103,	104,	105,	106,	107,	108,	109, 110,	111,	112,	113,	114,	115)
+#ru_nodes$number <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61,	62,	63,	64,	65,	66,	67,	68,	69, 70,	71,	72,	73, 74,	75,	76,	77,	78,	79, 80,	81,	82,	83,	84,	85,	86,	87,	88,	89, 90,	91,	92,	93,	94,	95,	96,	97,	98,	99, 100, 101,	102, 103,	104,	105,	106,	107,	108,	109, 110,	111,	112,	113)
+
+ru_nodes$number <- c(1:113)
+
 
 # Combining in_network with ru_nodes, based on the numbers of the nodes
 in_network <- left_join(in_network, ru_nodes, by = c("number" = "number"))

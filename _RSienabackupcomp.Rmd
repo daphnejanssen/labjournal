@@ -1,0 +1,321 @@
+# RSiena analysis Computing science staff RU
+
+<br>
+
+## Preparations
+```{r}
+# Starting with a clean workspace 
+rm(list=ls())
+```
+
+```{r}
+# Requiring packages 
+library(data.table) 
+library(tidyverse) 
+require(stringi)
+require(RSiena)
+```
+
+```{r}
+# Loading dataobjects
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\comp_net_array.RData")
+load("C:\\Users\\Daphn\\Documenten\\pubnets\\Data\\names_staff_cit_v20221006.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\comp_df.RData")
+```
+
+```{r}
+# Making the network undirected
+net1 <- net_comp_array[,,1]
+net1 <- net1 + t(net1)
+net1[net1==2] <- 1
+
+net2 <- net_comp_array[,,2]
+net2 <- net2 + t(net2)
+net2[net2==2] <- 1
+
+net3 <- net_comp_array[,,3]
+net3 <- net3 + t(net3)
+net3[net3==2] <- 1
+
+
+net_comp_array <- array(data = c(net1, net2, net3), dim=c(dim(net1),3))
+```
+
+```{r}
+# Selecting the dependent variable
+net <- sienaDependent(net_comp_array)
+?sienaDependent
+```
+
+<br>
+
+## Define data
+```{r}
+# Gender
+gender <- as.numeric(comp_df$gender=="female")
+gender <- coCovar(gender)
+```
+
+```{r}
+# Ethnicity
+dutch <- as.numeric(comp_df$dutch==1)
+dutch <- coCovar(dutch)
+```
+
+```{r}
+# Number of collaborators
+#ncollabs <- comp_df$ncollabs
+#ncollabs <- coCovar(ncollabs)
+
+#class(ncollabs)
+```
+
+```{r}
+# Creating a dataset with information on the google scholar id's, publications and citations of each computing science staff member 
+
+names_staff_cit %>%
+  filter(names_staff_cit$gs_id %in% comp_df$gs_id) -> comp_staff_cit
+
+# Removing duplicates
+sel <- (duplicated.data.frame(comp_staff_cit))
+
+comp_staff_cit %>% 
+  filter(!sel) -> comp_staff_cit
+```
+
+```{r}
+# Publications per wave for each staff computing science staff member
+pubsw1 <- pubsw2 <- pubsw3 <- NA
+
+for (i in 1:length(comp_df$gs_id)) {
+  pubsw1[i] <- nrow(comp_staff_cit[(comp_staff_cit$gs_id == comp_df$gs_id[i]) & comp_staff_cit$year>=2016 & comp_staff_cit$year<=2017,])
+  pubsw2[i] <- nrow(comp_staff_cit[(comp_staff_cit$gs_id == comp_df$gs_id[i]) & comp_staff_cit$year>=2018 & comp_staff_cit$year<=2019,])
+  pubsw3[i] <- nrow(comp_staff_cit[(comp_staff_cit$gs_id == comp_df$gs_id[i]) & comp_staff_cit$year>=2020 & comp_staff_cit$year<=2022,])
+}
+
+pub_df <- as.matrix(data.frame(pubsw1, pubsw2, pubsw3))
+
+pubs <- varCovar(pub_df)
+```
+
+```{r, warning=FALSE, message=FALSE}
+# Year of first publication
+comp_staff_cit %>% group_by(gs_id) %>%
+  mutate(pub_first = min(year)) %>%
+  select(c("gs_id", "pub_first")) %>%
+  distinct(gs_id, pub_first, .keep_all = TRUE) -> firstpub_df
+
+comp_df <- left_join(comp_df, firstpub_df)
+
+#if no publication yet, set pub_first op 2023
+comp_df %>% mutate(pub_first = replace_na(pub_first, 2023)) -> comp_df
+
+pub_first <-  coCovar(comp_df$pub_first)
+
+mydata <- sienaDataCreate(net, gender, dutch, pubs, pub_first)
+```
+
+## Step 0: get initial description
+```{r}
+print01Report(mydata, modelname = "C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_init")
+```
+
+![](results/comp_init.txt){#id .class width=100% height=200px}
+
+<br>
+
+## Model 1
+
+### Step 1: create effects structure
+```{r}
+myeff <- getEffects(mydata)
+#effectsDocumentation(myeff)
+```
+
+<br>
+
+### Step 2: specify model 1 (Only gender effects)
+```{r}
+# Gender effects
+myeff <- includeEffects(myeff, egoPlusAltX, interaction1 = "gender")
+myeff <- includeEffects(myeff, egoXaltX, interaction1 = "gender")
+myeff
+```
+
+<br>
+
+### Step 3: estimate
+```{r}
+myAlgorithm <- sienaAlgorithmCreate(projname = "comp_init", )
+```
+
+```{r, eval=FALSE}
+(ans1_a <- siena07(myAlgorithm, nbrNodes=7, data = mydata, effects = myeff))
+(ans1_b <- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans1_a))
+
+save(ans1..., file="C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_model1")
+```
+
+```{r, echo=FALSE}
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_model1")
+summary(ans1...)
+```
+
+
+<br>
+
+## Model 2
+
+### Step 1: create effects structure
+```{r}
+myeff <- getEffects(mydata)
+#effectsDocumentation(myeff)
+```
+
+<br>
+
+### Step 2: specify model 2 (structural effects)
+```{r}
+# Structural effects
+myeff <- includeEffects(myeff, density)
+#myeff <- includeEffects(myeff, isolateNet) #lijkt tot convergentie problemen te leiden. wellicht fixen op een hoge waarde??? zie manual als je ooit nog tijd hebt. 
+#myeff <- includeEffects(myeff, transTrip) #o, niet goed gekeken, deze alleen voor directed netwerken
+myeff <- includeEffects(myeff, transTies)
+myeff <- includeEffects(myeff, degPlus)
+```
+
+```{r, echo=FALSE}
+# Possible structural effects:
+# density
+# transTrip, transTies, gwesp, 
+# inPop, outAct, inAct of outPop, 
+# isolateNet
+# degPlus of egoPlusAltX
+```
+
+<br>
+
+### Step 3: estimate
+```{r}
+myAlgorithm <- sienaAlgorithmCreate(projname = "comp_init", )
+```
+
+```{r, eval=FALSE}
+(ans2_a <- siena07(myAlgorithm, nbrNodes=7, data = mydata, effects = myeff))
+(ans2_b <- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans2_a))
+
+save(ans2..., file="C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_model2")
+```
+
+```{r, echo=FALSE}
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_model2")
+summary(ans2...)
+```
+
+<br>
+
+## Model 3
+
+### Step 1: create effects structure
+```{r}
+myeff <- getEffects(mydata)
+#effectsDocumentation(myeff)
+```
+
+<br>
+
+### Step 2: specify model 3 (structural effects and gender effects)
+```{r}
+# Structural effects
+myeff <- includeEffects(myeff, density)
+myeff <- includeEffects(myeff, transTies)
+myeff <- includeEffects(myeff, degPlus)
+```
+
+```{r}
+# Gender effects
+myeff <- includeEffects(myeff, egoPlusAltX, interaction1 = "gender")
+myeff <- includeEffects(myeff, egoXaltX, interaction1 = "gender")
+myeff
+```
+
+<br>
+
+### Step 3: estimate
+```{r}
+myAlgorithm <- sienaAlgorithmCreate(projname = "comp_init", )
+```
+
+```{r, eval=FALSE}
+(ans3_a <- siena07(myAlgorithm, nbrNodes=7, data = mydata, effects = myeff))
+(ans3_b <- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans3_a))
+
+save(ans3..., file="C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_model2")
+```
+
+```{r, echo=FALSE}
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_model3")
+summary(ans3...)
+```
+
+<br>
+
+## Model 4
+
+### Step 1: create effects structure
+```{r}
+myeff <- getEffects(mydata)
+#effectsDocumentation(myeff)
+```
+
+<br>
+
+### Step 2: specify model 3 (structural effects, gender effects and covariate effects)
+```{r}
+# Structural effects
+myeff <- includeEffects(myeff, density)
+myeff <- includeEffects(myeff, transTies)
+myeff <- includeEffects(myeff, degPlus)
+```
+
+```{r}
+# Gender effects and covariate effects
+myeff <- includeEffects(myeff, sameX, interaction1 = "dutch")
+myeff <- includeEffects(myeff, egoX, interaction1 = "pub_first")
+myeff <- includeEffects(myeff, egoX, interaction1 = "dutch")
+myeff <- includeEffects(myeff, egoPlusAltX, interaction1 = "gender")
+myeff <- includeEffects(myeff, egoXaltX, interaction1 = "gender")
+myeff
+```
+
+```{r, echo=FALSE}
+# Possible gender and covariate effects
+#myeff <- includeEffects(myeff, sameX, interaction1 = "gender")
+#myeff <- includeEffects(myeff, sameX, interaction1 = "dutch")
+#myeff <- includeEffects(myeff, egoX, interaction1 = "pub_first")
+#myeff <- includeEffects(myeff, egoX, interaction1 = "gender")
+#myeff <- includeEffects(myeff, altX, interaction1 = "gender")
+#myeff <- includeEffects(myeff, egoPlusAltX, interaction1 = "gender")
+#myeff <- includeEffects(myeff, egoXaltX, interaction1 = "gender")
+#myeff <- includeEffects(myeff, egoX, interaction1 = "dutch")
+#myeff
+```
+
+<br>
+
+### Step 3: estimate
+```{r}
+myAlgorithm <- sienaAlgorithmCreate(projname = "comp_init", )
+```
+
+```{r, eval=FALSE}
+(ans4_a <- siena07(myAlgorithm, nbrNodes=7, data = mydata, effects = myeff))
+(ans4_b <- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans4_a))
+
+save(ans4..., file="C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_model4")
+```
+
+```{r, echo=FALSE}
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_model4")
+summary(ans4...)
+```

@@ -1,0 +1,368 @@
+---
+title: "RSiena back-up"
+#bibliography: references.bib
+author: "Daphne Janssen"
+---
+
+
+
+```{r, globalsettings, echo=FALSE, warning=FALSE, results='hide'}
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE)
+opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE, warning = FALSE, message = FALSE,comment = "#>", cache=TRUE, class.source=c("test"), class.output=c("test2"))
+options(width = 100)
+rgl::setupKnitr()
+
+
+
+colorize <- function(x, color) {sprintf("<span style='color: %s;'>%s</span>", color, x) }
+
+```
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(position = c('top', 'right'))
+#klippy::klippy(color = 'darkred')
+#klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
+```
+
+Last compiled on `r Sys.time()`
+
+<!---
+Last compiled on `r format(Sys.time(), '%B, %Y')`
+--->
+
+<br>
+
+----
+
+# RSiena analysis Sociology staff RU
+
+
+## Preparations
+```{r}
+# Starting with a clean workspace 
+rm(list=ls())
+```
+
+```{r}
+# Requiring packages 
+library(data.table) 
+library(tidyverse) 
+require(stringi)
+require(RSiena)
+```
+
+```{r}
+# Loading dataobjects
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\soc_net_array.RData")
+#load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_collabs.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_staff_cit.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\soc_df.RData")
+```
+
+```{r}
+# Making the network undirected
+net1 <- net_soc_array[,,1]
+net1 <- net1 + t(net1)
+net1[net1==2] <- 1
+
+net2 <- net_soc_array[,,2]
+net2 <- net2 + t(net2)
+net2[net2==2] <- 1
+
+net3 <- net_soc_array[,,3]
+net3 <- net3 + t(net3)
+net3[net3==2] <- 1
+
+
+net_soc_array <- array(data = c(net1, net2, net3), dim=c(dim(net1),3))
+```
+
+```{r}
+# Selecting the dependent variable
+net <- sienaDependent(net_soc_array)
+#?sienaDependent
+```
+
+<br>
+
+## Define data
+```{r}
+# Gender
+gender <- as.numeric(soc_df$gender=="female")
+gender <- coCovar(gender)
+```
+
+```{r}
+# Ethnicity
+dutch <- as.numeric(soc_df$dutch==1)
+dutch <- coCovar(dutch)
+```
+
+```{r}
+# Number of collaborators
+#ncollabs <- soc_df$ncollabs
+#ncollabs <- coCovar(ncollabs)
+
+#class(ncollabs)
+```
+
+```{r}
+# Publications per wave for each staff computing science staff member
+pubsw1 <- pubsw2 <- pubsw3 <- NA
+
+for (i in 1:length(soc_df$gs_id)) {
+  pubsw1[i] <- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) & soc_staff_cit$year>=2016 & soc_staff_cit$year<=2017,])
+  pubsw2[i] <- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) & soc_staff_cit$year>=2018 & soc_staff_cit$year<=2019,])
+  pubsw3[i] <- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) & soc_staff_cit$year>=2020 & soc_staff_cit$year<=2022,])
+}
+
+pub_df <- as.matrix(data.frame(pubsw1, pubsw2, pubsw3))
+
+pubs <- varCovar(pub_df)
+```
+
+```{r, warning=FALSE, message=FALSE}
+# Year first publication
+soc_staff_cit %>% group_by(gs_id) %>%
+  mutate(pub_first = min(year)) %>%
+  select(c("gs_id", "pub_first")) %>%
+  distinct(gs_id, pub_first, .keep_all = TRUE) -> firstpub_df
+
+soc_df <- left_join(soc_df, firstpub_df)
+
+#if no publication yet, set pub_first op 2023
+soc_df %>% mutate(pub_first = replace_na(pub_first, 2023)) -> soc_df
+
+pub_first <-  coCovar(soc_df$pub_first)
+
+mydata <- sienaDataCreate(net, gender, dutch, pubs, pub_first)
+```
+
+## Step 0: get initial description
+```{r}
+print01Report(mydata, modelname = "C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_init")
+```
+
+![](C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_init.txt){#id .class width=100% height=200px}
+
+<br>
+
+## Model 1
+
+### Step 1: create effects structure
+```{r}
+myeff <- getEffects(mydata)
+#effectsDocumentation(myeff)
+```
+
+<br>
+
+### Step 2: specify model 1 (Only gender effects)
+```{r}
+# Gender effects
+myeff <- includeEffects(myeff, egoPlusAltX, interaction1 = "gender")
+myeff <- includeEffects(myeff, egoXaltX, interaction1 = "gender")
+myeff
+```
+
+<br>
+
+### Step 3: estimate
+```{r}
+myAlgorithm <- sienaAlgorithmCreate(projname = "soc_init", )
+```
+
+```{r, eval=FALSE}
+#(ans1_a <- siena07(myAlgorithm, nbrNodes=7, data = mydata, effects = myeff))
+(ans1_b <- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans1_a))
+
+save(ans1_b, file="C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_model1")
+```
+
+```{r, echo=FALSE}
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_model1")
+summary(ans1_b)
+```
+
+### Interpretation results 
+
+Model 1 shows that women within the sociology department collaborate less with other people within the department and that other people within the department collaborate less with women (as there are only undirected ties). This result suggests that gender homophily plays a role within the sociology department. Whether this is really the case will be tested through model 4. Although this effect is not significant, it is important to note that women within the sociology department seem to cooperate even less with other women within the department.
+Moreover, the jaccard index shows that..
+
+<br>
+
+## Model 2
+
+### Step 1: create effects structure
+```{r}
+myeff <- getEffects(mydata)
+#effectsDocumentation(myeff)
+```
+
+<br>
+
+### Step 2: specify model 2 (structural effects)
+```{r}
+# Structural effects
+myeff <- includeEffects(myeff, density)
+#myeff <- includeEffects(myeff, isolateNet) #lijkt tot convergentie problemen te leiden. wellicht fixen op een hoge waarde??? zie manual als je ooit nog tijd hebt. 
+#myeff <- includeEffects(myeff, transTrip) #o, niet goed gekeken, deze alleen voor directed netwerken
+myeff <- includeEffects(myeff, transTies)
+myeff <- includeEffects(myeff, degPlus)
+```
+
+```{r, echo=FALSE}
+# Possible structural effects:
+# density
+# transTrip, transTies, gwesp, 
+# inPop, outAct, inAct of outPop, 
+# isolateNet
+# degPlus of egoPlusAltX
+```
+
+<br>
+
+### Step 3: estimate
+```{r}
+myAlgorithm <- sienaAlgorithmCreate(projname = "soc_init", )
+```
+
+```{r, eval=FALSE}
+(ans2_a <- siena07(myAlgorithm, nbrNodes=7, data = mydata, effects = myeff))
+(ans2_b <- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans2_a))
+
+save(ans2_b, file="C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_model2")
+```
+
+```{r, echo=FALSE}
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_model2")
+summary(ans2_b)
+```
+
+### Interpretation results
+
+Model 2 shows that there is transitivity within the sociology department: egos with many ties are more likely to receive a tie from an alter than egos with fewer ties. Moreover, within the sociology department, alters are more likely to enter form a tie with an ego with many ties than an ego with fewer ties (as there are only undirected ties).Model 2 thus shows that structural network effects seem to play a role within the sociology department's publication network. 
+Moreover, the jaccard index shows that..
+
+
+<br>
+
+## Model 3
+
+### Step 1: create effects structure
+```{r}
+myeff <- getEffects(mydata)
+#effectsDocumentation(myeff)
+```
+
+<br>
+
+### Step 2: specify model 3 (structural effects and gender effects)
+```{r}
+# Structural effects
+myeff <- includeEffects(myeff, density)
+myeff <- includeEffects(myeff, transTies)
+myeff <- includeEffects(myeff, degPlus)
+```
+
+```{r}
+# Gender effects
+myeff <- includeEffects(myeff, egoPlusAltX, interaction1 = "gender")
+myeff <- includeEffects(myeff, egoXaltX, interaction1 = "gender")
+myeff
+```
+
+<br>
+
+### Step 3: estimate
+```{r}
+myAlgorithm <- sienaAlgorithmCreate(projname = "soc_init", )
+```
+
+```{r, eval=FALSE}
+(ans3_a <- siena07(myAlgorithm, nbrNodes=7, data = mydata, effects = myeff))
+(ans3_b <- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans3_a))
+
+save(ans3_a, file="C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_model3")
+```
+
+```{r, echo=FALSE}
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_model3")
+summary(ans3_a)
+```
+### Interepretation results
+
+Model 3 shows that there is still transitivity within the sociology department even when the effects of gender are taken into account. Thus, both egos with many ties are more likely to receive a tie, than egos with fewer ties, and alters are more likely to form ties with egos with many ties, than with egos with fewer ties. The gender effect that was significant in model 1 is now no longer significant, but still seems to play an important role. Based on this model, it can be reasoned that the inclusion of structural network effects ensures that gender effects no longer exert a significant effect on the sociology department's publication network. 
+Moreover, the jaccard index shows that..
+
+<br>
+
+## Model 4
+
+### Step 1: create effects structure
+```{r}
+myeff <- getEffects(mydata)
+#effectsDocumentation(myeff)
+```
+
+<br>
+
+### Step 2: specify model 4 (structural effects, gender effects and covariate effects)
+```{r}
+# Structural effects
+myeff <- includeEffects(myeff, density)
+myeff <- includeEffects(myeff, transTies)
+myeff <- includeEffects(myeff, degPlus)
+```
+
+```{r}
+# Gender effects and covariate effects
+myeff <- includeEffects(myeff, egoPlusAltX, interaction1 = "gender")
+myeff <- includeEffects(myeff, egoXaltX, interaction1 = "gender")
+myeff
+```
+
+```{r}
+# Covariate effects
+#myeff <- includeEffects(myeff, sameX, interaction1 = "dutch")
+myeff <- includeEffects(myeff, egoX, interaction1 = "pub_first")
+myeff <- includeEffects(myeff, egoX, interaction1 = "dutch")
+myeff
+```
+
+```{r, echo=FALSE}
+# Possible gender and covariate effects
+#myeff <- includeEffects(myeff, sameX, interaction1 = "gender")
+#myeff <- includeEffects(myeff, sameX, interaction1 = "dutch")
+#myeff <- includeEffects(myeff, egoX, interaction1 = "pub_first")
+#myeff <- includeEffects(myeff, egoX, interaction1 = "gender")
+#myeff <- includeEffects(myeff, altX, interaction1 = "gender")
+#myeff <- includeEffects(myeff, egoPlusAltX, interaction1 = "gender")
+#myeff <- includeEffects(myeff, egoXaltX, interaction1 = "gender")
+#myeff <- includeEffects(myeff, egoX, interaction1 = "dutch")
+#myeff
+```
+
+<br>
+
+### Step 3: estimate
+```{r}
+myAlgorithm <- sienaAlgorithmCreate(projname = "soc_init", )
+```
+
+```{r, eval=FALSE}
+(ans4_a <- siena07(myAlgorithm, nbrNodes=7, data = mydata, effects = myeff))
+(ans4_b <- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans4_a))
+
+save(ans4_b, file="C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_model4")
+```
+
+```{r, echo=FALSE}
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_model4")
+summary(ans4_b)
+```
+### Interpretation results
+
+Model 4, the final model, shows that only the structural network effect transitivity appears to influence the sociology department's publication network. The significance of the transitivity effect shows that egos with more ties are not only offered more ties than egos with fewer ties, but alters are also more likely to form new ties with egos with many ties than with egos with fewer ties. Despite the fact that the gender effect that was significant in model 1 still seems to play an important role in model 4, it is not significant in model 4. It can be concluded from this that the structural network effect explains away the gender effect: under the influence of the transitivity effect, gender does not seem to exert a significant influence on the publication network of the sociology department. In other words, structural network effects explain away the application of the homopily principle to the networks of men and women within the sociology department. Furthermore, both having a Dutch origin, and age do not appear to be significantly related to the publication network within the sociology department. 

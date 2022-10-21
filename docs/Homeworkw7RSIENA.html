@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Daphne Janssen" />
+
+
+<title>RSiena</title>
+
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/clipboard-1.7.1/clipboard.min.js"></script>
+<link href="site_libs/primer-tooltips-1.4.0/build.css" rel="stylesheet" />
+<link href="site_libs/klippy-0.0.0.9500/css/klippy.min.css" rel="stylesheet" />
+<script src="site_libs/klippy-0.0.0.9500/js/klippy.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+
+<link rel="stylesheet" href="tweaks.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    My journal
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lab1.html">Week 1</a>
+    </li>
+    <li>
+      <a href="lab2.html">Week 2</a>
+    </li>
+    <li>
+      <a href="lab3.html">Week 3</a>
+    </li>
+    <li>
+      <a href="lab4.html">Week 4</a>
+    </li>
+    <li>
+      <a href="lab5.html">Week 5</a>
+    </li>
+    <li>
+      <a href="lab6.html">week 6</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Research Question
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="RQWeek1.html">Week 1</a>
+    </li>
+    <li>
+      <a href="RQWeek2.html">Week 2</a>
+    </li>
+    <li>
+      <a href="RQWeek4.html">Week 4</a>
+    </li>
+    <li>
+      <a href="RQWeek6.html">Week 6</a>
+    </li>
+    <li>
+      <a href="RQWeek7.html">Week 7</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Final report
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Homeworkw6INTRO.html">Introduction and Research Question</a>
+    </li>
+    <li>
+      <a href="Homeworkw6THEORY.html">Theory</a>
+    </li>
+    <li>
+      <a href="Homeworkw7DATA.html">Data - Description</a>
+    </li>
+    <li>
+      <a href="Homeworkw4DATASCRAPE.html">Data - Scraping</a>
+    </li>
+    <li>
+      <a href="Homeworkw6DESCRIPTIVES.html">Data - Descriptive statistics</a>
+    </li>
+    <li>
+      <a href="Homeworkw7RSIENA.html">RSiena analysis</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/JochemTolsma/labjournal">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">RSiena</h1>
+<h4 class="author">Daphne Janssen</h4>
+
+</div>
+
+
+<script>
+  addClassKlippyTo("pre.r, pre.markdown");
+  addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
+</script>
+<p>Last compiled on 2022-10-21 18:24:55</p>
+<!---
+Last compiled on oktober, 2022
+--->
+<p><br></p>
+<hr />
+<div id="rsiena-analysis-sociology-staff-ru" class="section level1"
+number="1">
+<h1><span class="header-section-number">1</span> RSiena analysis
+Sociology staff RU</h1>
+<div id="preparations" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Preparations</h2>
+<pre class="r test"><code># Starting with a clean workspace
+rm(list = ls())</code></pre>
+<pre class="r test"><code># Requiring packages
+library(data.table)
+library(tidyverse)
+require(stringi)
+require(RSiena)</code></pre>
+<pre class="r test"><code># Loading dataobjects
+load(&quot;C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\soc_net_array.RData&quot;)
+# load(&#39;C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_collabs.RData&#39;)
+load(&quot;C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_staff_cit.RData&quot;)
+load(&quot;C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\soc_df.RData&quot;)</code></pre>
+<pre class="r test"><code># Making the network undirected
+net1 &lt;- net_soc_array[, , 1]
+net1 &lt;- net1 + t(net1)
+net1[net1 == 2] &lt;- 1
+
+net2 &lt;- net_soc_array[, , 2]
+net2 &lt;- net2 + t(net2)
+net2[net2 == 2] &lt;- 1
+
+net3 &lt;- net_soc_array[, , 3]
+net3 &lt;- net3 + t(net3)
+net3[net3 == 2] &lt;- 1
+
+
+net_soc_array &lt;- array(data = c(net1, net2, net3), dim = c(dim(net1), 3))</code></pre>
+<pre class="r test"><code># Selecting the dependent variable
+net &lt;- sienaDependent(net_soc_array)
+# ?sienaDependent</code></pre>
+<p><br></p>
+</div>
+<div id="define-data" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Define data</h2>
+<pre class="r test"><code># Gender
+gender &lt;- as.numeric(soc_df$gender == &quot;female&quot;)
+gender &lt;- coCovar(gender)</code></pre>
+<pre class="r test"><code># Ethnicity
+dutch &lt;- as.numeric(soc_df$dutch == 1)
+dutch &lt;- coCovar(dutch)</code></pre>
+<pre class="r test"><code># Number of collaborators ncollabs &lt;- soc_df$ncollabs ncollabs &lt;- coCovar(ncollabs)
+
+# class(ncollabs)</code></pre>
+<pre class="r test"><code># Publications per wave for each staff computing science staff member
+pubsw1 &lt;- pubsw2 &lt;- pubsw3 &lt;- NA
+
+for (i in 1:length(soc_df$gs_id)) {
+    pubsw1[i] &lt;- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) &amp; soc_staff_cit$year &gt;=
+        2016 &amp; soc_staff_cit$year &lt;= 2017, ])
+    pubsw2[i] &lt;- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) &amp; soc_staff_cit$year &gt;=
+        2018 &amp; soc_staff_cit$year &lt;= 2019, ])
+    pubsw3[i] &lt;- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) &amp; soc_staff_cit$year &gt;=
+        2020 &amp; soc_staff_cit$year &lt;= 2022, ])
+}
+
+pub_df &lt;- as.matrix(data.frame(pubsw1, pubsw2, pubsw3))
+
+pubs &lt;- varCovar(pub_df)</code></pre>
+<pre class="r test"><code># Year first publication
+soc_staff_cit %&gt;%
+    group_by(gs_id) %&gt;%
+    mutate(pub_first = min(year)) %&gt;%
+    select(c(&quot;gs_id&quot;, &quot;pub_first&quot;)) %&gt;%
+    distinct(gs_id, pub_first, .keep_all = TRUE) -&gt; firstpub_df
+
+soc_df &lt;- left_join(soc_df, firstpub_df)
+
+# if no publication yet, set pub_first op 2023
+soc_df %&gt;%
+    mutate(pub_first = replace_na(pub_first, 2023)) -&gt; soc_df
+
+pub_first &lt;- coCovar(soc_df$pub_first)
+
+mydata &lt;- sienaDataCreate(net, gender, dutch, pubs, pub_first)</code></pre>
+<p><br></p>
+</div>
+<div id="step-0-get-initial-description" class="section level2"
+number="1.3">
+<h2><span class="header-section-number">1.3</span> Step 0: get initial
+description</h2>
+<pre class="r test"><code>print01Report(mydata, modelname = &quot;C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_init&quot;)</code></pre>
+<p><embed
+src="C:\Users\Daphn\Documenten\labjournal\Results\soc_init.txt" id="id"
+class="class" style="width:100.0%" height="200" /></p>
+<div id="jaccard-index" class="section level3" number="1.3.1">
+<h3><span class="header-section-number">1.3.1</span> Jaccard index</h3>
+<p>The Jaccard index indicates the stability of a network over time. In
+this study, the stability can be calculated for period 1 (wave 1 to wave
+2) and period 2 (wave 2 to wave 3), for both Sociology and Computing
+Science. As you can see in the print report, the Jaccard value of the
+publication network within the sociology department for period 1 is
+0.333 and for period 2 is 0.250.</p>
+<p>According to the R Siena manual, a Jaccard index of 0.3 or higher is
+good, a value below 0.2 indicates that there may be difficulties in
+estimation and a value below 0.1 indicates that the model cannot be
+estimated. Based on these guidelines, we can conclude that the Jaccard
+values of the sociology networks are more or less good, so the R Siena
+models for the publication networks within the sociology department
+should be estimable.</p>
+<p><br></p>
+</div>
+</div>
+<div id="model-1" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Model 1</h2>
+<div id="step-1-create-effects-structure" class="section level3"
+number="1.4.1">
+<h3><span class="header-section-number">1.4.1</span> Step 1: create
+effects structure</h3>
+<pre class="r test"><code>myeff &lt;- getEffects(mydata)
+# effectsDocumentation(myeff)</code></pre>
+<p><br></p>
+</div>
+<div id="step-2-specify-model-1-only-gender-effects"
+class="section level3" number="1.4.2">
+<h3><span class="header-section-number">1.4.2</span> Step 2: specify
+model 1 (Only gender effects)</h3>
+<pre class="r test"><code># Gender effects
+myeff &lt;- includeEffects(myeff, egoPlusAltX, interaction1 = &quot;gender&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName         include fix   test  initialValue parm
+#&gt; 1 gender ego and alt TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, egoXaltX, interaction1 = &quot;gender&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName                include fix   test  initialValue parm
+#&gt; 1 gender ego x gender alter TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code># myeff</code></pre>
+<p>Based on the R Siena manual, gender was expected to interact with the
+egoPlusAltX effect and the sameX effect. After interpreting the model
+fit of model 1 and reviewing the theory behind the homophily effect, it
+was decided to include the egoXaltX effect instead of the SameX
+effect.</p>
+<p>The egoXaltX structural effect represents an interaction of a
+covariate of the ego with the covariate of alters. In other words,
+whether nodes that are similar in terms of one characteristic have ties
+with each other. An interaction of this effect with gender indicates the
+extent to which women publish with other women. Within this study, we
+are only concerned with women publishing with other women within the
+same department.</p>
+<p><br></p>
+</div>
+<div id="step-3-estimate" class="section level3" number="1.4.3">
+<h3><span class="header-section-number">1.4.3</span> Step 3:
+estimate</h3>
+<pre class="r test"><code>myAlgorithm &lt;- sienaAlgorithmCreate(projname = &quot;soc_init&quot;, )</code></pre>
+<pre class="test2"><code>#&gt; If you use this algorithm object, siena07 will create/use an output file soc_init.txt .</code></pre>
+<pre class="r test"><code>(ans1_a &lt;- siena07(myAlgorithm, nbrNodes = 7, data = mydata, effects = myeff))
+(ans1_b &lt;- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans1_a))
+
+save(ans1_b, file = &quot;C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_model1&quot;)</code></pre>
+<pre class="test2"><code>#&gt; Estimates, standard errors and convergence t-ratios
+#&gt; 
+#&gt;                                      Estimate   Standard   Convergence 
+#&gt;                                                   Error      t-ratio   
+#&gt; 
+#&gt; Rate parameters: 
+#&gt;   0.1      Rate parameter period 1    0.8611  ( 0.2797   )             
+#&gt;   0.2      Rate parameter period 2    2.0030  ( 0.5573   )             
+#&gt; 
+#&gt; Other parameters: 
+#&gt;   1.  eval degree (density)          -1.9404  ( 0.2607   )    0.0076   
+#&gt;   2.  eval gender ego and alt        -0.7116  ( 0.3366   )   -0.0157   
+#&gt;   3.  eval gender ego x gender alter -0.6555  ( 0.6888   )    0.0487   
+#&gt; 
+#&gt; Overall maximum convergence ratio:    0.0501 
+#&gt; 
+#&gt; 
+#&gt; Total of 1992 iteration steps.
+#&gt; 
+#&gt; Covariance matrix of estimates (correlations below diagonal)
+#&gt; 
+#&gt;        0.068        0.053        0.038
+#&gt;        0.603        0.113        0.110
+#&gt;        0.211        0.476        0.474
+#&gt; 
+#&gt; Derivative matrix of expected statistics X by parameters:
+#&gt; 
+#&gt;       24.058      -23.466        1.771
+#&gt;      -10.431       33.480       -5.398
+#&gt;        0.270       -5.676        4.701
+#&gt; 
+#&gt; Covariance matrix of X (correlations below diagonal):
+#&gt; 
+#&gt;       25.036      -21.012        0.764
+#&gt;       -0.522       64.781       -9.945
+#&gt;        0.054       -0.436        8.023</code></pre>
+<p><br></p>
+</div>
+<div id="interpretation-results" class="section level3" number="1.4.4">
+<h3><span class="header-section-number">1.4.4</span> Interpretation
+results</h3>
+<p>Model 1 shows that the undirected covariate gender effect is
+significantly related to the development of the the sociology
+department’s publication network. This implies that women within the
+sociology department publish less with other people within the
+department than men (b=-0.712, se=0.337). Since only undirected ties are
+examined, this significant effect also implies that other people within
+the department publish less with women than with men. This result
+suggests that gender homophily plays a role within the development of
+the sociology department’s publication network. Whether this is still
+the case when structural network effects and covariate effects are also
+included in the model will be tested in model 4.</p>
+<p>Although the covariate-ego × alter gender effect is not significant,
+it is important to note that women within the sociology department seem
+to cooperate even less with other women within the department. The lack
+of statistical significance can be explained by a lack of power. Because
+of the small network size, it is more difficult for the covariate-ego ×
+alter gender effect to achieve significant results.</p>
+<p><br></p>
+</div>
+</div>
+<div id="model-2" class="section level2" number="1.5">
+<h2><span class="header-section-number">1.5</span> Model 2</h2>
+<div id="step-1-create-effects-structure-1" class="section level3"
+number="1.5.1">
+<h3><span class="header-section-number">1.5.1</span> Step 1: create
+effects structure</h3>
+<pre class="r test"><code>myeff &lt;- getEffects(mydata)
+# effectsDocumentation(myeff)</code></pre>
+<p><br></p>
+</div>
+<div id="step-2-specify-model-2-structural-effects"
+class="section level3" number="1.5.2">
+<h3><span class="header-section-number">1.5.2</span> Step 2: specify
+model 2 (structural effects)</h3>
+<pre class="r test"><code># Structural effects
+myeff &lt;- includeEffects(myeff, density)</code></pre>
+<pre class="test2"><code>#&gt;   effectName       include fix   test  initialValue parm
+#&gt; 1 degree (density) TRUE    FALSE FALSE   -1.36754   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, transTies)</code></pre>
+<pre class="test2"><code>#&gt;   effectName      include fix   test  initialValue parm
+#&gt; 1 transitive ties TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, degPlus)</code></pre>
+<pre class="test2"><code>#&gt;   effectName     include fix   test  initialValue parm
+#&gt; 1 degree act+pop TRUE    FALSE FALSE          0   1</code></pre>
+<pre class="r test"><code># myeff</code></pre>
+<p>The structural effects included in models 2, 3 and 4 were selected
+based on the R Siena manual and a test of model fit. Based on the R
+Siena manual, the following structural effects were selected: density,
+transTrip, transTies, gwesp, inPop, outAct, inAct/outPop, isolateNet and
+degPlus.</p>
+<p>The structural effect transTrip caused an error in the estimation of
+model 2, as it appeared to be applicable only to directed networks. The
+structural effect isolateNet seemed to cause convergence problems when
+estimating model 2. Gwesp, inPop, outAct and inAct/outPop were not
+included because they caused a lower model fit. The degPlus effect for
+undirected networks was found to fit the models better. The structural
+effects finally selected were density, transTies and degPlus.</p>
+<p><br></p>
+</div>
+<div id="step-3-estimate-1" class="section level3" number="1.5.3">
+<h3><span class="header-section-number">1.5.3</span> Step 3:
+estimate</h3>
+<pre class="r test"><code>myAlgorithm &lt;- sienaAlgorithmCreate(projname = &quot;soc_init&quot;, )</code></pre>
+<pre class="test2"><code>#&gt; If you use this algorithm object, siena07 will create/use an output file soc_init.txt .</code></pre>
+<pre class="r test"><code>(ans2_a &lt;- siena07(myAlgorithm, nbrNodes = 7, data = mydata, effects = myeff))
+(ans2_b &lt;- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans2_a))
+
+save(ans2_b, file = &quot;C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_model2&quot;)</code></pre>
+<pre class="test2"><code>#&gt; Estimates, standard errors and convergence t-ratios
+#&gt; 
+#&gt;                                    Estimate   Standard   Convergence 
+#&gt;                                                 Error      t-ratio   
+#&gt; 
+#&gt; Rate parameters: 
+#&gt;   0.1      Rate parameter period 1  2.0896  ( 0.8229   )             
+#&gt;   0.2      Rate parameter period 2  4.4536  ( 1.8278   )             
+#&gt; 
+#&gt; Other parameters: 
+#&gt;   1.  eval degree (density)        -4.3438  ( 0.5295   )   -0.0286   
+#&gt;   2.  eval transitive ties          4.1403  ( 1.0929   )   -0.0046   
+#&gt;   3.  eval degree act+pop          -0.0319  ( 0.0774   )   -0.0141   
+#&gt; 
+#&gt; Overall maximum convergence ratio:    0.0653 
+#&gt; 
+#&gt; 
+#&gt; Total of 2044 iteration steps.
+#&gt; 
+#&gt; Covariance matrix of estimates (correlations below diagonal)
+#&gt; 
+#&gt;        0.280       -0.291       -0.003
+#&gt;       -0.503        1.194       -0.068
+#&gt;       -0.065       -0.804        0.006
+#&gt; 
+#&gt; Derivative matrix of expected statistics X by parameters:
+#&gt; 
+#&gt;       34.143       68.445      863.844
+#&gt;       25.780       58.750      729.632
+#&gt;      300.442      649.668     8883.942
+#&gt; 
+#&gt; Covariance matrix of X (correlations below diagonal):
+#&gt; 
+#&gt;       40.387       81.786      997.503
+#&gt;        0.926      193.197     2172.133
+#&gt;        0.936        0.932    28135.843</code></pre>
+<p><br></p>
+</div>
+<div id="interpretation-results-1" class="section level3"
+number="1.5.4">
+<h3><span class="header-section-number">1.5.4</span> Interpretation
+results</h3>
+<p>Model 2 shows that transitivity plays a role in the development of
+the publication network of the sociology department (b=4.140, se=1.093):
+an ego is likely to form a bond with an alter, which has a bond with an
+alter with which ego already has a bond. With regard to the development
+of the sociology department’s publication network, this means that
+individuals like to publish with other individuals who have published
+with a common person within the sociology department. Model 2 thus
+suggests that the structural network effect transitivity plays a role
+within the development of the sociology department’s publication
+network.</p>
+<p><br></p>
+</div>
+</div>
+<div id="model-3" class="section level2" number="1.6">
+<h2><span class="header-section-number">1.6</span> Model 3</h2>
+<div id="step-1-create-effects-structure-2" class="section level3"
+number="1.6.1">
+<h3><span class="header-section-number">1.6.1</span> Step 1: create
+effects structure</h3>
+<pre class="r test"><code>myeff &lt;- getEffects(mydata)
+# effectsDocumentation(myeff)</code></pre>
+<p><br></p>
+</div>
+<div id="step-2-specify-model-3-structural-effects-and-gender-effects"
+class="section level3" number="1.6.2">
+<h3><span class="header-section-number">1.6.2</span> Step 2: specify
+model 3 (structural effects and gender effects)</h3>
+<pre class="r test"><code># Structural effects
+myeff &lt;- includeEffects(myeff, density)</code></pre>
+<pre class="test2"><code>#&gt;   effectName       include fix   test  initialValue parm
+#&gt; 1 degree (density) TRUE    FALSE FALSE   -1.36754   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, transTies)</code></pre>
+<pre class="test2"><code>#&gt;   effectName      include fix   test  initialValue parm
+#&gt; 1 transitive ties TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, degPlus)</code></pre>
+<pre class="test2"><code>#&gt;   effectName     include fix   test  initialValue parm
+#&gt; 1 degree act+pop TRUE    FALSE FALSE          0   1</code></pre>
+<pre class="r test"><code># Gender effects
+myeff &lt;- includeEffects(myeff, egoPlusAltX, interaction1 = &quot;gender&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName         include fix   test  initialValue parm
+#&gt; 1 gender ego and alt TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, egoXaltX, interaction1 = &quot;gender&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName                include fix   test  initialValue parm
+#&gt; 1 gender ego x gender alter TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code># myeff</code></pre>
+<p><br></p>
+</div>
+<div id="step-3-estimate-2" class="section level3" number="1.6.3">
+<h3><span class="header-section-number">1.6.3</span> Step 3:
+estimate</h3>
+<pre class="r test"><code>myAlgorithm &lt;- sienaAlgorithmCreate(projname = &quot;soc_init&quot;, )</code></pre>
+<pre class="test2"><code>#&gt; If you use this algorithm object, siena07 will create/use an output file soc_init.txt .</code></pre>
+<pre class="r test"><code>(ans3_a &lt;- siena07(myAlgorithm, nbrNodes = 7, data = mydata, effects = myeff))
+(ans3_b &lt;- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans3_a))
+
+save(ans3_a, file = &quot;C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_model3&quot;)</code></pre>
+<pre class="test2"><code>#&gt; Estimates, standard errors and convergence t-ratios
+#&gt; 
+#&gt;                                      Estimate   Standard   Convergence 
+#&gt;                                                   Error      t-ratio   
+#&gt; 
+#&gt; Rate parameters: 
+#&gt;   0.1      Rate parameter period 1    2.0717  ( 0.8028   )             
+#&gt;   0.2      Rate parameter period 2    4.5935  ( 1.9433   )             
+#&gt; 
+#&gt; Other parameters: 
+#&gt;   1.  eval degree (density)          -4.3031  ( 0.5392   )    0.0050   
+#&gt;   2.  eval transitive ties            4.0693  ( 1.0618   )    0.0263   
+#&gt;   3.  eval degree act+pop            -0.0440  ( 0.0778   )    0.0094   
+#&gt;   4.  eval gender ego and alt        -0.3366  ( 0.3500   )   -0.0041   
+#&gt;   5.  eval gender ego x gender alter -0.5423  ( 0.7956   )    0.0131   
+#&gt; 
+#&gt; Overall maximum convergence ratio:    0.0634 
+#&gt; 
+#&gt; 
+#&gt; Total of 2250 iteration steps.
+#&gt; 
+#&gt; Covariance matrix of estimates (correlations below diagonal)
+#&gt; 
+#&gt;        0.291       -0.315       -0.004       -0.025        0.027
+#&gt;       -0.551        1.127       -0.060        0.039        0.090
+#&gt;       -0.096       -0.731        0.006        0.005       -0.004
+#&gt;       -0.132        0.104        0.185        0.122        0.164
+#&gt;        0.062        0.106       -0.065        0.591        0.633
+#&gt; 
+#&gt; Derivative matrix of expected statistics X by parameters:
+#&gt; 
+#&gt;       35.437       71.289      863.999      -32.688        2.338
+#&gt;       26.544       59.921      717.122      -28.659        2.487
+#&gt;      302.372      647.101     8591.852     -348.701       34.573
+#&gt;      -15.493      -34.303     -468.239       50.861      -10.163
+#&gt;        0.746        1.949       38.290      -10.668        5.493
+#&gt; 
+#&gt; Covariance matrix of X (correlations below diagonal):
+#&gt; 
+#&gt;       40.175       80.893      988.595      -41.256        3.842
+#&gt;        0.931      187.818     2111.182      -88.220        8.594
+#&gt;        0.938        0.926    27649.312    -1164.357      121.111
+#&gt;       -0.578       -0.571       -0.621      127.009      -26.430
+#&gt;        0.177        0.183        0.212       -0.683       11.777</code></pre>
+<p><br></p>
+</div>
+<div id="interepretation-results" class="section level3" number="1.6.4">
+<h3><span class="header-section-number">1.6.4</span> Interepretation
+results</h3>
+<p>Model 3 shows that the transitivity effect is still significantly
+associated with the development of the sociology department’s
+publication network, even when gender effects are taken into account
+(b=4.0693, se=1.0618). Individuals within the sociology department thus
+tend to publish an article with individuals who have already published
+an article with the same co-author.</p>
+<p>The undirected covariate gender effect that was significant in model
+1 is now no longer significant, but still seems to play an important
+role. Based on model 3, it can be reasoned that the structural network
+effects ensure that the undirected covariate gender effect no longer
+significantly affects the sociology department’s publication network.
+However, the gender effect is still close to being significant.</p>
+<p><br></p>
+</div>
+</div>
+<div id="model-4" class="section level2" number="1.7">
+<h2><span class="header-section-number">1.7</span> Model 4</h2>
+<div id="step-1-create-effects-structure-3" class="section level3"
+number="1.7.1">
+<h3><span class="header-section-number">1.7.1</span> Step 1: create
+effects structure</h3>
+<pre class="r test"><code>myeff &lt;- getEffects(mydata)
+# effectsDocumentation(myeff)</code></pre>
+<p><br></p>
+</div>
+<div
+id="step-2-specify-model-4-structural-effects-gender-effects-and-covariate-effects"
+class="section level3" number="1.7.2">
+<h3><span class="header-section-number">1.7.2</span> Step 2: specify
+model 4 (structural effects, gender effects and covariate effects)</h3>
+<pre class="r test"><code># Structural effects
+myeff &lt;- includeEffects(myeff, density)</code></pre>
+<pre class="test2"><code>#&gt;   effectName       include fix   test  initialValue parm
+#&gt; 1 degree (density) TRUE    FALSE FALSE   -1.36754   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, transTies)</code></pre>
+<pre class="test2"><code>#&gt;   effectName      include fix   test  initialValue parm
+#&gt; 1 transitive ties TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, degPlus)</code></pre>
+<pre class="test2"><code>#&gt;   effectName     include fix   test  initialValue parm
+#&gt; 1 degree act+pop TRUE    FALSE FALSE          0   1</code></pre>
+<pre class="r test"><code># Gender effects
+myeff &lt;- includeEffects(myeff, egoPlusAltX, interaction1 = &quot;gender&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName         include fix   test  initialValue parm
+#&gt; 1 gender ego and alt TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, egoXaltX, interaction1 = &quot;gender&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName                include fix   test  initialValue parm
+#&gt; 1 gender ego x gender alter TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code># myeff</code></pre>
+<pre class="r test"><code># Covariate effects myeff &lt;- includeEffects(myeff, sameX, interaction1 = &#39;dutch&#39;)
+myeff &lt;- includeEffects(myeff, egoX, interaction1 = &quot;pub_first&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName    include fix   test  initialValue parm
+#&gt; 1 pub_first ego TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, egoX, interaction1 = &quot;dutch&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName include fix   test  initialValue parm
+#&gt; 1 dutch ego  TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code># myeff</code></pre>
+<p>Regarding the covariate effects, only having a Dutch background and
+age were included as ego-level variables.</p>
+<p><br></p>
+</div>
+<div id="step-3-estimate-3" class="section level3" number="1.7.3">
+<h3><span class="header-section-number">1.7.3</span> Step 3:
+estimate</h3>
+<pre class="r test"><code>myAlgorithm &lt;- sienaAlgorithmCreate(projname = &quot;soc_init&quot;, )</code></pre>
+<pre class="test2"><code>#&gt; If you use this algorithm object, siena07 will create/use an output file soc_init.txt .</code></pre>
+<pre class="r test"><code>(ans4_a &lt;- siena07(myAlgorithm, nbrNodes = 7, data = mydata, effects = myeff))
+(ans4_b &lt;- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans4_a))
+
+save(ans4_b, file = &quot;C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\soc_model4&quot;)</code></pre>
+<pre class="test2"><code>#&gt; Estimates, standard errors and convergence t-ratios
+#&gt; 
+#&gt;                                      Estimate   Standard   Convergence 
+#&gt;                                                   Error      t-ratio   
+#&gt; 
+#&gt; Rate parameters: 
+#&gt;   0.1      Rate parameter period 1    2.1028  ( 0.8628   )             
+#&gt;   0.2      Rate parameter period 2    4.7371  ( 1.9045   )             
+#&gt; 
+#&gt; Other parameters: 
+#&gt;   1.  eval degree (density)          -4.3030  ( 0.5250   )    0.0221   
+#&gt;   2.  eval transitive ties            4.1178  ( 1.0307   )    0.0474   
+#&gt;   3.  eval degree act+pop            -0.0504  ( 0.0786   )    0.0262   
+#&gt;   4.  eval gender ego and alt        -0.3400  ( 0.3633   )    0.0253   
+#&gt;   5.  eval gender ego x gender alter -0.5704  ( 0.7760   )   -0.0409   
+#&gt;   6.  eval dutch ego                 -0.6464  ( 0.7095   )    0.0685   
+#&gt;   7.  eval pub_first ego             -0.0108  ( 0.0394   )   -0.0599   
+#&gt; 
+#&gt; Overall maximum convergence ratio:    0.1525 
+#&gt; 
+#&gt; 
+#&gt; Total of 2581 iteration steps.
+#&gt; 
+#&gt; Covariance matrix of estimates (correlations below diagonal)
+#&gt; 
+#&gt;        0.276       -0.264       -0.006       -0.001        0.011        0.024       -0.002
+#&gt;       -0.488        1.062       -0.060       -0.033        0.040       -0.107        0.001
+#&gt;       -0.137       -0.746        0.006        0.006        0.001        0.007        0.001
+#&gt;       -0.004       -0.088        0.210        0.132        0.128        0.004       -0.006
+#&gt;        0.026        0.050        0.022        0.453        0.602       -0.027        0.002
+#&gt;        0.066       -0.146        0.123        0.015       -0.048        0.503        0.004
+#&gt;       -0.105        0.027        0.163       -0.388        0.068        0.125        0.002
+#&gt; 
+#&gt; Derivative matrix of expected statistics X by parameters:
+#&gt; 
+#&gt;       32.310       64.006      783.081      -27.613        1.854        2.036     -316.155
+#&gt;       24.085       54.500      655.084      -23.190        1.538        1.942     -258.398
+#&gt;      279.719      600.052     8045.630     -294.318       24.998       15.554    -3250.406
+#&gt;      -12.360      -27.678     -385.744       43.269       -8.074       -1.285      269.638
+#&gt;        0.238        1.238       21.443       -7.767        4.733        0.117      -41.730
+#&gt;       -0.601       -1.702      -16.386       -1.363        0.539        4.987      -10.156
+#&gt;      -98.386     -240.635    -3224.956      235.522      -41.415      -19.815     3374.044
+#&gt; 
+#&gt; Covariance matrix of X (correlations below diagonal):
+#&gt; 
+#&gt;       41.193       83.738      995.435      -38.452        3.087       -0.001     -389.340
+#&gt;        0.934      195.057     2160.199      -85.200        7.319       -1.543     -863.996
+#&gt;        0.935        0.933    27507.888    -1074.676      100.976      -21.573   -10885.660
+#&gt;       -0.574       -0.585       -0.621      108.783      -19.938       -2.636      687.411
+#&gt;        0.155        0.169        0.196       -0.616        9.637        0.533     -111.382
+#&gt;        0.000       -0.032       -0.038       -0.073        0.050       12.022      -26.302
+#&gt;       -0.627       -0.640       -0.679        0.682       -0.371       -0.078     9346.936</code></pre>
+<p><br></p>
+</div>
+<div id="interpretation-results-2" class="section level3"
+number="1.7.4">
+<h3><span class="header-section-number">1.7.4</span> Interpretation
+results</h3>
+<p>Model 4, the final model, shows that only transitivity appears to
+influence the development of the sociology department’s publication
+network (b=4.118, se=1.031). The significance of the transitivity effect
+shows that individuals in the sociology department tend to publish with
+individuals with whom they have a co-authorship in common with another
+member of the sociology department.</p>
+<p>Regarding the undirected covariate gender effect, we see roughly the
+same results in model 4 as in model 3: despite the fact that the gender
+effect that was significant in model 1 still seems to play an important
+role in model 4, it is not significant in model 4. It can be concluded
+from this that the structural network effect explains away the gender
+effect: under the influence of the transitivity effect, the undirected
+covariate gender effect does not seem to exert a significant influence
+on the development of the publication network of the sociology
+department. In other words, structural network effects explain away the
+application of the homophily principle to the networks of men and women
+within the sociology department.</p>
+<p>Furthermore, both having a Dutch origin, and age do not appear to be
+significantly related to the development of the publication network of
+the sociology department. However, having Dutch origin does have a
+near-significant effect in model 4.</p>
+<p><br></p>
+</div>
+</div>
+</div>
+<div id="rsiena-analysis-computing-science-staff-ru"
+class="section level1" number="2">
+<h1><span class="header-section-number">2</span> RSiena analysis
+Computing science staff RU</h1>
+<p><br></p>
+<div id="preparations-1" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Preparations</h2>
+<pre class="r test"><code># Starting with a clean workspace
+rm(list = ls())</code></pre>
+<pre class="r test"><code># Requiring packages
+library(data.table)
+library(tidyverse)
+require(stringi)
+require(RSiena)</code></pre>
+<pre class="r test"><code># Loading dataobjects
+load(&quot;C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\comp_net_array.RData&quot;)
+load(&quot;C:\\Users\\Daphn\\Documenten\\pubnets\\Data\\names_staff_cit_v20221006.RData&quot;)
+load(&quot;C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\comp_df.RData&quot;)</code></pre>
+<pre class="r test"><code># Making the network undirected
+net1 &lt;- net_comp_array[, , 1]
+net1 &lt;- net1 + t(net1)
+net1[net1 == 2] &lt;- 1
+
+net2 &lt;- net_comp_array[, , 2]
+net2 &lt;- net2 + t(net2)
+net2[net2 == 2] &lt;- 1
+
+net3 &lt;- net_comp_array[, , 3]
+net3 &lt;- net3 + t(net3)
+net3[net3 == 2] &lt;- 1
+
+
+net_comp_array &lt;- array(data = c(net1, net2, net3), dim = c(dim(net1), 3))</code></pre>
+<pre class="r test"><code># Selecting the dependent variable
+net &lt;- sienaDependent(net_comp_array)
+# ?sienaDependent</code></pre>
+<p><br></p>
+</div>
+<div id="define-data-1" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Define data</h2>
+<pre class="r test"><code># Gender
+gender &lt;- as.numeric(comp_df$gender == &quot;female&quot;)
+gender &lt;- coCovar(gender)</code></pre>
+<pre class="r test"><code># Ethnicity
+dutch &lt;- as.numeric(comp_df$dutch == &quot;dutch&quot;)
+dutch &lt;- coCovar(dutch)</code></pre>
+<pre class="r test"><code># Number of collaborators ncollabs &lt;- comp_df$ncollabs ncollabs &lt;- coCovar(ncollabs)
+
+# class(ncollabs)</code></pre>
+<pre class="r test"><code># Creating a dataset with information on the google scholar id&#39;s, publications and citations of
+# each computing science staff member
+
+names_staff_cit %&gt;%
+    filter(names_staff_cit$gs_id %in% comp_df$gs_id) -&gt; comp_staff_cit
+
+# Removing duplicates
+sel &lt;- (duplicated.data.frame(comp_staff_cit))
+
+comp_staff_cit %&gt;%
+    filter(!sel) -&gt; comp_staff_cit</code></pre>
+<pre class="r test"><code># Publications per wave for each staff computing science staff member
+pubsw1 &lt;- pubsw2 &lt;- pubsw3 &lt;- NA
+
+for (i in 1:length(comp_df$gs_id)) {
+    pubsw1[i] &lt;- nrow(comp_staff_cit[(comp_staff_cit$gs_id == comp_df$gs_id[i]) &amp; comp_staff_cit$year &gt;=
+        2016 &amp; comp_staff_cit$year &lt;= 2017, ])
+    pubsw2[i] &lt;- nrow(comp_staff_cit[(comp_staff_cit$gs_id == comp_df$gs_id[i]) &amp; comp_staff_cit$year &gt;=
+        2018 &amp; comp_staff_cit$year &lt;= 2019, ])
+    pubsw3[i] &lt;- nrow(comp_staff_cit[(comp_staff_cit$gs_id == comp_df$gs_id[i]) &amp; comp_staff_cit$year &gt;=
+        2020 &amp; comp_staff_cit$year &lt;= 2022, ])
+}
+
+pub_df &lt;- as.matrix(data.frame(pubsw1, pubsw2, pubsw3))
+
+pubs &lt;- varCovar(pub_df)</code></pre>
+<pre class="r test"><code># Year of first publication
+comp_staff_cit %&gt;%
+    group_by(gs_id) %&gt;%
+    mutate(pub_first = min(year)) %&gt;%
+    select(c(&quot;gs_id&quot;, &quot;pub_first&quot;)) %&gt;%
+    distinct(gs_id, pub_first, .keep_all = TRUE) -&gt; firstpub_df
+
+comp_df &lt;- left_join(comp_df, firstpub_df)
+
+# if no publication yet, set pub_first op 2023
+comp_df %&gt;%
+    mutate(pub_first = replace_na(pub_first, 2023)) -&gt; comp_df
+
+pub_first &lt;- coCovar(comp_df$pub_first)
+
+mydata &lt;- sienaDataCreate(net, gender, dutch, pubs, pub_first)</code></pre>
+<p><br></p>
+</div>
+<div id="step-0-get-initial-description-1" class="section level2"
+number="2.3">
+<h2><span class="header-section-number">2.3</span> Step 0: get initial
+description</h2>
+<pre class="r test"><code>print01Report(mydata, modelname = &quot;C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_init&quot;)</code></pre>
+<p><embed
+src="C:\Users\Daphn\Documenten\labjournal\Results\comp_init.txt" id="id"
+class="class" style="width:100.0%" height="200" /></p>
+<p><br></p>
+<div id="jaccard-index-1" class="section level3" number="2.3.1">
+<h3><span class="header-section-number">2.3.1</span> Jaccard index</h3>
+<p>As mentioned earlier, the Jaccard index indicates the stability of a
+network over time. In this study, we can look at the Jaccard index for
+period 1 (wave 1 to wave 2) and period 2 (wave 2 to wave 3), for both
+the publication network within the Sociology department and the
+Computing science department. The print report shows that for the
+Computing science network, the Jaccard value of period 1 is 0.284 and
+the Jaccard value of period 2 is 0.243. These values are slightly lower
+than the Jaccard values of the Sociology network.</p>
+<p>Based on the guidelines from the R Siena manual (a Jaccard value of
+0.3 or higher is good, a value below 0.2 indicates that there may be
+difficulties in estimation, and a value below 0.1 indicates that the
+model cannot be estimated), we can conclude that the Jaccard values of
+the Computing Science networks are okay, but there may be difficulties
+in estimating the R Siena models.</p>
+<p><br></p>
+</div>
+</div>
+<div id="model-1-1" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Model 1</h2>
+<div id="step-1-create-effects-structure-4" class="section level3"
+number="2.4.1">
+<h3><span class="header-section-number">2.4.1</span> Step 1: create
+effects structure</h3>
+<pre class="r test"><code>myeff &lt;- getEffects(mydata)
+# effectsDocumentation(myeff)</code></pre>
+<p><br></p>
+</div>
+<div id="step-2-specify-model-1-only-gender-effects-1"
+class="section level3" number="2.4.2">
+<h3><span class="header-section-number">2.4.2</span> Step 2: specify
+model 1 (Only gender effects)</h3>
+<pre class="r test"><code># Gender effects
+myeff &lt;- includeEffects(myeff, egoPlusAltX, interaction1 = &quot;gender&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName         include fix   test  initialValue parm
+#&gt; 1 gender ego and alt TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, egoXaltX, interaction1 = &quot;gender&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName                include fix   test  initialValue parm
+#&gt; 1 gender ego x gender alter TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code># myeff</code></pre>
+<p><br></p>
+</div>
+<div id="step-3-estimate-4" class="section level3" number="2.4.3">
+<h3><span class="header-section-number">2.4.3</span> Step 3:
+estimate</h3>
+<pre class="r test"><code>myAlgorithm &lt;- sienaAlgorithmCreate(projname = &quot;comp_init&quot;, )</code></pre>
+<pre class="test2"><code>#&gt; If you use this algorithm object, siena07 will create/use an output file comp_init.txt .</code></pre>
+<pre class="r test"><code>(ans1_a &lt;- siena07(myAlgorithm, nbrNodes = 7, data = mydata, effects = myeff))
+(ans1_b &lt;- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans1_a))
+
+save(ans1_b, file = &quot;C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_model1&quot;)</code></pre>
+<pre class="test2"><code>#&gt; Estimates, standard errors and convergence t-ratios
+#&gt; 
+#&gt;                                      Estimate   Standard   Convergence 
+#&gt;                                                   Error      t-ratio   
+#&gt; 
+#&gt; Rate parameters: 
+#&gt;   0.1      Rate parameter period 1    1.0692  ( 0.1429   )             
+#&gt;   0.2      Rate parameter period 2    2.6571  ( 0.3341   )             
+#&gt; 
+#&gt; Other parameters: 
+#&gt;   1.  eval degree (density)          -1.9308  ( 0.0700   )    0.0231   
+#&gt;   2.  eval gender ego and alt         0.0456  ( 0.0951   )    0.0313   
+#&gt;   3.  eval gender ego x gender alter  0.0503  ( 0.2606   )   -0.0123   
+#&gt; 
+#&gt; Overall maximum convergence ratio:    0.0405 
+#&gt; 
+#&gt; 
+#&gt; Total of 2069 iteration steps.
+#&gt; 
+#&gt; Covariance matrix of estimates (correlations below diagonal)
+#&gt; 
+#&gt;        0.005        0.000       -0.002
+#&gt;        0.021        0.009       -0.002
+#&gt;       -0.090       -0.080        0.068
+#&gt; 
+#&gt; Derivative matrix of expected statistics X by parameters:
+#&gt; 
+#&gt;      166.732        1.781        3.990
+#&gt;        4.020      191.052        6.381
+#&gt;        0.597        4.686       24.343
+#&gt; 
+#&gt; Covariance matrix of X (correlations below diagonal):
+#&gt; 
+#&gt;      136.355       11.537       -2.265
+#&gt;        0.055      327.812        9.489
+#&gt;       -0.031        0.083       39.759</code></pre>
+<p><br></p>
+</div>
+<div id="interpretation-results-3" class="section level3"
+number="2.4.4">
+<h3><span class="header-section-number">2.4.4</span> Interpretation
+results</h3>
+<p>Model 1 shows that both the undirected covariate gender effect and
+the covariate-ego × alter gender effect do not significantly affect the
+development of the publication network of the computing science
+department.</p>
+<p><br></p>
+</div>
+</div>
+<div id="model-2-1" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> Model 2</h2>
+<div id="step-1-create-effects-structure-5" class="section level3"
+number="2.5.1">
+<h3><span class="header-section-number">2.5.1</span> Step 1: create
+effects structure</h3>
+<pre class="r test"><code>myeff &lt;- getEffects(mydata)
+# effectsDocumentation(myeff)</code></pre>
+<p><br></p>
+</div>
+<div id="step-2-specify-model-2-structural-effects-1"
+class="section level3" number="2.5.2">
+<h3><span class="header-section-number">2.5.2</span> Step 2: specify
+model 2 (structural effects)</h3>
+<pre class="r test"><code># Structural effects
+myeff &lt;- includeEffects(myeff, density)</code></pre>
+<pre class="test2"><code>#&gt;   effectName       include fix   test  initialValue parm
+#&gt; 1 degree (density) TRUE    FALSE FALSE   -1.55379   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, transTies)</code></pre>
+<pre class="test2"><code>#&gt;   effectName      include fix   test  initialValue parm
+#&gt; 1 transitive ties TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, degPlus)</code></pre>
+<pre class="test2"><code>#&gt;   effectName     include fix   test  initialValue parm
+#&gt; 1 degree act+pop TRUE    FALSE FALSE          0   1</code></pre>
+<p><br></p>
+</div>
+<div id="step-3-estimate-5" class="section level3" number="2.5.3">
+<h3><span class="header-section-number">2.5.3</span> Step 3:
+estimate</h3>
+<pre class="r test"><code>myAlgorithm &lt;- sienaAlgorithmCreate(projname = &quot;comp_init&quot;, )</code></pre>
+<pre class="test2"><code>#&gt; If you use this algorithm object, siena07 will create/use an output file comp_init.txt .</code></pre>
+<pre class="r test"><code>(ans2_a &lt;- siena07(myAlgorithm, nbrNodes = 7, data = mydata, effects = myeff))
+(ans2_b &lt;- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans2_a))
+
+save(ans2_b, file = &quot;C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_model2&quot;)</code></pre>
+<pre class="test2"><code>#&gt; Estimates, standard errors and convergence t-ratios
+#&gt; 
+#&gt;                                    Estimate   Standard   Convergence 
+#&gt;                                                 Error      t-ratio   
+#&gt; 
+#&gt; Rate parameters: 
+#&gt;   0.1      Rate parameter period 1  1.8050  ( 0.3280   )             
+#&gt;   0.2      Rate parameter period 2  4.0002  ( 0.6456   )             
+#&gt; 
+#&gt; Other parameters: 
+#&gt;   1.  eval degree (density)        -3.4607  ( 0.1757   )    0.0187   
+#&gt;   2.  eval transitive ties          1.7148  ( 0.1856   )   -0.0053   
+#&gt;   3.  eval degree act+pop           0.0557  ( 0.0133   )    0.0265   
+#&gt; 
+#&gt; Overall maximum convergence ratio:    0.0696 
+#&gt; 
+#&gt; 
+#&gt; Total of 1999 iteration steps.
+#&gt; 
+#&gt; Covariance matrix of estimates (correlations below diagonal)
+#&gt; 
+#&gt;        0.031       -0.014       -0.001
+#&gt;       -0.433        0.034       -0.001
+#&gt;       -0.571       -0.392        0.000
+#&gt; 
+#&gt; Derivative matrix of expected statistics X by parameters:
+#&gt; 
+#&gt;      207.551      366.261     7525.725
+#&gt;      168.096      395.360     7274.940
+#&gt;     2871.816     5696.281   141403.025
+#&gt; 
+#&gt; Covariance matrix of X (correlations below diagonal):
+#&gt; 
+#&gt;      251.828      495.374    11751.572
+#&gt;        0.883     1249.643    26458.369
+#&gt;        0.867        0.877   729120.493</code></pre>
+<p><br></p>
+</div>
+<div id="interpretation-results-4" class="section level3"
+number="2.5.4">
+<h3><span class="header-section-number">2.5.4</span> Interpretation
+results</h3>
+<p>Model 2 shows that both the transitivity effect (b=1.715, se=0.186)
+and the degree activity plus popularity effect (b=0.056, se=0.013) are
+significantly related to the development of the publication network of
+the computing science department. The transitivity effect embodies a
+situation in which an ego enters into a tie with an alter, with whom it
+has a joint tie with another alter. In terms of the development of the
+publication network of the computing science department, this means that
+individuals are more likely to publish with individuals who have
+published with the same person within the computing science department.
+The degree activity plus popularity effect implies that egos with many
+ties are more likely to receive a tie from an alter than egos with fewer
+ties. Moreover, because we are investigating an undirected network, this
+effect also means that alters are more likely to form a tie with an ego
+that already has many ties than with an ego that has few ties. With
+regard to the computing science department, this implies that the
+publication network of individuals who have published a lot with other
+people within the computing science department will rapidly increase in
+size. In contrast, the publication networks of individuals who have
+published with very few people within the computing science department
+are less likely to grow in size. Model 2 thus shows that structural
+network effects play a major role in the development of the publication
+network within the computing science department.</p>
+<p><br></p>
+</div>
+</div>
+<div id="model-3-1" class="section level2" number="2.6">
+<h2><span class="header-section-number">2.6</span> Model 3</h2>
+<div id="step-1-create-effects-structure-6" class="section level3"
+number="2.6.1">
+<h3><span class="header-section-number">2.6.1</span> Step 1: create
+effects structure</h3>
+<pre class="r test"><code>myeff &lt;- getEffects(mydata)
+# effectsDocumentation(myeff)</code></pre>
+<p><br></p>
+</div>
+<div id="step-2-specify-model-3-structural-effects-and-gender-effects-1"
+class="section level3" number="2.6.2">
+<h3><span class="header-section-number">2.6.2</span> Step 2: specify
+model 3 (structural effects and gender effects)</h3>
+<pre class="r test"><code># Structural effects
+myeff &lt;- includeEffects(myeff, density)</code></pre>
+<pre class="test2"><code>#&gt;   effectName       include fix   test  initialValue parm
+#&gt; 1 degree (density) TRUE    FALSE FALSE   -1.55379   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, transTies)</code></pre>
+<pre class="test2"><code>#&gt;   effectName      include fix   test  initialValue parm
+#&gt; 1 transitive ties TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, degPlus)</code></pre>
+<pre class="test2"><code>#&gt;   effectName     include fix   test  initialValue parm
+#&gt; 1 degree act+pop TRUE    FALSE FALSE          0   1</code></pre>
+<pre class="r test"><code># Gender effects
+myeff &lt;- includeEffects(myeff, egoPlusAltX, interaction1 = &quot;gender&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName         include fix   test  initialValue parm
+#&gt; 1 gender ego and alt TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, egoXaltX, interaction1 = &quot;gender&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName                include fix   test  initialValue parm
+#&gt; 1 gender ego x gender alter TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code># myeff</code></pre>
+<p><br></p>
+</div>
+<div id="step-3-estimate-6" class="section level3" number="2.6.3">
+<h3><span class="header-section-number">2.6.3</span> Step 3:
+estimate</h3>
+<pre class="r test"><code>myAlgorithm &lt;- sienaAlgorithmCreate(projname = &quot;comp_init&quot;, )</code></pre>
+<pre class="test2"><code>#&gt; If you use this algorithm object, siena07 will create/use an output file comp_init.txt .</code></pre>
+<pre class="r test"><code>(ans3_a &lt;- siena07(myAlgorithm, nbrNodes = 7, data = mydata, effects = myeff))
+(ans3_b &lt;- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans3_a))
+
+save(ans3_b, file = &quot;C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_model3&quot;)</code></pre>
+<pre class="test2"><code>#&gt; Estimates, standard errors and convergence t-ratios
+#&gt; 
+#&gt;                                      Estimate   Standard   Convergence 
+#&gt;                                                   Error      t-ratio   
+#&gt; 
+#&gt; Rate parameters: 
+#&gt;   0.1      Rate parameter period 1    1.7903  ( 0.3254   )             
+#&gt;   0.2      Rate parameter period 2    4.0566  ( 0.6426   )             
+#&gt; 
+#&gt; Other parameters: 
+#&gt;   1.  eval degree (density)          -3.4632  ( 0.1709   )    0.0219   
+#&gt;   2.  eval transitive ties            1.7278  ( 0.1937   )    0.0223   
+#&gt;   3.  eval degree act+pop             0.0550  ( 0.0136   )    0.0112   
+#&gt;   4.  eval gender ego and alt        -0.0052  ( 0.0996   )   -0.0059   
+#&gt;   5.  eval gender ego x gender alter  0.1426  ( 0.2638   )   -0.0053   
+#&gt; 
+#&gt; Overall maximum convergence ratio:    0.0318 
+#&gt; 
+#&gt; 
+#&gt; Total of 2428 iteration steps.
+#&gt; 
+#&gt; Covariance matrix of estimates (correlations below diagonal)
+#&gt; 
+#&gt;        0.029       -0.014       -0.001        0.001       -0.007
+#&gt;       -0.435        0.038       -0.001        0.002        0.005
+#&gt;       -0.512       -0.453        0.000        0.000        0.000
+#&gt;        0.053        0.095       -0.145        0.010       -0.001
+#&gt;       -0.151        0.093        0.045       -0.026        0.070
+#&gt; 
+#&gt; Derivative matrix of expected statistics X by parameters:
+#&gt; 
+#&gt;      204.368      372.791     7373.342       -6.003        8.088
+#&gt;      163.517      390.733     7078.235       -9.452        1.952
+#&gt;     2733.367     5606.628   135567.780       53.830       55.583
+#&gt;        6.155        5.654      391.193      257.173        3.961
+#&gt;        2.448        0.611        3.926        3.387       22.654
+#&gt; 
+#&gt; Covariance matrix of X (correlations below diagonal):
+#&gt; 
+#&gt;      244.948      483.487    11238.627        3.182        6.483
+#&gt;        0.892     1200.469    25163.662       -7.655        7.063
+#&gt;        0.864        0.874   689967.745      -83.140      160.668
+#&gt;        0.008       -0.009       -0.004      643.518       11.303
+#&gt;        0.070        0.034        0.033        0.075       34.918</code></pre>
+<p><br></p>
+</div>
+<div id="interpretation-results-5" class="section level3"
+number="2.6.4">
+<h3><span class="header-section-number">2.6.4</span> Interpretation
+results</h3>
+<p>The results from model 3 show that only structural effects
+significantly influence the development of the publication network of
+the computing science department. First, this means that individuals
+prefer to publish with others who share the same coauthorship with
+another person within the computing science department (b=1.729,
+se=0.194). Moreover, both individuals with many publication ties within
+the computing science department are more likely to receive a tie than
+individuals with fewer ties within the computing science department, and
+individuals are more likely to form ties with individuals with many ties
+within the computing science department than with egos with fewer ties
+within the computing science department (b=0.055, se=0.014). Both gender
+effects are again not significantly related to the development of the
+publication network of the computing science department. Compared to
+Model 1 and Model 2, Model 3 thus does not change much in terms of the
+significance of the included effects.</p>
+<p><br></p>
+</div>
+</div>
+<div id="model-4-1" class="section level2" number="2.7">
+<h2><span class="header-section-number">2.7</span> Model 4</h2>
+<div id="step-1-create-effects-structure-7" class="section level3"
+number="2.7.1">
+<h3><span class="header-section-number">2.7.1</span> Step 1: create
+effects structure</h3>
+<pre class="r test"><code>myeff &lt;- getEffects(mydata)
+# effectsDocumentation(myeff)</code></pre>
+<p><br></p>
+</div>
+<div
+id="step-2-specify-model-4-structural-effects-gender-effects-and-covariate-effects-1"
+class="section level3" number="2.7.2">
+<h3><span class="header-section-number">2.7.2</span> Step 2: specify
+model 4 (structural effects, gender effects and covariate effects)</h3>
+<pre class="r test"><code># Structural effects
+myeff &lt;- includeEffects(myeff, density)</code></pre>
+<pre class="test2"><code>#&gt;   effectName       include fix   test  initialValue parm
+#&gt; 1 degree (density) TRUE    FALSE FALSE   -1.55379   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, transTies)</code></pre>
+<pre class="test2"><code>#&gt;   effectName      include fix   test  initialValue parm
+#&gt; 1 transitive ties TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, degPlus)</code></pre>
+<pre class="test2"><code>#&gt;   effectName     include fix   test  initialValue parm
+#&gt; 1 degree act+pop TRUE    FALSE FALSE          0   1</code></pre>
+<pre class="r test"><code># Gender effects
+myeff &lt;- includeEffects(myeff, egoPlusAltX, interaction1 = &quot;gender&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName         include fix   test  initialValue parm
+#&gt; 1 gender ego and alt TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, egoXaltX, interaction1 = &quot;gender&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName                include fix   test  initialValue parm
+#&gt; 1 gender ego x gender alter TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code># myeff</code></pre>
+<pre class="r test"><code># Covariate effects myeff &lt;- includeEffects(myeff, sameX, interaction1 = &#39;dutch&#39;)
+myeff &lt;- includeEffects(myeff, egoX, interaction1 = &quot;pub_first&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName    include fix   test  initialValue parm
+#&gt; 1 pub_first ego TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code>myeff &lt;- includeEffects(myeff, egoX, interaction1 = &quot;dutch&quot;)</code></pre>
+<pre class="test2"><code>#&gt;   effectName include fix   test  initialValue parm
+#&gt; 1 dutch ego  TRUE    FALSE FALSE          0   0</code></pre>
+<pre class="r test"><code># myeff</code></pre>
+<p><br></p>
+</div>
+<div id="step-3-estimate-7" class="section level3" number="2.7.3">
+<h3><span class="header-section-number">2.7.3</span> Step 3:
+estimate</h3>
+<pre class="r test"><code>myAlgorithm &lt;- sienaAlgorithmCreate(projname = &quot;comp_init&quot;, )</code></pre>
+<pre class="test2"><code>#&gt; If you use this algorithm object, siena07 will create/use an output file comp_init.txt .</code></pre>
+<pre class="r test"><code>(ans4_a &lt;- siena07(myAlgorithm, nbrNodes = 7, data = mydata, effects = myeff))
+(ans4_b &lt;- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans4_a))
+(ans4_c &lt;- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans4_b))
+
+save(ans4_c, file = &quot;C:\\Users\\Daphn\\Documenten\\labjournal\\Results\\comp_model4&quot;)</code></pre>
+<pre class="test2"><code>#&gt; Estimates, standard errors and convergence t-ratios
+#&gt; 
+#&gt;                                      Estimate   Standard   Convergence 
+#&gt;                                                   Error      t-ratio   
+#&gt; 
+#&gt; Rate parameters: 
+#&gt;   0.1      Rate parameter period 1    1.8338  ( 0.3203   )             
+#&gt;   0.2      Rate parameter period 2    4.0980  ( 0.6516   )             
+#&gt; 
+#&gt; Other parameters: 
+#&gt;   1.  eval degree (density)          -3.4702  ( 0.1716   )    0.0155   
+#&gt;   2.  eval transitive ties            1.7174  ( 0.2050   )    0.0180   
+#&gt;   3.  eval degree act+pop             0.0546  ( 0.0137   )    0.0114   
+#&gt;   4.  eval gender ego and alt         0.0187  ( 0.0972   )    0.0225   
+#&gt;   5.  eval gender ego x gender alter  0.1379  ( 0.2819   )   -0.0543   
+#&gt;   6.  eval dutch ego                  0.2150  ( 0.2573   )    0.0155   
+#&gt;   7.  eval pub_first ego             -0.0034  ( 0.0106   )   -0.0205   
+#&gt; 
+#&gt; Overall maximum convergence ratio:    0.0697 
+#&gt; 
+#&gt; 
+#&gt; Total of 2700 iteration steps.
+#&gt; 
+#&gt; Covariance matrix of estimates (correlations below diagonal)
+#&gt; 
+#&gt;        0.029       -0.015       -0.001        0.000       -0.003       -0.005        0.000
+#&gt;       -0.428        0.042       -0.001       -0.001        0.002        0.003        0.000
+#&gt;       -0.467       -0.479        0.000        0.000        0.000        0.000        0.000
+#&gt;        0.022       -0.037       -0.047        0.009       -0.002        0.004        0.000
+#&gt;       -0.070        0.042        0.009       -0.061        0.079        0.003        0.000
+#&gt;       -0.102        0.053       -0.031        0.166        0.035        0.066        0.000
+#&gt;       -0.074        0.096        0.111       -0.163       -0.021        0.048        0.000
+#&gt; 
+#&gt; Derivative matrix of expected statistics X by parameters:
+#&gt; 
+#&gt;      180.135      321.759     6401.233       15.149        3.984       21.113     -726.690
+#&gt;      146.145      355.305     6544.602       22.579       -0.459       14.390     -785.925
+#&gt;     2484.171     5089.099   126489.922      231.828       22.822      284.167   -13689.231
+#&gt;        6.778       10.912      194.131      278.655        6.381      -33.530      435.644
+#&gt;        2.108        2.657       53.425        6.577       22.456       -0.116       -5.520
+#&gt;       11.187       24.643      421.226      -18.156       -0.985       40.551     -140.508
+#&gt;     -456.464    -1070.017   -24000.361      313.652       23.115     -176.474    25682.403
+#&gt; 
+#&gt; Covariance matrix of X (correlations below diagonal):
+#&gt; 
+#&gt;      230.559      456.091    10633.697       15.621        3.856       28.690    -1291.928
+#&gt;        0.876     1175.860    24312.821       40.134        0.433       67.678    -3062.227
+#&gt;        0.856        0.867   668551.634      293.645       75.689     1327.782   -75905.443
+#&gt;        0.039        0.045        0.014      687.819       15.111      -83.271      896.022
+#&gt;        0.040        0.002        0.015        0.091       39.698       -0.540       -3.331
+#&gt;        0.185        0.193        0.159       -0.311       -0.008      104.082     -531.850
+#&gt;       -0.330       -0.347       -0.360        0.133       -0.002       -0.202    66328.838</code></pre>
+<p><br></p>
+</div>
+<div id="interpretation-results-6" class="section level3"
+number="2.7.4">
+<h3><span class="header-section-number">2.7.4</span> Interpretation
+results</h3>
+<p>Model 4, the final model, shows that when gender effects, as well as
+structural network effects and covariate effects are included, only the
+structural network effects significantly influence the development of
+the computing science department’s publication network.</p>
+<p>The fact that the transitivity effect is significant shows that
+within the computing science department, individuals tend to publish
+with individuals they have a co-authorship in common with another member
+of the computing science department (b=1.717, se=0.205). The
+significance of the degree activity plus popularity effect shows that
+individuals with more publication ties within the computing science
+department are offered more publication ties than individuals with fewer
+ties within the computing science department (b=0.055, se=0.014). It
+also appears that individuals are more likely to form new publication
+ties with individuals with many publication ties than with individuals
+with fewer publication ties.</p>
+<p>The undirected covariate gender effect and the covariate-ego × alter
+gender effect do not significantly affect the development of the
+publication network of the computing science department. Furthermore,
+Model 4 shows that having Dutch ancestry and age also do not reach the
+appropriate level of statistical significance.</p>
+<p><br></p>
+</div>
+</div>
+</div>
+<div id="testing-the-hypotheses" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Testing the
+hypotheses</h1>
+<p>What follows is a brief review of the results and subsequent
+evaluation of the hypotheses.</p>
+<p>Hypothesis 2 reads: The gender homophily principle applies more
+strongly to Computing Science than to Sociology.</p>
+<p>Based on the results emerging from this study, hypothesis 2 cannot be
+confirmed. Regarding the sociology data, one significant gender effect
+is present in model 1: women within the sociology department publish
+less with other people within the department than men and other people
+within the sociology department publish less with women than with men.
+Moreover, it seems to be the case that women within the sociology
+department seem to cooperate even less with other women within the
+department. However, this finding cannot be substantiated with a
+significant effect, due to lack of power. Thus, selection of potential
+co-authors based on gender seems to play a significant role in the
+development of the sociology department’s publication network.</p>
+<p>As for the computer science department, model 1 shows that neither of
+the two gender effects is significantly related to the development of
+the computer science department’s publication network.</p>
+<p>On this basis, it cannot be said that the gender homophily principle
+is applied more strongly within the computing science department than
+within the sociology department; the principle emerges only within the
+sociology department and is absent within the computing science
+department.</p>
+<p><br></p>
+<p>Hypothesis 3 reads: When structural network effects are taken into
+account, the gender homophily principle still applies more strongly to
+publications within Computer Science than to publications within
+Sociology.</p>
+<p>Hypothesis 3 cannot be confirmed based on the results found for the
+two gender effects tested in this study. Regarding both the sociology
+data and the computing science data, no significant gender effect
+emerges in the final model, model 4. Thus, it cannot be said that the
+two gender effects tested play a role in the development of both the
+publication network of the sociology department and the computing
+science department. In other words, it cannot be concluded from the
+findings that the gender homophily principle emerges at all within the
+computing science department and the sociology department</p>
+<p>Regarding structural effects, it can be seen from the sociology data
+that the only significant gender effect from model 1 is explained away
+by including structural network effects in the models. This seems to
+contradict Hypothesis 3, as it assumes that the existing gender effects
+remain equally strong under the influence of structural network effects.
+This contradiction between expectations and results gives reason to
+further investigate the combined application of structural effects and
+the gender homophily principle within publication networks in future
+research.</p>
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlJTaWVuYSINCiNiaWJsaW9ncmFwaHk6IHJlZmVyZW5jZXMuYmliDQphdXRob3I6ICJEYXBobmUgSmFuc3NlbiINCi0tLQ0KDQoNCg0KYGBge3IsIGdsb2JhbHNldHRpbmdzLCBlY2hvPUZBTFNFLCB3YXJuaW5nPUZBTFNFLCByZXN1bHRzPSdoaWRlJ30NCmxpYnJhcnkoa25pdHIpDQoNCmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkNCm9wdHNfY2h1bmskc2V0KHRpZHkub3B0cz1saXN0KHdpZHRoLmN1dG9mZj0xMDApLHRpZHk9VFJVRSwgd2FybmluZyA9IEZBTFNFLCBtZXNzYWdlID0gRkFMU0UsY29tbWVudCA9ICIjPiIsIGNhY2hlPVRSVUUsIGNsYXNzLnNvdXJjZT1jKCJ0ZXN0IiksIGNsYXNzLm91dHB1dD1jKCJ0ZXN0MiIpKQ0Kb3B0aW9ucyh3aWR0aCA9IDEwMCkNCnJnbDo6c2V0dXBLbml0cigpDQoNCg0KDQpjb2xvcml6ZSA8LSBmdW5jdGlvbih4LCBjb2xvcikge3NwcmludGYoIjxzcGFuIHN0eWxlPSdjb2xvcjogJXM7Jz4lczwvc3Bhbj4iLCBjb2xvciwgeCkgfQ0KDQpgYGANCg0KYGBge3Iga2xpcHB5LCBlY2hvPUZBTFNFLCBpbmNsdWRlPVRSVUV9DQprbGlwcHk6OmtsaXBweShwb3NpdGlvbiA9IGMoJ3RvcCcsICdyaWdodCcpKQ0KI2tsaXBweTo6a2xpcHB5KGNvbG9yID0gJ2RhcmtyZWQnKQ0KI2tsaXBweTo6a2xpcHB5KHRvb2x0aXBfbWVzc2FnZSA9ICdDbGljayB0byBjb3B5JywgdG9vbHRpcF9zdWNjZXNzID0gJ0RvbmUnKQ0KYGBgDQoNCkxhc3QgY29tcGlsZWQgb24gYHIgU3lzLnRpbWUoKWANCg0KPCEtLS0NCkxhc3QgY29tcGlsZWQgb24gYHIgZm9ybWF0KFN5cy50aW1lKCksICclQiwgJVknKWANCi0tLT4NCg0KPGJyPg0KDQotLS0tDQoNCiMgUlNpZW5hIGFuYWx5c2lzIFNvY2lvbG9neSBzdGFmZiBSVQ0KDQoNCiMjIFByZXBhcmF0aW9ucw0KYGBge3J9DQojIFN0YXJ0aW5nIHdpdGggYSBjbGVhbiB3b3Jrc3BhY2UgDQpybShsaXN0PWxzKCkpDQpgYGANCg0KYGBge3J9DQojIFJlcXVpcmluZyBwYWNrYWdlcyANCmxpYnJhcnkoZGF0YS50YWJsZSkgDQpsaWJyYXJ5KHRpZHl2ZXJzZSkgDQpyZXF1aXJlKHN0cmluZ2kpDQpyZXF1aXJlKFJTaWVuYSkNCmBgYA0KDQpgYGB7cn0NCiMgTG9hZGluZyBkYXRhb2JqZWN0cw0KbG9hZCgiQzpcXFVzZXJzXFxEYXBoblxcRG9jdW1lbnRlblxcbGFiam91cm5hbFxcZGF0YVxcZGVzY3JpcHRpdmVzXFxzb2NfbmV0X2FycmF5LlJEYXRhIikNCiNsb2FkKCJDOlxcVXNlcnNcXERhcGhuXFxEb2N1bWVudGVuXFxsYWJqb3VybmFsXFxEYXRhXFxzb2NfY29sbGFicy5SRGF0YSIpDQpsb2FkKCJDOlxcVXNlcnNcXERhcGhuXFxEb2N1bWVudGVuXFxsYWJqb3VybmFsXFxEYXRhXFxzb2Nfc3RhZmZfY2l0LlJEYXRhIikNCmxvYWQoIkM6XFxVc2Vyc1xcRGFwaG5cXERvY3VtZW50ZW5cXGxhYmpvdXJuYWxcXGRhdGFcXGRlc2NyaXB0aXZlc1xcc29jX2RmLlJEYXRhIikNCmBgYA0KDQpgYGB7cn0NCiMgTWFraW5nIHRoZSBuZXR3b3JrIHVuZGlyZWN0ZWQNCm5ldDEgPC0gbmV0X3NvY19hcnJheVssLDFdDQpuZXQxIDwtIG5ldDEgKyB0KG5ldDEpDQpuZXQxW25ldDE9PTJdIDwtIDENCg0KbmV0MiA8LSBuZXRfc29jX2FycmF5WywsMl0NCm5ldDIgPC0gbmV0MiArIHQobmV0MikNCm5ldDJbbmV0Mj09Ml0gPC0gMQ0KDQpuZXQzIDwtIG5ldF9zb2NfYXJyYXlbLCwzXQ0KbmV0MyA8LSBuZXQzICsgdChuZXQzKQ0KbmV0M1tuZXQzPT0yXSA8LSAxDQoNCg0KbmV0X3NvY19hcnJheSA8LSBhcnJheShkYXRhID0gYyhuZXQxLCBuZXQyLCBuZXQzKSwgZGltPWMoZGltKG5ldDEpLDMpKQ0KYGBgDQoNCmBgYHtyfQ0KIyBTZWxlY3RpbmcgdGhlIGRlcGVuZGVudCB2YXJpYWJsZQ0KbmV0IDwtIHNpZW5hRGVwZW5kZW50KG5ldF9zb2NfYXJyYXkpDQojP3NpZW5hRGVwZW5kZW50DQpgYGANCg0KPGJyPg0KDQojIyBEZWZpbmUgZGF0YQ0KYGBge3J9DQojIEdlbmRlcg0KZ2VuZGVyIDwtIGFzLm51bWVyaWMoc29jX2RmJGdlbmRlcj09ImZlbWFsZSIpDQpnZW5kZXIgPC0gY29Db3ZhcihnZW5kZXIpDQpgYGANCg0KYGBge3J9DQojIEV0aG5pY2l0eQ0KZHV0Y2ggPC0gYXMubnVtZXJpYyhzb2NfZGYkZHV0Y2g9PTEpDQpkdXRjaCA8LSBjb0NvdmFyKGR1dGNoKQ0KYGBgDQoNCmBgYHtyfQ0KIyBOdW1iZXIgb2YgY29sbGFib3JhdG9ycw0KI25jb2xsYWJzIDwtIHNvY19kZiRuY29sbGFicw0KI25jb2xsYWJzIDwtIGNvQ292YXIobmNvbGxhYnMpDQoNCiNjbGFzcyhuY29sbGFicykNCmBgYA0KDQpgYGB7cn0NCiMgUHVibGljYXRpb25zIHBlciB3YXZlIGZvciBlYWNoIHN0YWZmIGNvbXB1dGluZyBzY2llbmNlIHN0YWZmIG1lbWJlcg0KcHVic3cxIDwtIHB1YnN3MiA8LSBwdWJzdzMgPC0gTkENCg0KZm9yIChpIGluIDE6bGVuZ3RoKHNvY19kZiRnc19pZCkpIHsNCiAgcHVic3cxW2ldIDwtIG5yb3coc29jX3N0YWZmX2NpdFsoc29jX3N0YWZmX2NpdCRnc19pZCA9PSBzb2NfZGYkZ3NfaWRbaV0pICYgc29jX3N0YWZmX2NpdCR5ZWFyPj0yMDE2ICYgc29jX3N0YWZmX2NpdCR5ZWFyPD0yMDE3LF0pDQogIHB1YnN3MltpXSA8LSBucm93KHNvY19zdGFmZl9jaXRbKHNvY19zdGFmZl9jaXQkZ3NfaWQgPT0gc29jX2RmJGdzX2lkW2ldKSAmIHNvY19zdGFmZl9jaXQkeWVhcj49MjAxOCAmIHNvY19zdGFmZl9jaXQkeWVhcjw9MjAxOSxdKQ0KICBwdWJzdzNbaV0gPC0gbnJvdyhzb2Nfc3RhZmZfY2l0Wyhzb2Nfc3RhZmZfY2l0JGdzX2lkID09IHNvY19kZiRnc19pZFtpXSkgJiBzb2Nfc3RhZmZfY2l0JHllYXI+PTIwMjAgJiBzb2Nfc3RhZmZfY2l0JHllYXI8PTIwMjIsXSkNCn0NCg0KcHViX2RmIDwtIGFzLm1hdHJpeChkYXRhLmZyYW1lKHB1YnN3MSwgcHVic3cyLCBwdWJzdzMpKQ0KDQpwdWJzIDwtIHZhckNvdmFyKHB1Yl9kZikNCmBgYA0KDQpgYGB7ciwgd2FybmluZz1GQUxTRSwgbWVzc2FnZT1GQUxTRX0NCiMgWWVhciBmaXJzdCBwdWJsaWNhdGlvbg0Kc29jX3N0YWZmX2NpdCAlPiUgZ3JvdXBfYnkoZ3NfaWQpICU+JQ0KICBtdXRhdGUocHViX2ZpcnN0ID0gbWluKHllYXIpKSAlPiUNCiAgc2VsZWN0KGMoImdzX2lkIiwgInB1Yl9maXJzdCIpKSAlPiUNCiAgZGlzdGluY3QoZ3NfaWQsIHB1Yl9maXJzdCwgLmtlZXBfYWxsID0gVFJVRSkgLT4gZmlyc3RwdWJfZGYNCg0Kc29jX2RmIDwtIGxlZnRfam9pbihzb2NfZGYsIGZpcnN0cHViX2RmKQ0KDQojaWYgbm8gcHVibGljYXRpb24geWV0LCBzZXQgcHViX2ZpcnN0IG9wIDIwMjMNCnNvY19kZiAlPiUgbXV0YXRlKHB1Yl9maXJzdCA9IHJlcGxhY2VfbmEocHViX2ZpcnN0LCAyMDIzKSkgLT4gc29jX2RmDQoNCnB1Yl9maXJzdCA8LSAgY29Db3Zhcihzb2NfZGYkcHViX2ZpcnN0KQ0KDQpteWRhdGEgPC0gc2llbmFEYXRhQ3JlYXRlKG5ldCwgZ2VuZGVyLCBkdXRjaCwgcHVicywgcHViX2ZpcnN0KQ0KYGBgDQoNCjxicj4NCg0KIyMgU3RlcCAwOiBnZXQgaW5pdGlhbCBkZXNjcmlwdGlvbg0KYGBge3J9DQpwcmludDAxUmVwb3J0KG15ZGF0YSwgbW9kZWxuYW1lID0gIkM6XFxVc2Vyc1xcRGFwaG5cXERvY3VtZW50ZW5cXGxhYmpvdXJuYWxcXFJlc3VsdHNcXHNvY19pbml0IikNCmBgYA0KDQohW10oQzpcXFVzZXJzXFxEYXBoblxcRG9jdW1lbnRlblxcbGFiam91cm5hbFxcUmVzdWx0c1xcc29jX2luaXQudHh0KXsjaWQgLmNsYXNzIHdpZHRoPTEwMCUgaGVpZ2h0PTIwMHB4fQ0KDQoNCiMjIyBKYWNjYXJkIGluZGV4DQpUaGUgSmFjY2FyZCBpbmRleCBpbmRpY2F0ZXMgdGhlIHN0YWJpbGl0eSBvZiBhIG5ldHdvcmsgb3ZlciB0aW1lLiBJbiB0aGlzIHN0dWR5LCB0aGUgc3RhYmlsaXR5IGNhbiBiZSBjYWxjdWxhdGVkIGZvciBwZXJpb2QgMSAod2F2ZSAxIHRvIHdhdmUgMikgYW5kIHBlcmlvZCAyICh3YXZlIDIgdG8gd2F2ZSAzKSwgZm9yIGJvdGggU29jaW9sb2d5IGFuZCBDb21wdXRpbmcgU2NpZW5jZS4gQXMgeW91IGNhbiBzZWUgaW4gdGhlIHByaW50IHJlcG9ydCwgdGhlIEphY2NhcmQgdmFsdWUgb2YgdGhlIHB1YmxpY2F0aW9uIG5ldHdvcmsgd2l0aGluIHRoZSBzb2Npb2xvZ3kgZGVwYXJ0bWVudCBmb3IgcGVyaW9kIDEgaXMgMC4zMzMgYW5kIGZvciBwZXJpb2QgMiBpcyAwLjI1MC4gDQoNCkFjY29yZGluZyB0byB0aGUgUiBTaWVuYSBtYW51YWwsIGEgSmFjY2FyZCBpbmRleCBvZiAwLjMgb3IgaGlnaGVyIGlzIGdvb2QsIGEgdmFsdWUgYmVsb3cgMC4yIGluZGljYXRlcyB0aGF0IHRoZXJlIG1heSBiZSBkaWZmaWN1bHRpZXMgaW4gZXN0aW1hdGlvbiBhbmQgYSB2YWx1ZSBiZWxvdyAwLjEgaW5kaWNhdGVzIHRoYXQgdGhlIG1vZGVsIGNhbm5vdCBiZSBlc3RpbWF0ZWQuIEJhc2VkIG9uIHRoZXNlIGd1aWRlbGluZXMsIHdlIGNhbiBjb25jbHVkZSB0aGF0IHRoZSBKYWNjYXJkIHZhbHVlcyBvZiB0aGUgc29jaW9sb2d5IG5ldHdvcmtzIGFyZSBtb3JlIG9yIGxlc3MgZ29vZCwgc28gdGhlIFIgU2llbmEgbW9kZWxzIGZvciB0aGUgcHVibGljYXRpb24gbmV0d29ya3Mgd2l0aGluIHRoZSBzb2Npb2xvZ3kgZGVwYXJ0bWVudCBzaG91bGQgYmUgZXN0aW1hYmxlLiANCg0KPGJyPg0KDQojIyBNb2RlbCAxDQoNCiMjIyBTdGVwIDE6IGNyZWF0ZSBlZmZlY3RzIHN0cnVjdHVyZQ0KYGBge3J9DQpteWVmZiA8LSBnZXRFZmZlY3RzKG15ZGF0YSkNCiNlZmZlY3RzRG9jdW1lbnRhdGlvbihteWVmZikNCmBgYA0KDQo8YnI+DQoNCiMjIyBTdGVwIDI6IHNwZWNpZnkgbW9kZWwgMSAoT25seSBnZW5kZXIgZWZmZWN0cykNCmBgYHtyfQ0KIyBHZW5kZXIgZWZmZWN0cw0KbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIGVnb1BsdXNBbHRYLCBpbnRlcmFjdGlvbjEgPSAiZ2VuZGVyIikNCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBlZ29YYWx0WCwgaW50ZXJhY3Rpb24xID0gImdlbmRlciIpDQojbXllZmYNCmBgYA0KQmFzZWQgb24gdGhlIFIgU2llbmEgbWFudWFsLCBnZW5kZXIgd2FzIGV4cGVjdGVkIHRvIGludGVyYWN0IHdpdGggdGhlIGVnb1BsdXNBbHRYIGVmZmVjdCBhbmQgdGhlIHNhbWVYIGVmZmVjdC4gQWZ0ZXIgaW50ZXJwcmV0aW5nIHRoZSBtb2RlbCBmaXQgb2YgbW9kZWwgMSBhbmQgcmV2aWV3aW5nIHRoZSB0aGVvcnkgYmVoaW5kIHRoZSBob21vcGhpbHkgZWZmZWN0LCBpdCB3YXMgZGVjaWRlZCB0byBpbmNsdWRlIHRoZSBlZ29YYWx0WCBlZmZlY3QgaW5zdGVhZCBvZiB0aGUgU2FtZVggZWZmZWN0Lg0KDQpUaGUgZWdvWGFsdFggc3RydWN0dXJhbCBlZmZlY3QgcmVwcmVzZW50cyBhbiBpbnRlcmFjdGlvbiBvZiBhIGNvdmFyaWF0ZSBvZiB0aGUgZWdvIHdpdGggdGhlIGNvdmFyaWF0ZSBvZiBhbHRlcnMuIEluIG90aGVyIHdvcmRzLCB3aGV0aGVyIG5vZGVzIHRoYXQgYXJlIHNpbWlsYXIgaW4gdGVybXMgb2Ygb25lIGNoYXJhY3RlcmlzdGljIGhhdmUgdGllcyB3aXRoIGVhY2ggb3RoZXIuIEFuIGludGVyYWN0aW9uIG9mIHRoaXMgZWZmZWN0IHdpdGggZ2VuZGVyIGluZGljYXRlcyB0aGUgZXh0ZW50IHRvIHdoaWNoIHdvbWVuIHB1Ymxpc2ggd2l0aCBvdGhlciB3b21lbi4gV2l0aGluIHRoaXMgc3R1ZHksIHdlIGFyZSBvbmx5IGNvbmNlcm5lZCB3aXRoIHdvbWVuIHB1Ymxpc2hpbmcgd2l0aCBvdGhlciB3b21lbiB3aXRoaW4gdGhlIHNhbWUgZGVwYXJ0bWVudC4gDQoNCjxicj4NCg0KIyMjIFN0ZXAgMzogZXN0aW1hdGUNCmBgYHtyfQ0KbXlBbGdvcml0aG0gPC0gc2llbmFBbGdvcml0aG1DcmVhdGUocHJvam5hbWUgPSAic29jX2luaXQiLCApDQpgYGANCg0KYGBge3IsIGV2YWw9RkFMU0V9DQooYW5zMV9hIDwtIHNpZW5hMDcobXlBbGdvcml0aG0sIG5ick5vZGVzPTcsIGRhdGEgPSBteWRhdGEsIGVmZmVjdHMgPSBteWVmZikpDQooYW5zMV9iIDwtIHNpZW5hMDcobXlBbGdvcml0aG0sIGRhdGEgPSBteWRhdGEsIGVmZmVjdHMgPSBteWVmZiwgcHJldkFucyA9IGFuczFfYSkpDQoNCnNhdmUoYW5zMV9iLCBmaWxlPSJDOlxcVXNlcnNcXERhcGhuXFxEb2N1bWVudGVuXFxsYWJqb3VybmFsXFxSZXN1bHRzXFxzb2NfbW9kZWwxIikNCmBgYA0KDQpgYGB7ciwgZWNobz1GQUxTRX0NCmxvYWQoIkM6XFxVc2Vyc1xcRGFwaG5cXERvY3VtZW50ZW5cXGxhYmpvdXJuYWxcXFJlc3VsdHNcXHNvY19tb2RlbDEiKQ0Kc3VtbWFyeShhbnMxX2IpDQpgYGANCg0KPGJyPg0KDQojIyMgSW50ZXJwcmV0YXRpb24gcmVzdWx0cyANCg0KTW9kZWwgMSBzaG93cyB0aGF0IHRoZSB1bmRpcmVjdGVkIGNvdmFyaWF0ZSBnZW5kZXIgZWZmZWN0IGlzIHNpZ25pZmljYW50bHkgcmVsYXRlZCB0byB0aGUgZGV2ZWxvcG1lbnQgb2YgdGhlIHRoZSBzb2Npb2xvZ3kgZGVwYXJ0bWVudOKAmXMgcHVibGljYXRpb24gbmV0d29yay4gVGhpcyBpbXBsaWVzIHRoYXQgd29tZW4gd2l0aGluIHRoZSBzb2Npb2xvZ3kgZGVwYXJ0bWVudCBwdWJsaXNoIGxlc3Mgd2l0aCBvdGhlciBwZW9wbGUgd2l0aGluIHRoZSBkZXBhcnRtZW50IHRoYW4gbWVuIChiPS0wLjcxMiwgc2U9MC4zMzcpLiBTaW5jZSBvbmx5IHVuZGlyZWN0ZWQgdGllcyBhcmUgZXhhbWluZWQsIHRoaXMgc2lnbmlmaWNhbnQgZWZmZWN0IGFsc28gaW1wbGllcyB0aGF0IG90aGVyIHBlb3BsZSB3aXRoaW4gdGhlIGRlcGFydG1lbnQgcHVibGlzaCBsZXNzIHdpdGggd29tZW4gdGhhbiB3aXRoIG1lbi4gVGhpcyByZXN1bHQgc3VnZ2VzdHMgdGhhdCBnZW5kZXIgaG9tb3BoaWx5IHBsYXlzIGEgcm9sZSB3aXRoaW4gdGhlIGRldmVsb3BtZW50IG9mIHRoZSBzb2Npb2xvZ3kgZGVwYXJ0bWVudCdzIHB1YmxpY2F0aW9uIG5ldHdvcmsuIFdoZXRoZXIgdGhpcyBpcyBzdGlsbCB0aGUgY2FzZSB3aGVuIHN0cnVjdHVyYWwgbmV0d29yayBlZmZlY3RzIGFuZCBjb3ZhcmlhdGUgZWZmZWN0cyBhcmUgYWxzbyBpbmNsdWRlZCBpbiB0aGUgbW9kZWwgd2lsbCBiZSB0ZXN0ZWQgaW4gbW9kZWwgNC4NCg0KQWx0aG91Z2ggdGhlIGNvdmFyaWF0ZS1lZ28gw5cgYWx0ZXIgZ2VuZGVyIGVmZmVjdCBpcyBub3Qgc2lnbmlmaWNhbnQsIGl0IGlzIGltcG9ydGFudCB0byBub3RlIHRoYXQgd29tZW4gd2l0aGluIHRoZSBzb2Npb2xvZ3kgZGVwYXJ0bWVudCBzZWVtIHRvIGNvb3BlcmF0ZSBldmVuIGxlc3Mgd2l0aCBvdGhlciB3b21lbiB3aXRoaW4gdGhlIGRlcGFydG1lbnQuIFRoZSBsYWNrIG9mIHN0YXRpc3RpY2FsIHNpZ25pZmljYW5jZSBjYW4gYmUgZXhwbGFpbmVkIGJ5IGEgbGFjayBvZiBwb3dlci4gQmVjYXVzZSBvZiB0aGUgc21hbGwgbmV0d29yayBzaXplLCBpdCBpcyBtb3JlIGRpZmZpY3VsdCBmb3IgdGhlIGNvdmFyaWF0ZS1lZ28gw5cgYWx0ZXIgZ2VuZGVyIGVmZmVjdCB0byBhY2hpZXZlIHNpZ25pZmljYW50IHJlc3VsdHMuDQoNCjxicj4NCg0KIyMgTW9kZWwgMg0KDQojIyMgU3RlcCAxOiBjcmVhdGUgZWZmZWN0cyBzdHJ1Y3R1cmUNCmBgYHtyfQ0KbXllZmYgPC0gZ2V0RWZmZWN0cyhteWRhdGEpDQojZWZmZWN0c0RvY3VtZW50YXRpb24obXllZmYpDQpgYGANCg0KPGJyPg0KDQojIyMgU3RlcCAyOiBzcGVjaWZ5IG1vZGVsIDIgKHN0cnVjdHVyYWwgZWZmZWN0cykNCmBgYHtyfQ0KIyBTdHJ1Y3R1cmFsIGVmZmVjdHMNCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBkZW5zaXR5KQ0KbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIHRyYW5zVGllcykNCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBkZWdQbHVzKSAgDQojbXllZmYgDQpgYGANCg0KVGhlIHN0cnVjdHVyYWwgZWZmZWN0cyBpbmNsdWRlZCBpbiBtb2RlbHMgMiwgMyBhbmQgNCB3ZXJlIHNlbGVjdGVkIGJhc2VkIG9uIHRoZSBSIFNpZW5hIG1hbnVhbCBhbmQgYSB0ZXN0IG9mIG1vZGVsIGZpdC4gQmFzZWQgb24gdGhlIFIgU2llbmEgbWFudWFsLCB0aGUgZm9sbG93aW5nIHN0cnVjdHVyYWwgZWZmZWN0cyB3ZXJlIHNlbGVjdGVkOiBkZW5zaXR5LCB0cmFuc1RyaXAsIHRyYW5zVGllcywgZ3dlc3AsIGluUG9wLCBvdXRBY3QsIGluQWN0L291dFBvcCwgaXNvbGF0ZU5ldCBhbmQgZGVnUGx1cy4NCg0KVGhlIHN0cnVjdHVyYWwgZWZmZWN0IHRyYW5zVHJpcCBjYXVzZWQgYW4gZXJyb3IgaW4gdGhlIGVzdGltYXRpb24gb2YgbW9kZWwgMiwgYXMgaXQgYXBwZWFyZWQgdG8gYmUgYXBwbGljYWJsZSBvbmx5IHRvIGRpcmVjdGVkIG5ldHdvcmtzLiBUaGUgc3RydWN0dXJhbCBlZmZlY3QgaXNvbGF0ZU5ldCBzZWVtZWQgdG8gY2F1c2UgY29udmVyZ2VuY2UgcHJvYmxlbXMgd2hlbiBlc3RpbWF0aW5nIG1vZGVsIDIuIEd3ZXNwLCBpblBvcCwgb3V0QWN0IGFuZCBpbkFjdC9vdXRQb3Agd2VyZSBub3QgaW5jbHVkZWQgYmVjYXVzZSB0aGV5IGNhdXNlZCBhIGxvd2VyIG1vZGVsIGZpdC4gVGhlIGRlZ1BsdXMgZWZmZWN0IGZvciB1bmRpcmVjdGVkIG5ldHdvcmtzIHdhcyBmb3VuZCB0byBmaXQgdGhlIG1vZGVscyBiZXR0ZXIuIFRoZSBzdHJ1Y3R1cmFsIGVmZmVjdHMgZmluYWxseSBzZWxlY3RlZCB3ZXJlIGRlbnNpdHksIHRyYW5zVGllcyBhbmQgZGVnUGx1cy4NCg0KPGJyPg0KDQojIyMgU3RlcCAzOiBlc3RpbWF0ZQ0KYGBge3J9DQpteUFsZ29yaXRobSA8LSBzaWVuYUFsZ29yaXRobUNyZWF0ZShwcm9qbmFtZSA9ICJzb2NfaW5pdCIsICkNCmBgYA0KDQpgYGB7ciwgZXZhbD1GQUxTRX0NCihhbnMyX2EgPC0gc2llbmEwNyhteUFsZ29yaXRobSwgbmJyTm9kZXM9NywgZGF0YSA9IG15ZGF0YSwgZWZmZWN0cyA9IG15ZWZmKSkNCihhbnMyX2IgPC0gc2llbmEwNyhteUFsZ29yaXRobSwgZGF0YSA9IG15ZGF0YSwgZWZmZWN0cyA9IG15ZWZmLCBwcmV2QW5zID0gYW5zMl9hKSkNCg0Kc2F2ZShhbnMyX2IsIGZpbGU9IkM6XFxVc2Vyc1xcRGFwaG5cXERvY3VtZW50ZW5cXGxhYmpvdXJuYWxcXFJlc3VsdHNcXHNvY19tb2RlbDIiKQ0KYGBgDQoNCmBgYHtyLCBlY2hvPUZBTFNFfQ0KbG9hZCgiQzpcXFVzZXJzXFxEYXBoblxcRG9jdW1lbnRlblxcbGFiam91cm5hbFxcUmVzdWx0c1xcc29jX21vZGVsMiIpDQpzdW1tYXJ5KGFuczJfYikNCmBgYA0KDQo8YnI+DQoNCiMjIyBJbnRlcnByZXRhdGlvbiByZXN1bHRzDQoNCk1vZGVsIDIgc2hvd3MgdGhhdCB0cmFuc2l0aXZpdHkgcGxheXMgYSByb2xlIGluIHRoZSBkZXZlbG9wbWVudCBvZiB0aGUgcHVibGljYXRpb24gbmV0d29yayBvZiB0aGUgIHNvY2lvbG9neSBkZXBhcnRtZW50IChiPTQuMTQwLCBzZT0xLjA5Myk6IGFuIGVnbyBpcyBsaWtlbHkgdG8gZm9ybSBhIGJvbmQgd2l0aCBhbiBhbHRlciwgd2hpY2ggaGFzIGEgYm9uZCB3aXRoIGFuIGFsdGVyIHdpdGggd2hpY2ggZWdvIGFscmVhZHkgaGFzIGEgYm9uZC4gV2l0aCByZWdhcmQgdG8gdGhlIGRldmVsb3BtZW50IG9mIHRoZSBzb2Npb2xvZ3kgZGVwYXJ0bWVudOKAmXMgcHVibGljYXRpb24gbmV0d29yaywgdGhpcyBtZWFucyB0aGF0IGluZGl2aWR1YWxzIGxpa2UgdG8gcHVibGlzaCB3aXRoIG90aGVyIGluZGl2aWR1YWxzIHdobyBoYXZlIHB1Ymxpc2hlZCB3aXRoIGEgY29tbW9uIHBlcnNvbiB3aXRoaW4gdGhlIHNvY2lvbG9neSBkZXBhcnRtZW50LiBNb2RlbCAyIHRodXMgc3VnZ2VzdHMgdGhhdCB0aGUgc3RydWN0dXJhbCBuZXR3b3JrIGVmZmVjdCB0cmFuc2l0aXZpdHkgcGxheXMgYSByb2xlIHdpdGhpbiB0aGUgZGV2ZWxvcG1lbnQgb2YgdGhlIHNvY2lvbG9neSBkZXBhcnRtZW50J3MgcHVibGljYXRpb24gbmV0d29yay4NCg0KPGJyPg0KDQojIyBNb2RlbCAzDQoNCiMjIyBTdGVwIDE6IGNyZWF0ZSBlZmZlY3RzIHN0cnVjdHVyZQ0KYGBge3J9DQpteWVmZiA8LSBnZXRFZmZlY3RzKG15ZGF0YSkNCiNlZmZlY3RzRG9jdW1lbnRhdGlvbihteWVmZikNCmBgYA0KDQo8YnI+DQoNCiMjIyBTdGVwIDI6IHNwZWNpZnkgbW9kZWwgMyAoc3RydWN0dXJhbCBlZmZlY3RzIGFuZCBnZW5kZXIgZWZmZWN0cykNCmBgYHtyfQ0KIyBTdHJ1Y3R1cmFsIGVmZmVjdHMNCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBkZW5zaXR5KQ0KbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIHRyYW5zVGllcykNCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBkZWdQbHVzKQ0KYGBgDQoNCmBgYHtyfQ0KIyBHZW5kZXIgZWZmZWN0cw0KbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIGVnb1BsdXNBbHRYLCBpbnRlcmFjdGlvbjEgPSAiZ2VuZGVyIikNCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBlZ29YYWx0WCwgaW50ZXJhY3Rpb24xID0gImdlbmRlciIpDQojbXllZmYNCmBgYA0KDQo8YnI+DQoNCiMjIyBTdGVwIDM6IGVzdGltYXRlDQpgYGB7cn0NCm15QWxnb3JpdGhtIDwtIHNpZW5hQWxnb3JpdGhtQ3JlYXRlKHByb2puYW1lID0gInNvY19pbml0IiwgKQ0KYGBgDQoNCmBgYHtyLCBldmFsPUZBTFNFfQ0KKGFuczNfYSA8LSBzaWVuYTA3KG15QWxnb3JpdGhtLCBuYnJOb2Rlcz03LCBkYXRhID0gbXlkYXRhLCBlZmZlY3RzID0gbXllZmYpKQ0KKGFuczNfYiA8LSBzaWVuYTA3KG15QWxnb3JpdGhtLCBkYXRhID0gbXlkYXRhLCBlZmZlY3RzID0gbXllZmYsIHByZXZBbnMgPSBhbnMzX2EpKQ0KDQpzYXZlKGFuczNfYSwgZmlsZT0iQzpcXFVzZXJzXFxEYXBoblxcRG9jdW1lbnRlblxcbGFiam91cm5hbFxcUmVzdWx0c1xcc29jX21vZGVsMyIpDQpgYGANCg0KYGBge3IsIGVjaG89RkFMU0V9DQpsb2FkKCJDOlxcVXNlcnNcXERhcGhuXFxEb2N1bWVudGVuXFxsYWJqb3VybmFsXFxSZXN1bHRzXFxzb2NfbW9kZWwzIikNCnN1bW1hcnkoYW5zM19hKQ0KYGBgDQoNCjxicj4NCg0KIyMjIEludGVyZXByZXRhdGlvbiByZXN1bHRzDQoNCk1vZGVsIDMgc2hvd3MgdGhhdCB0aGUgdHJhbnNpdGl2aXR5IGVmZmVjdCBpcyBzdGlsbCBzaWduaWZpY2FudGx5IGFzc29jaWF0ZWQgd2l0aCB0aGUgZGV2ZWxvcG1lbnQgb2YgdGhlIHNvY2lvbG9neSBkZXBhcnRtZW50J3MgcHVibGljYXRpb24gbmV0d29yaywgZXZlbiB3aGVuIGdlbmRlciBlZmZlY3RzIGFyZSB0YWtlbiBpbnRvIGFjY291bnQgKGI9NC4wNjkzLCBzZT0xLjA2MTgpLiBJbmRpdmlkdWFscyB3aXRoaW4gdGhlIHNvY2lvbG9neSBkZXBhcnRtZW50IHRodXMgdGVuZCB0byBwdWJsaXNoIGFuIGFydGljbGUgd2l0aCBpbmRpdmlkdWFscyB3aG8gaGF2ZSBhbHJlYWR5IHB1Ymxpc2hlZCBhbiBhcnRpY2xlIHdpdGggdGhlIHNhbWUgY28tYXV0aG9yLg0KDQpUaGUgdW5kaXJlY3RlZCBjb3ZhcmlhdGUgZ2VuZGVyIGVmZmVjdCB0aGF0IHdhcyBzaWduaWZpY2FudCBpbiBtb2RlbCAxIGlzIG5vdyBubyBsb25nZXIgc2lnbmlmaWNhbnQsIGJ1dCBzdGlsbCBzZWVtcyB0byBwbGF5IGFuIGltcG9ydGFudCByb2xlLiBCYXNlZCBvbiBtb2RlbCAzLCBpdCBjYW4gYmUgcmVhc29uZWQgdGhhdCB0aGUgc3RydWN0dXJhbCBuZXR3b3JrIGVmZmVjdHMgZW5zdXJlIHRoYXQgdGhlIHVuZGlyZWN0ZWQgY292YXJpYXRlIGdlbmRlciBlZmZlY3Qgbm8gbG9uZ2VyIHNpZ25pZmljYW50bHkgYWZmZWN0cyB0aGUgc29jaW9sb2d5IGRlcGFydG1lbnQncyBwdWJsaWNhdGlvbiBuZXR3b3JrLiBIb3dldmVyLCB0aGUgZ2VuZGVyIGVmZmVjdCBpcyBzdGlsbCBjbG9zZSB0byBiZWluZyBzaWduaWZpY2FudC4NCg0KPGJyPg0KDQojIyBNb2RlbCA0DQoNCiMjIyBTdGVwIDE6IGNyZWF0ZSBlZmZlY3RzIHN0cnVjdHVyZQ0KYGBge3J9DQpteWVmZiA8LSBnZXRFZmZlY3RzKG15ZGF0YSkNCiNlZmZlY3RzRG9jdW1lbnRhdGlvbihteWVmZikNCmBgYA0KDQo8YnI+DQoNCiMjIyBTdGVwIDI6IHNwZWNpZnkgbW9kZWwgNCAoc3RydWN0dXJhbCBlZmZlY3RzLCBnZW5kZXIgZWZmZWN0cyBhbmQgY292YXJpYXRlIGVmZmVjdHMpDQpgYGB7cn0NCiMgU3RydWN0dXJhbCBlZmZlY3RzDQpteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgZGVuc2l0eSkNCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCB0cmFuc1RpZXMpDQpteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgZGVnUGx1cykNCmBgYA0KDQpgYGB7cn0NCiMgR2VuZGVyIGVmZmVjdHMgDQpteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgZWdvUGx1c0FsdFgsIGludGVyYWN0aW9uMSA9ICJnZW5kZXIiKQ0KbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIGVnb1hhbHRYLCBpbnRlcmFjdGlvbjEgPSAiZ2VuZGVyIikNCiNteWVmZg0KYGBgDQoNCmBgYHtyfQ0KIyBDb3ZhcmlhdGUgZWZmZWN0cw0KI215ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBzYW1lWCwgaW50ZXJhY3Rpb24xID0gImR1dGNoIikNCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBlZ29YLCBpbnRlcmFjdGlvbjEgPSAicHViX2ZpcnN0IikNCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBlZ29YLCBpbnRlcmFjdGlvbjEgPSAiZHV0Y2giKQ0KI215ZWZmDQpgYGANClJlZ2FyZGluZyB0aGUgY292YXJpYXRlIGVmZmVjdHMsIG9ubHkgaGF2aW5nIGEgRHV0Y2ggYmFja2dyb3VuZCBhbmQgYWdlIHdlcmUgaW5jbHVkZWQgYXMgZWdvLWxldmVsIHZhcmlhYmxlcy4gDQogDQoNCmBgYHtyLCBlY2hvPUZBTFNFfQ0KIyBQb3NzaWJsZSBnZW5kZXIgYW5kIGNvdmFyaWF0ZSBlZmZlY3RzDQojbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIHNhbWVYLCBpbnRlcmFjdGlvbjEgPSAiZ2VuZGVyIikNCiNteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgc2FtZVgsIGludGVyYWN0aW9uMSA9ICJkdXRjaCIpDQojbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIGVnb1gsIGludGVyYWN0aW9uMSA9ICJwdWJfZmlyc3QiKQ0KI215ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBlZ29YLCBpbnRlcmFjdGlvbjEgPSAiZ2VuZGVyIikNCiNteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgYWx0WCwgaW50ZXJhY3Rpb24xID0gImdlbmRlciIpDQojbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIGVnb1BsdXNBbHRYLCBpbnRlcmFjdGlvbjEgPSAiZ2VuZGVyIikNCiNteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgZWdvWGFsdFgsIGludGVyYWN0aW9uMSA9ICJnZW5kZXIiKQ0KI215ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBlZ29YLCBpbnRlcmFjdGlvbjEgPSAiZHV0Y2giKQ0KI215ZWZmDQpgYGANCg0KPGJyPg0KDQojIyMgU3RlcCAzOiBlc3RpbWF0ZQ0KYGBge3J9DQpteUFsZ29yaXRobSA8LSBzaWVuYUFsZ29yaXRobUNyZWF0ZShwcm9qbmFtZSA9ICJzb2NfaW5pdCIsICkNCmBgYA0KDQpgYGB7ciwgZXZhbD1GQUxTRX0NCihhbnM0X2EgPC0gc2llbmEwNyhteUFsZ29yaXRobSwgbmJyTm9kZXM9NywgZGF0YSA9IG15ZGF0YSwgZWZmZWN0cyA9IG15ZWZmKSkNCihhbnM0X2IgPC0gc2llbmEwNyhteUFsZ29yaXRobSwgZGF0YSA9IG15ZGF0YSwgZWZmZWN0cyA9IG15ZWZmLCBwcmV2QW5zID0gYW5zNF9hKSkNCg0Kc2F2ZShhbnM0X2IsIGZpbGU9IkM6XFxVc2Vyc1xcRGFwaG5cXERvY3VtZW50ZW5cXGxhYmpvdXJuYWxcXFJlc3VsdHNcXHNvY19tb2RlbDQiKQ0KYGBgDQoNCmBgYHtyLCBlY2hvPUZBTFNFfQ0KbG9hZCgiQzpcXFVzZXJzXFxEYXBoblxcRG9jdW1lbnRlblxcbGFiam91cm5hbFxcUmVzdWx0c1xcc29jX21vZGVsNCIpDQpzdW1tYXJ5KGFuczRfYikNCmBgYA0KDQo8YnI+DQoNCiMjIyBJbnRlcnByZXRhdGlvbiByZXN1bHRzDQoNCk1vZGVsIDQsIHRoZSBmaW5hbCBtb2RlbCwgc2hvd3MgdGhhdCBvbmx5IHRyYW5zaXRpdml0eSBhcHBlYXJzIHRvIGluZmx1ZW5jZSB0aGUgZGV2ZWxvcG1lbnQgb2YgdGhlIHNvY2lvbG9neSBkZXBhcnRtZW50J3MgcHVibGljYXRpb24gbmV0d29yayAoYj00LjExOCwgc2U9MS4wMzEpLiBUaGUgc2lnbmlmaWNhbmNlIG9mIHRoZSB0cmFuc2l0aXZpdHkgZWZmZWN0IHNob3dzIHRoYXQgaW5kaXZpZHVhbHMgaW4gdGhlIHNvY2lvbG9neSBkZXBhcnRtZW50IHRlbmQgdG8gcHVibGlzaCB3aXRoIGluZGl2aWR1YWxzIHdpdGggd2hvbSB0aGV5IGhhdmUgYSBjby1hdXRob3JzaGlwIGluIGNvbW1vbiB3aXRoIGFub3RoZXIgbWVtYmVyIG9mIHRoZSBzb2Npb2xvZ3kgZGVwYXJ0bWVudC4NCg0KUmVnYXJkaW5nIHRoZSB1bmRpcmVjdGVkIGNvdmFyaWF0ZSBnZW5kZXIgZWZmZWN0LCB3ZSBzZWUgcm91Z2hseSB0aGUgc2FtZSByZXN1bHRzIGluIG1vZGVsIDQgYXMgaW4gbW9kZWwgMzogZGVzcGl0ZSB0aGUgZmFjdCB0aGF0IHRoZSBnZW5kZXIgZWZmZWN0IHRoYXQgd2FzIHNpZ25pZmljYW50IGluIG1vZGVsIDEgc3RpbGwgc2VlbXMgdG8gcGxheSBhbiBpbXBvcnRhbnQgcm9sZSBpbiBtb2RlbCA0LCBpdCBpcyBub3Qgc2lnbmlmaWNhbnQgaW4gbW9kZWwgNC4gSXQgY2FuIGJlIGNvbmNsdWRlZCBmcm9tIHRoaXMgdGhhdCB0aGUgc3RydWN0dXJhbCBuZXR3b3JrIGVmZmVjdCBleHBsYWlucyBhd2F5IHRoZSBnZW5kZXIgZWZmZWN0OiB1bmRlciB0aGUgaW5mbHVlbmNlIG9mIHRoZSB0cmFuc2l0aXZpdHkgZWZmZWN0LCB0aGUgdW5kaXJlY3RlZCBjb3ZhcmlhdGUgZ2VuZGVyIGVmZmVjdCBkb2VzIG5vdCBzZWVtIHRvIGV4ZXJ0IGEgc2lnbmlmaWNhbnQgaW5mbHVlbmNlIG9uIHRoZSBkZXZlbG9wbWVudCBvZiB0aGUgcHVibGljYXRpb24gbmV0d29yayBvZiB0aGUgc29jaW9sb2d5IGRlcGFydG1lbnQuIEluIG90aGVyIHdvcmRzLCBzdHJ1Y3R1cmFsIG5ldHdvcmsgZWZmZWN0cyBleHBsYWluIGF3YXkgdGhlIGFwcGxpY2F0aW9uIG9mIHRoZSBob21vcGhpbHkgcHJpbmNpcGxlIHRvIHRoZSBuZXR3b3JrcyBvZiBtZW4gYW5kIHdvbWVuIHdpdGhpbiB0aGUgc29jaW9sb2d5IGRlcGFydG1lbnQuIA0KDQpGdXJ0aGVybW9yZSwgYm90aCBoYXZpbmcgYSBEdXRjaCBvcmlnaW4sIGFuZCBhZ2UgZG8gbm90IGFwcGVhciB0byBiZSBzaWduaWZpY2FudGx5IHJlbGF0ZWQgdG8gdGhlIGRldmVsb3BtZW50IG9mIHRoZSBwdWJsaWNhdGlvbiBuZXR3b3JrIG9mIHRoZSBzb2Npb2xvZ3kgZGVwYXJ0bWVudC4gSG93ZXZlciwgaGF2aW5nIER1dGNoIG9yaWdpbiBkb2VzIGhhdmUgYSBuZWFyLXNpZ25pZmljYW50IGVmZmVjdCBpbiBtb2RlbCA0Lg0KDQo8YnI+DQoNCg0KIyBSU2llbmEgYW5hbHlzaXMgQ29tcHV0aW5nIHNjaWVuY2Ugc3RhZmYgUlUNCg0KPGJyPg0KDQojIyBQcmVwYXJhdGlvbnMNCmBgYHtyfQ0KIyBTdGFydGluZyB3aXRoIGEgY2xlYW4gd29ya3NwYWNlIA0Kcm0obGlzdD1scygpKQ0KYGBgDQoNCmBgYHtyfQ0KIyBSZXF1aXJpbmcgcGFja2FnZXMgDQpsaWJyYXJ5KGRhdGEudGFibGUpIA0KbGlicmFyeSh0aWR5dmVyc2UpIA0KcmVxdWlyZShzdHJpbmdpKQ0KcmVxdWlyZShSU2llbmEpDQpgYGANCg0KYGBge3J9DQojIExvYWRpbmcgZGF0YW9iamVjdHMNCmxvYWQoIkM6XFxVc2Vyc1xcRGFwaG5cXERvY3VtZW50ZW5cXGxhYmpvdXJuYWxcXGRhdGFcXGRlc2NyaXB0aXZlc1xcY29tcF9uZXRfYXJyYXkuUkRhdGEiKQ0KbG9hZCgiQzpcXFVzZXJzXFxEYXBoblxcRG9jdW1lbnRlblxccHVibmV0c1xcRGF0YVxcbmFtZXNfc3RhZmZfY2l0X3YyMDIyMTAwNi5SRGF0YSIpDQpsb2FkKCJDOlxcVXNlcnNcXERhcGhuXFxEb2N1bWVudGVuXFxsYWJqb3VybmFsXFxkYXRhXFxkZXNjcmlwdGl2ZXNcXGNvbXBfZGYuUkRhdGEiKQ0KYGBgDQoNCmBgYHtyfQ0KIyBNYWtpbmcgdGhlIG5ldHdvcmsgdW5kaXJlY3RlZA0KbmV0MSA8LSBuZXRfY29tcF9hcnJheVssLDFdDQpuZXQxIDwtIG5ldDEgKyB0KG5ldDEpDQpuZXQxW25ldDE9PTJdIDwtIDENCg0KbmV0MiA8LSBuZXRfY29tcF9hcnJheVssLDJdDQpuZXQyIDwtIG5ldDIgKyB0KG5ldDIpDQpuZXQyW25ldDI9PTJdIDwtIDENCg0KbmV0MyA8LSBuZXRfY29tcF9hcnJheVssLDNdDQpuZXQzIDwtIG5ldDMgKyB0KG5ldDMpDQpuZXQzW25ldDM9PTJdIDwtIDENCg0KDQpuZXRfY29tcF9hcnJheSA8LSBhcnJheShkYXRhID0gYyhuZXQxLCBuZXQyLCBuZXQzKSwgZGltPWMoZGltKG5ldDEpLDMpKQ0KYGBgDQoNCmBgYHtyfQ0KIyBTZWxlY3RpbmcgdGhlIGRlcGVuZGVudCB2YXJpYWJsZQ0KbmV0IDwtIHNpZW5hRGVwZW5kZW50KG5ldF9jb21wX2FycmF5KQ0KIz9zaWVuYURlcGVuZGVudA0KYGBgDQoNCjxicj4NCg0KIyMgRGVmaW5lIGRhdGENCmBgYHtyfQ0KIyBHZW5kZXINCmdlbmRlciA8LSBhcy5udW1lcmljKGNvbXBfZGYkZ2VuZGVyPT0iZmVtYWxlIikNCmdlbmRlciA8LSBjb0NvdmFyKGdlbmRlcikNCmBgYA0KDQpgYGB7cn0NCiMgRXRobmljaXR5DQpkdXRjaCA8LSBhcy5udW1lcmljKGNvbXBfZGYkZHV0Y2g9PSJkdXRjaCIpDQpkdXRjaCA8LSBjb0NvdmFyKGR1dGNoKQ0KYGBgDQoNCmBgYHtyfQ0KIyBOdW1iZXIgb2YgY29sbGFib3JhdG9ycw0KI25jb2xsYWJzIDwtIGNvbXBfZGYkbmNvbGxhYnMNCiNuY29sbGFicyA8LSBjb0NvdmFyKG5jb2xsYWJzKQ0KDQojY2xhc3MobmNvbGxhYnMpDQpgYGANCg0KYGBge3J9DQojIENyZWF0aW5nIGEgZGF0YXNldCB3aXRoIGluZm9ybWF0aW9uIG9uIHRoZSBnb29nbGUgc2Nob2xhciBpZCdzLCBwdWJsaWNhdGlvbnMgYW5kIGNpdGF0aW9ucyBvZiBlYWNoIGNvbXB1dGluZyBzY2llbmNlIHN0YWZmIG1lbWJlciANCg0KbmFtZXNfc3RhZmZfY2l0ICU+JQ0KICBmaWx0ZXIobmFtZXNfc3RhZmZfY2l0JGdzX2lkICVpbiUgY29tcF9kZiRnc19pZCkgLT4gY29tcF9zdGFmZl9jaXQNCg0KIyBSZW1vdmluZyBkdXBsaWNhdGVzDQpzZWwgPC0gKGR1cGxpY2F0ZWQuZGF0YS5mcmFtZShjb21wX3N0YWZmX2NpdCkpDQoNCmNvbXBfc3RhZmZfY2l0ICU+JSANCiAgZmlsdGVyKCFzZWwpIC0+IGNvbXBfc3RhZmZfY2l0DQpgYGANCg0KYGBge3J9DQojIFB1YmxpY2F0aW9ucyBwZXIgd2F2ZSBmb3IgZWFjaCBzdGFmZiBjb21wdXRpbmcgc2NpZW5jZSBzdGFmZiBtZW1iZXINCnB1YnN3MSA8LSBwdWJzdzIgPC0gcHVic3czIDwtIE5BDQoNCmZvciAoaSBpbiAxOmxlbmd0aChjb21wX2RmJGdzX2lkKSkgew0KICBwdWJzdzFbaV0gPC0gbnJvdyhjb21wX3N0YWZmX2NpdFsoY29tcF9zdGFmZl9jaXQkZ3NfaWQgPT0gY29tcF9kZiRnc19pZFtpXSkgJiBjb21wX3N0YWZmX2NpdCR5ZWFyPj0yMDE2ICYgY29tcF9zdGFmZl9jaXQkeWVhcjw9MjAxNyxdKQ0KICBwdWJzdzJbaV0gPC0gbnJvdyhjb21wX3N0YWZmX2NpdFsoY29tcF9zdGFmZl9jaXQkZ3NfaWQgPT0gY29tcF9kZiRnc19pZFtpXSkgJiBjb21wX3N0YWZmX2NpdCR5ZWFyPj0yMDE4ICYgY29tcF9zdGFmZl9jaXQkeWVhcjw9MjAxOSxdKQ0KICBwdWJzdzNbaV0gPC0gbnJvdyhjb21wX3N0YWZmX2NpdFsoY29tcF9zdGFmZl9jaXQkZ3NfaWQgPT0gY29tcF9kZiRnc19pZFtpXSkgJiBjb21wX3N0YWZmX2NpdCR5ZWFyPj0yMDIwICYgY29tcF9zdGFmZl9jaXQkeWVhcjw9MjAyMixdKQ0KfQ0KDQpwdWJfZGYgPC0gYXMubWF0cml4KGRhdGEuZnJhbWUocHVic3cxLCBwdWJzdzIsIHB1YnN3MykpDQoNCnB1YnMgPC0gdmFyQ292YXIocHViX2RmKQ0KYGBgDQoNCmBgYHtyLCB3YXJuaW5nPUZBTFNFLCBtZXNzYWdlPUZBTFNFfQ0KIyBZZWFyIG9mIGZpcnN0IHB1YmxpY2F0aW9uDQpjb21wX3N0YWZmX2NpdCAlPiUgZ3JvdXBfYnkoZ3NfaWQpICU+JQ0KICBtdXRhdGUocHViX2ZpcnN0ID0gbWluKHllYXIpKSAlPiUNCiAgc2VsZWN0KGMoImdzX2lkIiwgInB1Yl9maXJzdCIpKSAlPiUNCiAgZGlzdGluY3QoZ3NfaWQsIHB1Yl9maXJzdCwgLmtlZXBfYWxsID0gVFJVRSkgLT4gZmlyc3RwdWJfZGYNCg0KY29tcF9kZiA8LSBsZWZ0X2pvaW4oY29tcF9kZiwgZmlyc3RwdWJfZGYpDQoNCiNpZiBubyBwdWJsaWNhdGlvbiB5ZXQsIHNldCBwdWJfZmlyc3Qgb3AgMjAyMw0KY29tcF9kZiAlPiUgbXV0YXRlKHB1Yl9maXJzdCA9IHJlcGxhY2VfbmEocHViX2ZpcnN0LCAyMDIzKSkgLT4gY29tcF9kZg0KDQpwdWJfZmlyc3QgPC0gIGNvQ292YXIoY29tcF9kZiRwdWJfZmlyc3QpDQoNCm15ZGF0YSA8LSBzaWVuYURhdGFDcmVhdGUobmV0LCBnZW5kZXIsIGR1dGNoLCBwdWJzLCBwdWJfZmlyc3QpDQpgYGANCg0KPGJyPg0KDQojIyBTdGVwIDA6IGdldCBpbml0aWFsIGRlc2NyaXB0aW9uDQpgYGB7ciwgZXZhbD1GQUxTRX0NCnByaW50MDFSZXBvcnQobXlkYXRhLCBtb2RlbG5hbWUgPSAiQzpcXFVzZXJzXFxEYXBoblxcRG9jdW1lbnRlblxcbGFiam91cm5hbFxcUmVzdWx0c1xcY29tcF9pbml0IikNCmBgYA0KDQohW10oQzpcXFVzZXJzXFxEYXBoblxcRG9jdW1lbnRlblxcbGFiam91cm5hbFxcUmVzdWx0c1xcY29tcF9pbml0LnR4dCl7I2lkIC5jbGFzcyB3aWR0aD0xMDAlIGhlaWdodD0yMDBweH0NCg0KPGJyPg0KDQojIyMgSmFjY2FyZCBpbmRleA0KQXMgbWVudGlvbmVkIGVhcmxpZXIsIHRoZSBKYWNjYXJkIGluZGV4IGluZGljYXRlcyB0aGUgc3RhYmlsaXR5IG9mIGEgbmV0d29yayBvdmVyIHRpbWUuIEluIHRoaXMgc3R1ZHksIHdlIGNhbiBsb29rIGF0IHRoZSBKYWNjYXJkIGluZGV4IGZvciBwZXJpb2QgMSAod2F2ZSAxIHRvIHdhdmUgMikgYW5kIHBlcmlvZCAyICh3YXZlIDIgdG8gd2F2ZSAzKSwgZm9yIGJvdGggdGhlIHB1YmxpY2F0aW9uIG5ldHdvcmsgd2l0aGluIHRoZSBTb2Npb2xvZ3kgZGVwYXJ0bWVudCBhbmQgdGhlIENvbXB1dGluZyBzY2llbmNlIGRlcGFydG1lbnQuIFRoZSBwcmludCByZXBvcnQgc2hvd3MgdGhhdCBmb3IgdGhlIENvbXB1dGluZyBzY2llbmNlIG5ldHdvcmssIHRoZSBKYWNjYXJkIHZhbHVlIG9mIHBlcmlvZCAxIGlzIDAuMjg0IGFuZCB0aGUgSmFjY2FyZCB2YWx1ZSBvZiBwZXJpb2QgMiBpcyAwLjI0My4gVGhlc2UgdmFsdWVzIGFyZSBzbGlnaHRseSBsb3dlciB0aGFuIHRoZSBKYWNjYXJkIHZhbHVlcyBvZiB0aGUgU29jaW9sb2d5IG5ldHdvcmsuDQoNCkJhc2VkIG9uIHRoZSBndWlkZWxpbmVzIGZyb20gdGhlIFIgU2llbmEgbWFudWFsIChhIEphY2NhcmQgdmFsdWUgb2YgMC4zIG9yIGhpZ2hlciBpcyBnb29kLCBhIHZhbHVlIGJlbG93IDAuMiBpbmRpY2F0ZXMgdGhhdCB0aGVyZSBtYXkgYmUgZGlmZmljdWx0aWVzIGluIGVzdGltYXRpb24sIGFuZCBhIHZhbHVlIGJlbG93IDAuMSBpbmRpY2F0ZXMgdGhhdCB0aGUgbW9kZWwgY2Fubm90IGJlIGVzdGltYXRlZCksIHdlIGNhbiBjb25jbHVkZSB0aGF0IHRoZSBKYWNjYXJkIHZhbHVlcyBvZiB0aGUgQ29tcHV0aW5nIFNjaWVuY2UgbmV0d29ya3MgYXJlIG9rYXksIGJ1dCB0aGVyZSBtYXkgYmUgZGlmZmljdWx0aWVzIGluIGVzdGltYXRpbmcgdGhlIFIgU2llbmEgbW9kZWxzLiANCg0KPGJyPg0KDQojIyBNb2RlbCAxDQoNCiMjIyBTdGVwIDE6IGNyZWF0ZSBlZmZlY3RzIHN0cnVjdHVyZQ0KYGBge3J9DQpteWVmZiA8LSBnZXRFZmZlY3RzKG15ZGF0YSkNCiNlZmZlY3RzRG9jdW1lbnRhdGlvbihteWVmZikNCmBgYA0KDQo8YnI+DQoNCiMjIyBTdGVwIDI6IHNwZWNpZnkgbW9kZWwgMSAoT25seSBnZW5kZXIgZWZmZWN0cykNCmBgYHtyfQ0KIyBHZW5kZXIgZWZmZWN0cw0KbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIGVnb1BsdXNBbHRYLCBpbnRlcmFjdGlvbjEgPSAiZ2VuZGVyIikNCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBlZ29YYWx0WCwgaW50ZXJhY3Rpb24xID0gImdlbmRlciIpDQojbXllZmYNCmBgYA0KDQo8YnI+DQoNCiMjIyBTdGVwIDM6IGVzdGltYXRlDQpgYGB7cn0NCm15QWxnb3JpdGhtIDwtIHNpZW5hQWxnb3JpdGhtQ3JlYXRlKHByb2puYW1lID0gImNvbXBfaW5pdCIsICkNCmBgYA0KDQpgYGB7ciwgZXZhbD1GQUxTRX0NCihhbnMxX2EgPC0gc2llbmEwNyhteUFsZ29yaXRobSwgbmJyTm9kZXM9NywgZGF0YSA9IG15ZGF0YSwgZWZmZWN0cyA9IG15ZWZmKSkNCihhbnMxX2IgPC0gc2llbmEwNyhteUFsZ29yaXRobSwgZGF0YSA9IG15ZGF0YSwgZWZmZWN0cyA9IG15ZWZmLCBwcmV2QW5zID0gYW5zMV9hKSkNCg0Kc2F2ZShhbnMxX2IsIGZpbGU9IkM6XFxVc2Vyc1xcRGFwaG5cXERvY3VtZW50ZW5cXGxhYmpvdXJuYWxcXFJlc3VsdHNcXGNvbXBfbW9kZWwxIikNCmBgYA0KDQpgYGB7ciwgZWNobz1GQUxTRX0NCmxvYWQoIkM6XFxVc2Vyc1xcRGFwaG5cXERvY3VtZW50ZW5cXGxhYmpvdXJuYWxcXFJlc3VsdHNcXGNvbXBfbW9kZWwxIikNCnN1bW1hcnkoYW5zMV9iKQ0KYGBgDQoNCjxicj4NCg0KIyMjIEludGVycHJldGF0aW9uIHJlc3VsdHMNCg0KTW9kZWwgMSBzaG93cyB0aGF0IGJvdGggdGhlIHVuZGlyZWN0ZWQgY292YXJpYXRlIGdlbmRlciBlZmZlY3QgYW5kIHRoZSBjb3ZhcmlhdGUtZWdvIMOXIGFsdGVyIGdlbmRlciBlZmZlY3QgZG8gbm90IHNpZ25pZmljYW50bHkgYWZmZWN0IHRoZSBkZXZlbG9wbWVudCBvZiB0aGUgcHVibGljYXRpb24gbmV0d29yayBvZiB0aGUgY29tcHV0aW5nIHNjaWVuY2UgZGVwYXJ0bWVudC4gDQoNCjxicj4NCg0KIyMgTW9kZWwgMg0KDQojIyMgU3RlcCAxOiBjcmVhdGUgZWZmZWN0cyBzdHJ1Y3R1cmUNCmBgYHtyfQ0KbXllZmYgPC0gZ2V0RWZmZWN0cyhteWRhdGEpDQojZWZmZWN0c0RvY3VtZW50YXRpb24obXllZmYpDQpgYGANCg0KPGJyPg0KDQojIyMgU3RlcCAyOiBzcGVjaWZ5IG1vZGVsIDIgKHN0cnVjdHVyYWwgZWZmZWN0cykNCmBgYHtyfQ0KIyBTdHJ1Y3R1cmFsIGVmZmVjdHMNCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBkZW5zaXR5KQ0KbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIHRyYW5zVGllcykNCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBkZWdQbHVzKQ0KYGBgDQoNCjxicj4NCg0KIyMjIFN0ZXAgMzogZXN0aW1hdGUNCmBgYHtyfQ0KbXlBbGdvcml0aG0gPC0gc2llbmFBbGdvcml0aG1DcmVhdGUocHJvam5hbWUgPSAiY29tcF9pbml0IiwgKQ0KYGBgDQoNCmBgYHtyLCBldmFsPUZBTFNFfQ0KKGFuczJfYSA8LSBzaWVuYTA3KG15QWxnb3JpdGhtLCBuYnJOb2Rlcz03LCBkYXRhID0gbXlkYXRhLCBlZmZlY3RzID0gbXllZmYpKQ0KKGFuczJfYiA8LSBzaWVuYTA3KG15QWxnb3JpdGhtLCBkYXRhID0gbXlkYXRhLCBlZmZlY3RzID0gbXllZmYsIHByZXZBbnMgPSBhbnMyX2EpKQ0KDQpzYXZlKGFuczJfYiwgZmlsZT0iQzpcXFVzZXJzXFxEYXBoblxcRG9jdW1lbnRlblxcbGFiam91cm5hbFxcUmVzdWx0c1xcY29tcF9tb2RlbDIiKQ0KYGBgDQoNCmBgYHtyLCBlY2hvPUZBTFNFfQ0KbG9hZCgiQzpcXFVzZXJzXFxEYXBoblxcRG9jdW1lbnRlblxcbGFiam91cm5hbFxcUmVzdWx0c1xcY29tcF9tb2RlbDIiKQ0Kc3VtbWFyeShhbnMyX2IpDQpgYGANCg0KPGJyPg0KDQojIyMgSW50ZXJwcmV0YXRpb24gcmVzdWx0cw0KDQpNb2RlbCAyIHNob3dzIHRoYXQgYm90aCB0aGUgdHJhbnNpdGl2aXR5IGVmZmVjdCAoYj0xLjcxNSwgc2U9MC4xODYpIGFuZCB0aGUgZGVncmVlIGFjdGl2aXR5IHBsdXMgcG9wdWxhcml0eSBlZmZlY3QgKGI9MC4wNTYsIHNlPTAuMDEzKSBhcmUgc2lnbmlmaWNhbnRseSByZWxhdGVkIHRvIHRoZSBkZXZlbG9wbWVudCBvZiB0aGUgcHVibGljYXRpb24gbmV0d29yayBvZiB0aGUgY29tcHV0aW5nIHNjaWVuY2UgZGVwYXJ0bWVudC4gVGhlIHRyYW5zaXRpdml0eSBlZmZlY3QgZW1ib2RpZXMgYSBzaXR1YXRpb24gaW4gd2hpY2ggYW4gZWdvIGVudGVycyBpbnRvIGEgdGllIHdpdGggYW4gYWx0ZXIsIHdpdGggd2hvbSBpdCBoYXMgYSBqb2ludCB0aWUgd2l0aCBhbm90aGVyIGFsdGVyLiBJbiB0ZXJtcyBvZiB0aGUgZGV2ZWxvcG1lbnQgb2YgdGhlIHB1YmxpY2F0aW9uIG5ldHdvcmsgb2YgdGhlIGNvbXB1dGluZyBzY2llbmNlIGRlcGFydG1lbnQsIHRoaXMgbWVhbnMgdGhhdCBpbmRpdmlkdWFscyBhcmUgbW9yZSBsaWtlbHkgdG8gcHVibGlzaCB3aXRoIGluZGl2aWR1YWxzIHdobyBoYXZlIHB1Ymxpc2hlZCB3aXRoIHRoZSBzYW1lIHBlcnNvbiB3aXRoaW4gdGhlIGNvbXB1dGluZyBzY2llbmNlIGRlcGFydG1lbnQuIFRoZSBkZWdyZWUgYWN0aXZpdHkgcGx1cyBwb3B1bGFyaXR5IGVmZmVjdCBpbXBsaWVzIHRoYXQgZWdvcyB3aXRoIG1hbnkgdGllcyBhcmUgbW9yZSBsaWtlbHkgdG8gcmVjZWl2ZSBhIHRpZSBmcm9tIGFuIGFsdGVyIHRoYW4gZWdvcyB3aXRoIGZld2VyIHRpZXMuIE1vcmVvdmVyLCBiZWNhdXNlIHdlIGFyZSBpbnZlc3RpZ2F0aW5nIGFuIHVuZGlyZWN0ZWQgbmV0d29yaywgdGhpcyBlZmZlY3QgYWxzbyBtZWFucyB0aGF0IGFsdGVycyBhcmUgbW9yZSBsaWtlbHkgdG8gZm9ybSBhIHRpZSB3aXRoIGFuIGVnbyB0aGF0IGFscmVhZHkgaGFzIG1hbnkgdGllcyB0aGFuIHdpdGggYW4gZWdvIHRoYXQgaGFzIGZldyB0aWVzLiBXaXRoIHJlZ2FyZCB0byB0aGUgY29tcHV0aW5nIHNjaWVuY2UgZGVwYXJ0bWVudCwgdGhpcyBpbXBsaWVzIHRoYXQgdGhlIHB1YmxpY2F0aW9uIG5ldHdvcmsgb2YgaW5kaXZpZHVhbHMgd2hvIGhhdmUgcHVibGlzaGVkIGEgbG90IHdpdGggb3RoZXIgcGVvcGxlIHdpdGhpbiB0aGUgY29tcHV0aW5nIHNjaWVuY2UgZGVwYXJ0bWVudCB3aWxsIHJhcGlkbHkgaW5jcmVhc2UgaW4gc2l6ZS4gSW4gY29udHJhc3QsIHRoZSBwdWJsaWNhdGlvbiBuZXR3b3JrcyBvZiBpbmRpdmlkdWFscyB3aG8gaGF2ZSBwdWJsaXNoZWQgd2l0aCB2ZXJ5IGZldyBwZW9wbGUgd2l0aGluIHRoZSBjb21wdXRpbmcgc2NpZW5jZSBkZXBhcnRtZW50IGFyZSBsZXNzIGxpa2VseSB0byBncm93IGluIHNpemUuIE1vZGVsIDIgdGh1cyBzaG93cyB0aGF0IHN0cnVjdHVyYWwgbmV0d29yayBlZmZlY3RzIHBsYXkgYSBtYWpvciByb2xlIGluIHRoZSBkZXZlbG9wbWVudCBvZiB0aGUgcHVibGljYXRpb24gbmV0d29yayB3aXRoaW4gdGhlIGNvbXB1dGluZyBzY2llbmNlIGRlcGFydG1lbnQuDQoNCjxicj4NCg0KIyMgTW9kZWwgMw0KDQojIyMgU3RlcCAxOiBjcmVhdGUgZWZmZWN0cyBzdHJ1Y3R1cmUNCmBgYHtyfQ0KbXllZmYgPC0gZ2V0RWZmZWN0cyhteWRhdGEpDQojZWZmZWN0c0RvY3VtZW50YXRpb24obXllZmYpDQpgYGANCg0KPGJyPg0KDQojIyMgU3RlcCAyOiBzcGVjaWZ5IG1vZGVsIDMgKHN0cnVjdHVyYWwgZWZmZWN0cyBhbmQgZ2VuZGVyIGVmZmVjdHMpDQpgYGB7cn0NCiMgU3RydWN0dXJhbCBlZmZlY3RzDQpteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgZGVuc2l0eSkNCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCB0cmFuc1RpZXMpDQpteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgZGVnUGx1cykNCmBgYA0KDQpgYGB7cn0NCiMgR2VuZGVyIGVmZmVjdHMNCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBlZ29QbHVzQWx0WCwgaW50ZXJhY3Rpb24xID0gImdlbmRlciIpDQpteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgZWdvWGFsdFgsIGludGVyYWN0aW9uMSA9ICJnZW5kZXIiKQ0KI215ZWZmDQpgYGANCg0KPGJyPg0KDQojIyMgU3RlcCAzOiBlc3RpbWF0ZQ0KYGBge3J9DQpteUFsZ29yaXRobSA8LSBzaWVuYUFsZ29yaXRobUNyZWF0ZShwcm9qbmFtZSA9ICJjb21wX2luaXQiLCApDQpgYGANCg0KYGBge3IsIGV2YWw9RkFMU0V9DQooYW5zM19hIDwtIHNpZW5hMDcobXlBbGdvcml0aG0sIG5ick5vZGVzPTcsIGRhdGEgPSBteWRhdGEsIGVmZmVjdHMgPSBteWVmZikpDQooYW5zM19iIDwtIHNpZW5hMDcobXlBbGdvcml0aG0sIGRhdGEgPSBteWRhdGEsIGVmZmVjdHMgPSBteWVmZiwgcHJldkFucyA9IGFuczNfYSkpDQoNCnNhdmUoYW5zM19iLCBmaWxlPSJDOlxcVXNlcnNcXERhcGhuXFxEb2N1bWVudGVuXFxsYWJqb3VybmFsXFxSZXN1bHRzXFxjb21wX21vZGVsMyIpDQpgYGANCg0KYGBge3IsIGVjaG89RkFMU0V9DQpsb2FkKCJDOlxcVXNlcnNcXERhcGhuXFxEb2N1bWVudGVuXFxsYWJqb3VybmFsXFxSZXN1bHRzXFxjb21wX21vZGVsMyIpDQpzdW1tYXJ5KGFuczNfYikNCmBgYA0KDQo8YnI+DQoNCiMjIyBJbnRlcnByZXRhdGlvbiByZXN1bHRzDQoNClRoZSByZXN1bHRzIGZyb20gbW9kZWwgMyBzaG93IHRoYXQgb25seSBzdHJ1Y3R1cmFsIGVmZmVjdHMgc2lnbmlmaWNhbnRseSBpbmZsdWVuY2UgdGhlIGRldmVsb3BtZW50IG9mIHRoZSBwdWJsaWNhdGlvbiBuZXR3b3JrIG9mIHRoZSBjb21wdXRpbmcgc2NpZW5jZSBkZXBhcnRtZW50LiBGaXJzdCwgdGhpcyBtZWFucyB0aGF0IGluZGl2aWR1YWxzIHByZWZlciB0byBwdWJsaXNoIHdpdGggb3RoZXJzIHdobyBzaGFyZSB0aGUgc2FtZSBjb2F1dGhvcnNoaXAgd2l0aCBhbm90aGVyIHBlcnNvbiB3aXRoaW4gdGhlIGNvbXB1dGluZyBzY2llbmNlIGRlcGFydG1lbnQgKGI9MS43MjksIHNlPTAuMTk0KS4gTW9yZW92ZXIsIGJvdGggaW5kaXZpZHVhbHMgd2l0aCBtYW55IHB1YmxpY2F0aW9uIHRpZXMgd2l0aGluIHRoZSBjb21wdXRpbmcgc2NpZW5jZSBkZXBhcnRtZW50IGFyZSBtb3JlIGxpa2VseSB0byByZWNlaXZlIGEgdGllIHRoYW4gaW5kaXZpZHVhbHMgd2l0aCBmZXdlciB0aWVzIHdpdGhpbiB0aGUgY29tcHV0aW5nIHNjaWVuY2UgZGVwYXJ0bWVudCwgYW5kIGluZGl2aWR1YWxzIGFyZSBtb3JlIGxpa2VseSB0byBmb3JtIHRpZXMgd2l0aCBpbmRpdmlkdWFscyB3aXRoIG1hbnkgdGllcyB3aXRoaW4gdGhlIGNvbXB1dGluZyBzY2llbmNlIGRlcGFydG1lbnQgdGhhbiB3aXRoIGVnb3Mgd2l0aCBmZXdlciB0aWVzIHdpdGhpbiB0aGUgY29tcHV0aW5nIHNjaWVuY2UgZGVwYXJ0bWVudCAoYj0wLjA1NSwgc2U9MC4wMTQpLiANCkJvdGggZ2VuZGVyIGVmZmVjdHMgYXJlIGFnYWluIG5vdCBzaWduaWZpY2FudGx5IHJlbGF0ZWQgdG8gdGhlIGRldmVsb3BtZW50IG9mIHRoZSBwdWJsaWNhdGlvbiBuZXR3b3JrIG9mIHRoZSBjb21wdXRpbmcgc2NpZW5jZSBkZXBhcnRtZW50LiBDb21wYXJlZCB0byBNb2RlbCAxIGFuZCBNb2RlbCAyLCBNb2RlbCAzIHRodXMgZG9lcyBub3QgY2hhbmdlIG11Y2ggaW4gdGVybXMgb2YgdGhlIHNpZ25pZmljYW5jZSBvZiB0aGUgaW5jbHVkZWQgZWZmZWN0cy4NCg0KPGJyPg0KDQojIyBNb2RlbCA0DQoNCiMjIyBTdGVwIDE6IGNyZWF0ZSBlZmZlY3RzIHN0cnVjdHVyZQ0KYGBge3J9DQpteWVmZiA8LSBnZXRFZmZlY3RzKG15ZGF0YSkNCiNlZmZlY3RzRG9jdW1lbnRhdGlvbihteWVmZikNCmBgYA0KDQo8YnI+DQoNCiMjIyBTdGVwIDI6IHNwZWNpZnkgbW9kZWwgNCAoc3RydWN0dXJhbCBlZmZlY3RzLCBnZW5kZXIgZWZmZWN0cyBhbmQgY292YXJpYXRlIGVmZmVjdHMpDQpgYGB7cn0NCiMgU3RydWN0dXJhbCBlZmZlY3RzDQpteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgZGVuc2l0eSkNCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCB0cmFuc1RpZXMpDQpteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgZGVnUGx1cykNCmBgYA0KDQpgYGB7cn0NCiMgR2VuZGVyIGVmZmVjdHMNCm15ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBlZ29QbHVzQWx0WCwgaW50ZXJhY3Rpb24xID0gImdlbmRlciIpDQpteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgZWdvWGFsdFgsIGludGVyYWN0aW9uMSA9ICJnZW5kZXIiKQ0KI215ZWZmDQpgYGANCg0KYGBge3J9DQojIENvdmFyaWF0ZSBlZmZlY3RzIA0KIyBteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgc2FtZVgsIGludGVyYWN0aW9uMSA9ICJkdXRjaCIpDQpteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgZWdvWCwgaW50ZXJhY3Rpb24xID0gInB1Yl9maXJzdCIpDQpteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgZWdvWCwgaW50ZXJhY3Rpb24xID0gImR1dGNoIikNCiNteWVmZg0KYGBgDQoNCg0KYGBge3IsIGVjaG89RkFMU0V9DQojIFBvc3NpYmxlIGdlbmRlciBhbmQgY292YXJpYXRlIGVmZmVjdHMNCiNteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgc2FtZVgsIGludGVyYWN0aW9uMSA9ICJnZW5kZXIiKQ0KI215ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBzYW1lWCwgaW50ZXJhY3Rpb24xID0gImR1dGNoIikNCiNteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgZWdvWCwgaW50ZXJhY3Rpb24xID0gInB1Yl9maXJzdCIpDQojbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIGVnb1gsIGludGVyYWN0aW9uMSA9ICJnZW5kZXIiKQ0KI215ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBhbHRYLCBpbnRlcmFjdGlvbjEgPSAiZ2VuZGVyIikNCiNteWVmZiA8LSBpbmNsdWRlRWZmZWN0cyhteWVmZiwgZWdvUGx1c0FsdFgsIGludGVyYWN0aW9uMSA9ICJnZW5kZXIiKQ0KI215ZWZmIDwtIGluY2x1ZGVFZmZlY3RzKG15ZWZmLCBlZ29YYWx0WCwgaW50ZXJhY3Rpb24xID0gImdlbmRlciIpDQojbXllZmYgPC0gaW5jbHVkZUVmZmVjdHMobXllZmYsIGVnb1gsIGludGVyYWN0aW9uMSA9ICJkdXRjaCIpDQojbXllZmYNCmBgYA0KDQo8YnI+DQoNCiMjIyBTdGVwIDM6IGVzdGltYXRlDQpgYGB7cn0NCm15QWxnb3JpdGhtIDwtIHNpZW5hQWxnb3JpdGhtQ3JlYXRlKHByb2puYW1lID0gImNvbXBfaW5pdCIsICkNCmBgYA0KDQpgYGB7ciwgZXZhbD1GQUxTRX0NCihhbnM0X2EgPC0gc2llbmEwNyhteUFsZ29yaXRobSwgbmJyTm9kZXM9NywgZGF0YSA9IG15ZGF0YSwgZWZmZWN0cyA9IG15ZWZmKSkNCihhbnM0X2IgPC0gc2llbmEwNyhteUFsZ29yaXRobSwgZGF0YSA9IG15ZGF0YSwgZWZmZWN0cyA9IG15ZWZmLCBwcmV2QW5zID0gYW5zNF9hKSkNCihhbnM0X2MgPC0gc2llbmEwNyhteUFsZ29yaXRobSwgZGF0YSA9IG15ZGF0YSwgZWZmZWN0cyA9IG15ZWZmLCBwcmV2QW5zID0gYW5zNF9iKSkNCg0Kc2F2ZShhbnM0X2MsIGZpbGU9IkM6XFxVc2Vyc1xcRGFwaG5cXERvY3VtZW50ZW5cXGxhYmpvdXJuYWxcXFJlc3VsdHNcXGNvbXBfbW9kZWw0IikNCmBgYA0KDQpgYGB7ciwgZWNobz1GQUxTRX0NCmxvYWQoIkM6XFxVc2Vyc1xcRGFwaG5cXERvY3VtZW50ZW5cXGxhYmpvdXJuYWxcXFJlc3VsdHNcXGNvbXBfbW9kZWw0IikNCnN1bW1hcnkoYW5zNF9jKQ0KYGBgDQoNCjxicj4NCg0KIyMjIEludGVycHJldGF0aW9uIHJlc3VsdHMNCg0KTW9kZWwgNCwgdGhlIGZpbmFsIG1vZGVsLCBzaG93cyB0aGF0IHdoZW4gZ2VuZGVyIGVmZmVjdHMsIGFzIHdlbGwgYXMgc3RydWN0dXJhbCBuZXR3b3JrIGVmZmVjdHMgYW5kIGNvdmFyaWF0ZSBlZmZlY3RzIGFyZSBpbmNsdWRlZCwgb25seSB0aGUgc3RydWN0dXJhbCBuZXR3b3JrIGVmZmVjdHMgc2lnbmlmaWNhbnRseSBpbmZsdWVuY2UgdGhlIGRldmVsb3BtZW50IG9mIHRoZSBjb21wdXRpbmcgc2NpZW5jZSBkZXBhcnRtZW50J3MgcHVibGljYXRpb24gbmV0d29yay4gDQoNClRoZSBmYWN0IHRoYXQgdGhlIHRyYW5zaXRpdml0eSBlZmZlY3QgaXMgc2lnbmlmaWNhbnQgc2hvd3MgdGhhdCB3aXRoaW4gdGhlIGNvbXB1dGluZyBzY2llbmNlIGRlcGFydG1lbnQsIGluZGl2aWR1YWxzIHRlbmQgdG8gcHVibGlzaCB3aXRoIGluZGl2aWR1YWxzIHRoZXkgaGF2ZSBhIGNvLWF1dGhvcnNoaXAgaW4gY29tbW9uIHdpdGggYW5vdGhlciBtZW1iZXIgb2YgdGhlIGNvbXB1dGluZyBzY2llbmNlIGRlcGFydG1lbnQgKGI9MS43MTcsIHNlPTAuMjA1KS4gVGhlIHNpZ25pZmljYW5jZSBvZiB0aGUgZGVncmVlIGFjdGl2aXR5IHBsdXMgcG9wdWxhcml0eSBlZmZlY3Qgc2hvd3MgdGhhdCBpbmRpdmlkdWFscyB3aXRoIG1vcmUgcHVibGljYXRpb24gdGllcyB3aXRoaW4gdGhlIGNvbXB1dGluZyBzY2llbmNlIGRlcGFydG1lbnQgYXJlIG9mZmVyZWQgbW9yZSBwdWJsaWNhdGlvbiB0aWVzIHRoYW4gaW5kaXZpZHVhbHMgd2l0aCBmZXdlciB0aWVzIHdpdGhpbiB0aGUgY29tcHV0aW5nIHNjaWVuY2UgZGVwYXJ0bWVudCAoYj0wLjA1NSwgc2U9MC4wMTQpLiBJdCBhbHNvIGFwcGVhcnMgdGhhdCBpbmRpdmlkdWFscyBhcmUgbW9yZSBsaWtlbHkgdG8gZm9ybSBuZXcgcHVibGljYXRpb24gdGllcyB3aXRoIGluZGl2aWR1YWxzIHdpdGggbWFueSBwdWJsaWNhdGlvbiB0aWVzIHRoYW4gd2l0aCBpbmRpdmlkdWFscyB3aXRoIGZld2VyIHB1YmxpY2F0aW9uIHRpZXMuDQoNClRoZSB1bmRpcmVjdGVkIGNvdmFyaWF0ZSBnZW5kZXIgZWZmZWN0IGFuZCB0aGUgY292YXJpYXRlLWVnbyDDlyBhbHRlciBnZW5kZXIgZWZmZWN0IGRvIG5vdCBzaWduaWZpY2FudGx5IGFmZmVjdCB0aGUgZGV2ZWxvcG1lbnQgb2YgdGhlIHB1YmxpY2F0aW9uIG5ldHdvcmsgb2YgdGhlIGNvbXB1dGluZyBzY2llbmNlIGRlcGFydG1lbnQuIEZ1cnRoZXJtb3JlLCBNb2RlbCA0IHNob3dzIHRoYXQgaGF2aW5nIER1dGNoIGFuY2VzdHJ5IGFuZCBhZ2UgYWxzbyBkbyBub3QgcmVhY2ggdGhlIGFwcHJvcHJpYXRlIGxldmVsIG9mIHN0YXRpc3RpY2FsIHNpZ25pZmljYW5jZS4NCg0KPGJyPg0KDQojIFRlc3RpbmcgdGhlIGh5cG90aGVzZXMNCg0KV2hhdCBmb2xsb3dzIGlzIGEgYnJpZWYgcmV2aWV3IG9mIHRoZSByZXN1bHRzIGFuZCBzdWJzZXF1ZW50IGV2YWx1YXRpb24gb2YgdGhlIGh5cG90aGVzZXMuIA0KDQpIeXBvdGhlc2lzIDIgcmVhZHM6IFRoZSBnZW5kZXIgaG9tb3BoaWx5IHByaW5jaXBsZSBhcHBsaWVzIG1vcmUgc3Ryb25nbHkgdG8gQ29tcHV0aW5nIFNjaWVuY2UgdGhhbiB0byBTb2Npb2xvZ3kuDQoNCkJhc2VkIG9uIHRoZSByZXN1bHRzIGVtZXJnaW5nIGZyb20gdGhpcyBzdHVkeSwgaHlwb3RoZXNpcyAyIGNhbm5vdCBiZSBjb25maXJtZWQuIFJlZ2FyZGluZyB0aGUgc29jaW9sb2d5IGRhdGEsIG9uZSBzaWduaWZpY2FudCBnZW5kZXIgZWZmZWN0IGlzIHByZXNlbnQgaW4gbW9kZWwgMTogd29tZW4gd2l0aGluIHRoZSBzb2Npb2xvZ3kgZGVwYXJ0bWVudCBwdWJsaXNoIGxlc3Mgd2l0aCBvdGhlciBwZW9wbGUgd2l0aGluIHRoZSBkZXBhcnRtZW50IHRoYW4gbWVuIGFuZCBvdGhlciBwZW9wbGUgd2l0aGluIHRoZSBzb2Npb2xvZ3kgZGVwYXJ0bWVudCBwdWJsaXNoIGxlc3Mgd2l0aCB3b21lbiB0aGFuIHdpdGggbWVuLiBNb3Jlb3ZlciwgaXQgc2VlbXMgdG8gYmUgdGhlIGNhc2UgdGhhdCB3b21lbiB3aXRoaW4gdGhlIHNvY2lvbG9neSBkZXBhcnRtZW50IHNlZW0gdG8gY29vcGVyYXRlIGV2ZW4gbGVzcyB3aXRoIG90aGVyIHdvbWVuIHdpdGhpbiB0aGUgZGVwYXJ0bWVudC4gSG93ZXZlciwgdGhpcyBmaW5kaW5nIGNhbm5vdCBiZSBzdWJzdGFudGlhdGVkIHdpdGggYSBzaWduaWZpY2FudCBlZmZlY3QsIGR1ZSB0byBsYWNrIG9mIHBvd2VyLiBUaHVzLCBzZWxlY3Rpb24gb2YgcG90ZW50aWFsIGNvLWF1dGhvcnMgYmFzZWQgb24gZ2VuZGVyIHNlZW1zIHRvIHBsYXkgYSBzaWduaWZpY2FudCByb2xlIGluIHRoZSBkZXZlbG9wbWVudCBvZiB0aGUgc29jaW9sb2d5IGRlcGFydG1lbnQncyBwdWJsaWNhdGlvbiBuZXR3b3JrLg0KDQpBcyBmb3IgdGhlIGNvbXB1dGVyIHNjaWVuY2UgZGVwYXJ0bWVudCwgbW9kZWwgMSBzaG93cyB0aGF0IG5laXRoZXIgb2YgdGhlIHR3byBnZW5kZXIgZWZmZWN0cyBpcyBzaWduaWZpY2FudGx5IHJlbGF0ZWQgdG8gdGhlIGRldmVsb3BtZW50IG9mIHRoZSBjb21wdXRlciBzY2llbmNlIGRlcGFydG1lbnQncyBwdWJsaWNhdGlvbiBuZXR3b3JrLiANCg0KT24gdGhpcyBiYXNpcywgaXQgY2Fubm90IGJlIHNhaWQgdGhhdCB0aGUgZ2VuZGVyIGhvbW9waGlseSBwcmluY2lwbGUgaXMgYXBwbGllZCBtb3JlIHN0cm9uZ2x5IHdpdGhpbiB0aGUgY29tcHV0aW5nIHNjaWVuY2UgZGVwYXJ0bWVudCB0aGFuIHdpdGhpbiB0aGUgc29jaW9sb2d5IGRlcGFydG1lbnQ7IHRoZSBwcmluY2lwbGUgZW1lcmdlcyBvbmx5IHdpdGhpbiB0aGUgc29jaW9sb2d5IGRlcGFydG1lbnQgYW5kIGlzIGFic2VudCB3aXRoaW4gdGhlIGNvbXB1dGluZyBzY2llbmNlIGRlcGFydG1lbnQuIA0KDQo8YnI+DQoNCkh5cG90aGVzaXMgMyByZWFkczogV2hlbiBzdHJ1Y3R1cmFsIG5ldHdvcmsgZWZmZWN0cyBhcmUgdGFrZW4gaW50byBhY2NvdW50LCB0aGUgZ2VuZGVyIGhvbW9waGlseSBwcmluY2lwbGUgc3RpbGwgYXBwbGllcyBtb3JlIHN0cm9uZ2x5IHRvIHB1YmxpY2F0aW9ucyB3aXRoaW4gQ29tcHV0ZXIgU2NpZW5jZSB0aGFuIHRvIHB1YmxpY2F0aW9ucyB3aXRoaW4gU29jaW9sb2d5Lg0KDQpIeXBvdGhlc2lzIDMgY2Fubm90IGJlIGNvbmZpcm1lZCBiYXNlZCBvbiB0aGUgcmVzdWx0cyBmb3VuZCBmb3IgdGhlIHR3byBnZW5kZXIgZWZmZWN0cyB0ZXN0ZWQgaW4gdGhpcyBzdHVkeS4gUmVnYXJkaW5nIGJvdGggdGhlIHNvY2lvbG9neSBkYXRhIGFuZCB0aGUgY29tcHV0aW5nIHNjaWVuY2UgZGF0YSwgbm8gc2lnbmlmaWNhbnQgZ2VuZGVyIGVmZmVjdCBlbWVyZ2VzIGluIHRoZSBmaW5hbCBtb2RlbCwgbW9kZWwgNC4gVGh1cywgaXQgY2Fubm90IGJlIHNhaWQgdGhhdCB0aGUgdHdvIGdlbmRlciBlZmZlY3RzIHRlc3RlZCBwbGF5IGEgcm9sZSBpbiB0aGUgZGV2ZWxvcG1lbnQgb2YgYm90aCB0aGUgcHVibGljYXRpb24gbmV0d29yayBvZiB0aGUgc29jaW9sb2d5IGRlcGFydG1lbnQgYW5kIHRoZSBjb21wdXRpbmcgc2NpZW5jZSBkZXBhcnRtZW50LiBJbiBvdGhlciB3b3JkcywgaXQgY2Fubm90IGJlIGNvbmNsdWRlZCBmcm9tIHRoZSBmaW5kaW5ncyB0aGF0IHRoZSBnZW5kZXIgaG9tb3BoaWx5IHByaW5jaXBsZSBlbWVyZ2VzIGF0IGFsbCB3aXRoaW4gdGhlIGNvbXB1dGluZyBzY2llbmNlIGRlcGFydG1lbnQgYW5kIHRoZSBzb2Npb2xvZ3kgZGVwYXJ0bWVudA0KDQpSZWdhcmRpbmcgc3RydWN0dXJhbCBlZmZlY3RzLCBpdCBjYW4gYmUgc2VlbiBmcm9tIHRoZSBzb2Npb2xvZ3kgZGF0YSB0aGF0IHRoZSBvbmx5IHNpZ25pZmljYW50IGdlbmRlciBlZmZlY3QgZnJvbSBtb2RlbCAxIGlzIGV4cGxhaW5lZCBhd2F5IGJ5IGluY2x1ZGluZyBzdHJ1Y3R1cmFsIG5ldHdvcmsgZWZmZWN0cyBpbiB0aGUgbW9kZWxzLiBUaGlzIHNlZW1zIHRvIGNvbnRyYWRpY3QgSHlwb3RoZXNpcyAzLCBhcyBpdCBhc3N1bWVzIHRoYXQgdGhlIGV4aXN0aW5nIGdlbmRlciBlZmZlY3RzIHJlbWFpbiBlcXVhbGx5IHN0cm9uZyB1bmRlciB0aGUgaW5mbHVlbmNlIG9mIHN0cnVjdHVyYWwgbmV0d29yayBlZmZlY3RzLiBUaGlzIGNvbnRyYWRpY3Rpb24gYmV0d2VlbiBleHBlY3RhdGlvbnMgYW5kIHJlc3VsdHMgZ2l2ZXMgcmVhc29uIHRvIGZ1cnRoZXIgaW52ZXN0aWdhdGUgdGhlIGNvbWJpbmVkIGFwcGxpY2F0aW9uIG9mIHN0cnVjdHVyYWwgZWZmZWN0cyBhbmQgdGhlIGdlbmRlciBob21vcGhpbHkgcHJpbmNpcGxlIHdpdGhpbiBwdWJsaWNhdGlvbiBuZXR3b3JrcyBpbiBmdXR1cmUgcmVzZWFyY2guIA0K</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("Homeworkw7RSIENA.Rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

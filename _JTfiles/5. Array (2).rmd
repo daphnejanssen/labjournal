@@ -1,0 +1,293 @@
+
+```{r}
+#start with clean workspace 
+rm(list=ls())
+getwd()
+```
+
+# packages
+
+```{r}
+library(data.table) 
+library(tidyverse) 
+require(stringi)
+require(Rsiena)
+
+```
+
+# load data
+
+```{r}
+load("./data/names_df2_v20220106.RData")
+load("./data/names_df_publications_v20221006.RData")
+```
+
+# sample selection sociology
+
+```{r}
+
+#wrong gs_id (just by eye-balling)
+#deselect <- c(24,25, 34,35)
+
+names_df %>% 
+  filter(affiliation=="Radboud University") %>%
+  filter(field=="sociology") %>% 
+  filter(!(id %in% deselect)) -> soc_df
+
+names_df_publications %>% 
+  filter(gs_id %in% soc_df$gs_id) -> socpub_df
+  
+soc_df %>% 
+  select(c("gs_id", "lastname")) %>%
+  right_join(socpub_df) -> socpub_df
+
+rm(names_df)  
+rm(names_df_publications)  
+rm(deselect)
+```
+<!--- to do, deze selecties opslaan ---> 
+
+
+# clean names a bit
+
+```{r}
+soc_df$lastname_pubs <- as.character(str_split(soc_df$lastname, pattern=",", n = 2, simplify = TRUE)[,1]) 
+
+socpub_df$author <- tolower(socpub_df$author)
+
+```
+
+```{r}
+save(soc_df, file="./data/descriptives/soc_df.RData")
+save(socpub_df, file="./data/descriptives/socpub_df.RData")
+```
+
+# network based on publications
+
+NATURALLY, THIS IS JUST AN EXAMPLE. fOR rSIENA, YOU NEED AT LEAST 3 NETWORKS. tHUS YOU HAVE TO TWEAK THE PERIOD AS YOU DEEM FIT. 
+
+```{r}
+network2016_2017 <- matrix(NA, nrow=nrow(soc_df), ncol=nrow(soc_df))
+network2018_2019 <- matrix(NA, nrow=nrow(soc_df), ncol=nrow(soc_df))
+network2020_2022 <- matrix(NA, nrow=nrow(soc_df), ncol=nrow(soc_df))
+```
+
+```{r}
+#select publications of the corresponding time era
+pubs_sel <- socpub_df %>%
+    filter(year>=2016 & year<=2017)
+
+# to do: we gebruiken nu str_detect, maar wrs moeten we een exact match gebruiken. 
+
+#fill the matrix
+for (ego in 1: nrow(soc_df)) {
+  name_ego <- soc_df$lastname_pubs[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[pubs_sel$gs_id==soc_df$gs_id[ego],] #selecteer de publicaties van ego
+  for (alter in 1:nrow(soc_df)){
+    name_alter <- soc_df$last_name[alter] #which alter? 
+    network2016_2017[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1)  #did alter publish with ego
+  }
+}
+```
+
+```{r}
+#select publications of the corresponding time era
+pubs_sel <- socpub_df %>%
+    filter(year>=2018 & year<=2019)
+
+# to do: we gebruiken nu str_detect, maar wrs moeten we een exact match gebruiken. 
+
+#fill the matrix
+for (ego in 1: nrow(soc_df)) {
+  name_ego <- soc_df$lastname_pubs[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[pubs_sel$gs_id==soc_df$gs_id[ego],] #selecteer de publicaties van ego
+  for (alter in 1:nrow(soc_df)){
+    name_alter <- soc_df$last_name[alter] #which alter? 
+    network2018_2019[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1)  #did alter publish with ego
+  }
+}
+```
+
+```{r}
+#select publications of the corresponding time era
+pubs_sel <- socpub_df %>%
+    filter(year>=2020 & year<=2022)
+
+# to do: we gebruiken nu str_detect, maar wrs moeten we een exact match gebruiken. 
+
+#fill the matrix
+for (ego in 1: nrow(soc_df)) {
+  name_ego <- soc_df$lastname_pubs[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[pubs_sel$gs_id==soc_df$gs_id[ego],] #selecteer de publicaties van ego
+  for (alter in 1:nrow(soc_df)){
+    name_alter <- soc_df$last_name[alter] #which alter? 
+    network2020_2022[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1)  #did alter publish with ego
+  }
+}
+```
+
+
+# netwerken undirected maken, dat zijn ze grappig genoeg niet! 
+
+alle adjacency matrix in een array stoppen. 
+```{r}
+net_soc_array <- array(data = c(network2016_2017, network2018_2019, network2020_2022), dim=c(dim(network2020_2022),3))
+
+```
+
+
+```{r}
+save(net_soc_array, file="./data/descriptives/soc_net_array.RData")
+```
+
+
+
+# computer science
+
+```{r}
+#start with clean workspace 
+rm(list=ls())
+getwd()
+```
+
+# packages
+
+```{r}
+library(data.table) 
+library(tidyverse) 
+require(stringi)
+require(Rsiena)
+
+```
+
+# load data
+
+```{r}
+load("./data/names_df2_v20220106.RData")
+load("./data/names_df_publications_v20221006.RData")
+```
+
+
+# sample selection computer science
+
+```{r}
+
+#wrong gs_id (just by eye-balling)
+#deselect <- c(24,25, 34,35)
+#filter(!(id %in% deselect))
+
+names_df %>% 
+  filter(affiliation=="Radboud University") %>%
+  filter(field=="computer science")  -> soc_df
+
+names_df_publications %>% 
+  filter(gs_id %in% soc_df$gs_id) -> socpub_df
+  
+soc_df %>% 
+  select(c("gs_id", "lastname")) %>%
+  right_join(socpub_df) -> socpub_df
+
+rm(names_df)  
+rm(names_df_publications)  
+rm(deselect)
+```
+<!--- to do, deze selecties opslaan ---> 
+
+
+# clean names a bit
+
+```{r}
+soc_df$lastname_pubs <- as.character(str_split(soc_df$lastname, pattern=",", n = 2, simplify = TRUE)[,1]) 
+
+socpub_df$author <- tolower(socpub_df$author)
+
+```
+
+```{r}
+cs_df <- soc_df
+cspub_df <- socpub_df
+
+save(cs_df, file="./data/descriptives/cs_df.RData")
+save(cspub_df, file="./data/descriptives/cspub_df.RData")
+```
+
+# network based on publications
+
+NATURALLY, THIS IS JUST AN EXAMPLE. fOR rSIENA, YOU NEED AT LEAST 3 NETWORKS. tHUS YOU HAVE TO TWEAK THE PERIOD AS YOU DEEM FIT. 
+
+```{r}
+network2016_2017 <- matrix(NA, nrow=nrow(cs_df), ncol=nrow(cs_df))
+network2018_2019 <- matrix(NA, nrow=nrow(cs_df), ncol=nrow(cs_df))
+network2020_2022 <- matrix(NA, nrow=nrow(cs_df), ncol=nrow(cs_df))
+```
+
+```{r}
+#select publications of the corresponding time era
+pubs_sel <- cspub_df %>%
+    filter(year>=2016 & year<=2017)
+
+# to do: we gebruiken nu str_detect, maar wrs moeten we een exact match gebruiken. 
+
+#fill the matrix
+for (ego in 1: nrow(cs_df)) {
+  name_ego <- cs_df$lastname_pubs[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[pubs_sel$gs_id==cs_df$gs_id[ego],] #selecteer de publicaties van ego
+  for (alter in 1:nrow(cs_df)){
+    name_alter <- cs_df$last_name[alter] #which alter? 
+    network2016_2017[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1)  #did alter publish with ego
+  }
+}
+```
+
+```{r}
+#select publications of the corresponding time era
+pubs_sel <- cspub_df %>%
+    filter(year>=2018 & year<=2019)
+
+# to do: we gebruiken nu str_detect, maar wrs moeten we een exact match gebruiken. 
+
+#fill the matrix
+for (ego in 1: nrow(cs_df)) {
+  name_ego <- cs_df$lastname_pubs[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[pubs_sel$gs_id==cs_df$gs_id[ego],] #selecteer de publicaties van ego
+  for (alter in 1:nrow(cs_df)){
+    name_alter <- cs_df$last_name[alter] #which alter? 
+    network2018_2019[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1)  #did alter publish with ego
+  }
+}
+```
+
+```{r}
+#select publications of the corresponding time era
+pubs_sel <- cspub_df %>%
+    filter(year>=2020 & year<=2022)
+
+# to do: we gebruiken nu str_detect, maar wrs moeten we een exact match gebruiken. 
+
+#fill the matrix
+for (ego in 1: nrow(soc_df)) {
+  name_ego <- soc_df$lastname_pubs[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[pubs_sel$gs_id==soc_df$gs_id[ego],] #selecteer de publicaties van ego
+  for (alter in 1:nrow(soc_df)){
+    name_alter <- soc_df$last_name[alter] #which alter? 
+    network2020_2022[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1)  #did alter publish with ego
+  }
+}
+```
+
+
+# netwerken undirected maken, dat zijn ze grappig genoeg niet! 
+
+alle adjacency matrix in een array stoppen. 
+```{r}
+net_cs_array <- array(data = c(network2016_2017, network2018_2019, network2020_2022), dim=c(dim(network2020_2022),3))
+
+```
+
+
+```{r}
+save(net_cs_array, file="./data/descriptives/cs_net_array.RData")
+```
+
+
+

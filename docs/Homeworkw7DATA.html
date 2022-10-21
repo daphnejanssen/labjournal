@@ -395,6 +395,9 @@ div.tocify {
     <li>
       <a href="RQWeek6.html">Week 6</a>
     </li>
+    <li>
+      <a href="RQWeek7.html">Week 7</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -411,7 +414,7 @@ div.tocify {
       <a href="Homeworkw6THEORY.html">Theory</a>
     </li>
     <li>
-      <a href="Homeworkw6DATA.html">Data - Description</a>
+      <a href="Homeworkw7DATA.html">Data - Description</a>
     </li>
     <li>
       <a href="Homeworkw4DATASCRAPE.html">Data - Scraping</a>
@@ -420,7 +423,7 @@ div.tocify {
       <a href="Homeworkw6DESCRIPTIVES.html">Data - Descriptive statistics</a>
     </li>
     <li>
-      <a href="Homeworkw6RSIENA.html">RSiena analysis</a>
+      <a href="Homeworkw7RSIENA.html">RSiena analysis</a>
     </li>
   </ul>
 </li>
@@ -461,7 +464,7 @@ div.tocify {
   addClassKlippyTo("pre.r, pre.markdown");
   addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
 </script>
-<p>Last compiled on 2022-10-19 09:11:41</p>
+<p>Last compiled on 2022-10-21 18:24:52</p>
 <!---
 Last compiled on oktober, 2022
 --->
@@ -469,7 +472,9 @@ Last compiled on oktober, 2022
 <hr />
 <div id="data" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Data</h1>
-<p><strong>Data collection</strong></p>
+<p><br></p>
+<div id="data-collection" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Data collection</h2>
 <p>The data has been collected around the beginning of October 2022,
 through web-scraping of the Internet pages with the Sociology and
 Computing Science staff members. The data collected were the titles and
@@ -492,6 +497,12 @@ class="uri">https://www.cbgfamilienamen.nl/nfb/</a>). Depending on
 whether the surname appears in this database, the staff members were
 assigned a Dutch or non-Dutch ethnicity. The <em>age</em> of the
 individuals is represented by the first year of publication.</p>
+<p><br></p>
+</div>
+<div id="data-description" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Data description</h2>
+<div id="network" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Network</h3>
 <p><strong>Sample</strong></p>
 <p>The staff of the department of Sociology, representing the social
 sciences. And the staff of the Computing Science department,
@@ -502,37 +513,53 @@ representing the scientific field of STEM.</p>
 <p>The co-authorships of scientists within (1) the Sociology department
 and (2) the Computing Science department.</p>
 <p><br></p>
+</div>
+<div id="variables" class="section level3" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span> Variables</h3>
 <p><strong>Independent variable</strong></p>
-<ul>
-<li>Network structure: <em>co-authorship connections among men and
-women</em> at the diad level within the departments of Sociology and
-Computing Science.</li>
-</ul>
+<p>Gender:</p>
 <p><strong>Dependent variable</strong></p>
-<ul>
-<li><p><em>Number of published articles</em>: do men who have
-connections with other men influence each other by publishing more
-articles (together) (<em>influence processes</em>). This could widen the
-gap between the prominence of male and female scientists.</p></li>
-<li><p><em>Number of citations</em>: do men who have connections with
-other men influence each other by both being more often citated
-(<em>influence processes</em>). This could widen the gap between the
-prominence of male and female scientists.</p></li>
-</ul>
+<p>Network structure: <em>co-authorship connections among men and
+women</em> at the diad level within the departments of Sociology and
+Computing Science.</p>
 <p><strong>Control variables</strong></p>
 <ul>
-<li><p><em>Number of men and women within the departments of Sociology
-and Computing Science.</em></p></li>
-<li><p><em>Number of different topics men and women research within the
-departments of Sociology and Computing Science.</em></p></li>
-<li><p><em>The ethnicity of the staff members of Sociology and Computing
-Science.</em></p></li>
-<li><p><em>The age of the staff members of Sociology and Computing
-Science.</em></p></li>
+<li><p>The <em>ethnicity</em> of the staff members of Sociology and
+Computing Science.</p></li>
+<li><p>The <em>age</em> of the staff members of Sociology and Computing
+Science.</p></li>
 </ul>
+<p><br></p>
+</div>
+</div>
+<div id="methods" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Methods</h2>
+<p>To answer the first research question, the degree of sex segregation
+will be determined for both studies by calculating the density between
+groups and within groups for each wave. The density will also be
+calculated separately for the group of men and the group of women within
+each study. These different densities will be compared to determine
+whether men are more likely to work with men and/or women more likely to
+work with women, for both the Sociology sample and the Computer Science
+sample.</p>
+<p>To answer the second research question, an R Siena model will be
+estimated that includes only ego-level gender effects. This model can be
+used to compare the difference in the application of the gender
+homophily principle to the publication network of male and female
+scientists, between Sociology and Computer Science across the three
+waves.</p>
+<p>The third research question will be answered by estimating an R Siena
+model that includes both ego-level gender effects and structural
+effects. To control for several individual characteristics, another
+model will be estimated that also includes covariate effects. With these
+models, the extent to which structural network effects affect the
+difference in gender homophily in the publication network of male and
+female scientists can be compared between Sociology and Computer Science
+across the three waves.</p>
+</div>
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkRhdGEiDQojYmlibGlvZ3JhcGh5OiByZWZlcmVuY2VzLmJpYg0KYXV0aG9yOiAiRGFwaG5lIEphbnNzZW4iDQotLS0NCg0KDQoNCmBgYHtyLCBnbG9iYWxzZXR0aW5ncywgZWNobz1GQUxTRSwgd2FybmluZz1GQUxTRSwgcmVzdWx0cz0naGlkZSd9DQpsaWJyYXJ5KGtuaXRyKQ0KDQprbml0cjo6b3B0c19jaHVuayRzZXQoZWNobyA9IFRSVUUpDQpvcHRzX2NodW5rJHNldCh0aWR5Lm9wdHM9bGlzdCh3aWR0aC5jdXRvZmY9MTAwKSx0aWR5PVRSVUUsIHdhcm5pbmcgPSBGQUxTRSwgbWVzc2FnZSA9IEZBTFNFLGNvbW1lbnQgPSAiIz4iLCBjYWNoZT1UUlVFLCBjbGFzcy5zb3VyY2U9YygidGVzdCIpLCBjbGFzcy5vdXRwdXQ9YygidGVzdDIiKSkNCm9wdGlvbnMod2lkdGggPSAxMDApDQpyZ2w6OnNldHVwS25pdHIoKQ0KDQoNCg0KY29sb3JpemUgPC0gZnVuY3Rpb24oeCwgY29sb3IpIHtzcHJpbnRmKCI8c3BhbiBzdHlsZT0nY29sb3I6ICVzOyc+JXM8L3NwYW4+IiwgY29sb3IsIHgpIH0NCg0KYGBgDQoNCmBgYHtyIGtsaXBweSwgZWNobz1GQUxTRSwgaW5jbHVkZT1UUlVFfQ0Ka2xpcHB5OjprbGlwcHkocG9zaXRpb24gPSBjKCd0b3AnLCAncmlnaHQnKSkNCiNrbGlwcHk6OmtsaXBweShjb2xvciA9ICdkYXJrcmVkJykNCiNrbGlwcHk6OmtsaXBweSh0b29sdGlwX21lc3NhZ2UgPSAnQ2xpY2sgdG8gY29weScsIHRvb2x0aXBfc3VjY2VzcyA9ICdEb25lJykNCmBgYA0KDQpMYXN0IGNvbXBpbGVkIG9uIGByIFN5cy50aW1lKClgDQoNCjwhLS0tDQpMYXN0IGNvbXBpbGVkIG9uIGByIGZvcm1hdChTeXMudGltZSgpLCAnJUIsICVZJylgDQotLS0+DQoNCjxicj4NCg0KLS0tLQ0KDQojIERhdGEgDQoNCioqRGF0YSBjb2xsZWN0aW9uKioNCg0KVGhlIGRhdGEgaGFzIGJlZW4gY29sbGVjdGVkIGFyb3VuZCB0aGUgYmVnaW5uaW5nIG9mIE9jdG9iZXIgMjAyMiwgdGhyb3VnaCB3ZWItc2NyYXBpbmcgb2YgdGhlIEludGVybmV0IHBhZ2VzIHdpdGggdGhlIFNvY2lvbG9neSBhbmQgQ29tcHV0aW5nIFNjaWVuY2Ugc3RhZmYgbWVtYmVycy4gVGhlIGRhdGEgY29sbGVjdGVkIHdlcmUgdGhlIHRpdGxlcyBhbmQgZmlyc3QgYW5kIGxhc3QgbmFtZXMgb2YgdGhlIGluZGl2aWR1YWxzLiBUaGVuLCB1c2luZyBhbiByLXNjcmlwdCwgdGhlICpnb29nbGUgc2Nob2xhciBpZHMqIG9mIGFsbCBzdGFmZiBtZW1iZXJzIHdlcmUgc2NyYXBlZCBmcm9tIHRoZSBJbnRlcm5ldC4gV2l0aCB0aGVzZSBpZHMsIGluZm9ybWF0aW9uIHdhcyBvYnRhaW5lZCBhYm91dCB0aGUgcHVibGljYXRpb25zIG9mIHRoZSBpbmRpdmlkdWFscywgYW5kIHRodXMgdGhlIHNjaG9sYXJzIHdpdGggd2hvbSB0aGV5IHB1Ymxpc2hlZCBhbmQgaG93IG9mdGVuIHRoZXkgd2VyZSBjaXRlZC4gDQoNCkFyb3VuZCB0aGUgc2FtZSB0aW1lLCBpbmZvcm1hdGlvbiBvbiB0aGUgKnNleCogb2YgdGhlIGluZGl2aWR1YWxzIHdhcyBjb2xsZWN0ZWQgdGhyb3VnaCBhbiByLXNjcmlwdCB0aGF0IGVudGVyZWQgdGhlIGZpcnN0IG5hbWVzIG9mIGFsbCBzdGFmZiBtZW1iZXJzIGludG8gdGhlIE1lZXJ0ZW5zIGRhdGFiYXNlIChodHRwczovL3d3dy5tZWVydGVucy5rbmF3Lm5sL252Yi8pLiBCYXNlZCBvbiB0aGUgc2V4IG9mIHRoZSBoaWdoZXN0IG51bWJlciBvZiBpbmRpdmlkdWFscyBiZWFyaW5nIHRoZSBzYW1lIG5hbWUsIHN0YWZmIG1lbWJlcnMgd2VyZSBhc3NpZ25lZCBhIHNleC4gSW5mb3JtYXRpb24gb24gdGhlICpldGhuaWNpdHkqIG9mIHN0YWZmIG1lbWJlcnMgd2FzIGNvbGxlY3RlZCBpbiBhIHNpbWlsYXIgbWFubmVyLiBUaGUgc3VybmFtZXMgd2VyZSBlbnRlcmVkIGludG8gdGhlIER1dGNoIEZhbWlseSBOYW1lcyBEYXRhYmFzZSAoaHR0cHM6Ly93d3cuY2JnZmFtaWxpZW5hbWVuLm5sL25mYi8pLiBEZXBlbmRpbmcgb24gd2hldGhlciB0aGUgc3VybmFtZSBhcHBlYXJzIGluIHRoaXMgZGF0YWJhc2UsIHRoZSBzdGFmZiBtZW1iZXJzIHdlcmUgYXNzaWduZWQgYSBEdXRjaCBvciBub24tRHV0Y2ggZXRobmljaXR5LiBUaGUgKmFnZSogb2YgdGhlIGluZGl2aWR1YWxzIGlzIHJlcHJlc2VudGVkIGJ5IHRoZSBmaXJzdCB5ZWFyIG9mIHB1YmxpY2F0aW9uLiANCg0KDQoqKlNhbXBsZSoqDQoNClRoZSBzdGFmZiBvZiB0aGUgZGVwYXJ0bWVudCBvZiBTb2Npb2xvZ3ksIHJlcHJlc2VudGluZyB0aGUgc29jaWFsIHNjaWVuY2VzLiBBbmQgdGhlIHN0YWZmIG9mIHRoZSBDb21wdXRpbmcgU2NpZW5jZSBkZXBhcnRtZW50LCByZXByZXNlbnRpbmcgdGhlIHNjaWVudGlmaWMgZmllbGQgb2YgU1RFTS4NCg0KKipOb2RlcyoqDQoNClRoZSBzY2llbnRpc3RzIHdpdGhpbiB0aGUgYWZvcmVtZW50aW9uZWQgZGVwYXJ0bWVudHMuDQoNCioqRWRnZXMqKg0KDQpUaGUgY28tYXV0aG9yc2hpcHMgb2Ygc2NpZW50aXN0cyB3aXRoaW4gKDEpIHRoZSBTb2Npb2xvZ3kgZGVwYXJ0bWVudCBhbmQgKDIpIHRoZSBDb21wdXRpbmcgU2NpZW5jZSBkZXBhcnRtZW50LiANCg0KPGJyPg0KDQoqKkluZGVwZW5kZW50IHZhcmlhYmxlKioNCg0KLQlOZXR3b3JrIHN0cnVjdHVyZTogKmNvLWF1dGhvcnNoaXAgY29ubmVjdGlvbnMgYW1vbmcgbWVuIGFuZCB3b21lbiogYXQgdGhlIGRpYWQgbGV2ZWwgd2l0aGluIHRoZSBkZXBhcnRtZW50cyBvZiBTb2Npb2xvZ3kgYW5kIENvbXB1dGluZyBTY2llbmNlLg0KDQoqKkRlcGVuZGVudCB2YXJpYWJsZSoqDQoNCi0JKk51bWJlciBvZiBwdWJsaXNoZWQgYXJ0aWNsZXMqOiBkbyBtZW4gd2hvIGhhdmUgY29ubmVjdGlvbnMgd2l0aCBvdGhlciBtZW4gaW5mbHVlbmNlIGVhY2ggb3RoZXIgYnkgcHVibGlzaGluZyBtb3JlIGFydGljbGVzICh0b2dldGhlcikgKCppbmZsdWVuY2UgcHJvY2Vzc2VzKikuIFRoaXMgY291bGQgd2lkZW4gdGhlIGdhcCBiZXR3ZWVuIHRoZSBwcm9taW5lbmNlIG9mIG1hbGUgYW5kIGZlbWFsZSBzY2llbnRpc3RzLg0KDQotCSpOdW1iZXIgb2YgY2l0YXRpb25zKjogZG8gbWVuIHdobyBoYXZlIGNvbm5lY3Rpb25zIHdpdGggb3RoZXIgbWVuIGluZmx1ZW5jZSBlYWNoIG90aGVyIGJ5IGJvdGggYmVpbmcgbW9yZSBvZnRlbiBjaXRhdGVkICgqaW5mbHVlbmNlIHByb2Nlc3NlcyopLiBUaGlzIGNvdWxkIHdpZGVuIHRoZSBnYXAgYmV0d2VlbiB0aGUgcHJvbWluZW5jZSBvZiBtYWxlIGFuZCBmZW1hbGUgc2NpZW50aXN0cy4NCg0KKipDb250cm9sIHZhcmlhYmxlcyoqDQoNCi0JKk51bWJlciBvZiBtZW4gYW5kIHdvbWVuIHdpdGhpbiB0aGUgZGVwYXJ0bWVudHMgb2YgU29jaW9sb2d5IGFuZCBDb21wdXRpbmcgU2NpZW5jZS4qDQoNCi0JKk51bWJlciBvZiBkaWZmZXJlbnQgdG9waWNzIG1lbiBhbmQgd29tZW4gcmVzZWFyY2ggd2l0aGluIHRoZSBkZXBhcnRtZW50cyBvZiBTb2Npb2xvZ3kgYW5kIENvbXB1dGluZyBTY2llbmNlLioNCg0KLSAqVGhlIGV0aG5pY2l0eSBvZiB0aGUgc3RhZmYgbWVtYmVycyBvZiBTb2Npb2xvZ3kgYW5kIENvbXB1dGluZyBTY2llbmNlLioNCg0KLSAqVGhlIGFnZSBvZiB0aGUgc3RhZmYgbWVtYmVycyBvZiBTb2Npb2xvZ3kgYW5kIENvbXB1dGluZyBTY2llbmNlLioNCg0K</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkRhdGEiDQojYmlibGlvZ3JhcGh5OiByZWZlcmVuY2VzLmJpYg0KYXV0aG9yOiAiRGFwaG5lIEphbnNzZW4iDQotLS0NCg0KDQoNCmBgYHtyLCBnbG9iYWxzZXR0aW5ncywgZWNobz1GQUxTRSwgd2FybmluZz1GQUxTRSwgcmVzdWx0cz0naGlkZSd9DQpsaWJyYXJ5KGtuaXRyKQ0KDQprbml0cjo6b3B0c19jaHVuayRzZXQoZWNobyA9IFRSVUUpDQpvcHRzX2NodW5rJHNldCh0aWR5Lm9wdHM9bGlzdCh3aWR0aC5jdXRvZmY9MTAwKSx0aWR5PVRSVUUsIHdhcm5pbmcgPSBGQUxTRSwgbWVzc2FnZSA9IEZBTFNFLGNvbW1lbnQgPSAiIz4iLCBjYWNoZT1UUlVFLCBjbGFzcy5zb3VyY2U9YygidGVzdCIpLCBjbGFzcy5vdXRwdXQ9YygidGVzdDIiKSkNCm9wdGlvbnMod2lkdGggPSAxMDApDQpyZ2w6OnNldHVwS25pdHIoKQ0KDQoNCg0KY29sb3JpemUgPC0gZnVuY3Rpb24oeCwgY29sb3IpIHtzcHJpbnRmKCI8c3BhbiBzdHlsZT0nY29sb3I6ICVzOyc+JXM8L3NwYW4+IiwgY29sb3IsIHgpIH0NCg0KYGBgDQoNCmBgYHtyIGtsaXBweSwgZWNobz1GQUxTRSwgaW5jbHVkZT1UUlVFfQ0Ka2xpcHB5OjprbGlwcHkocG9zaXRpb24gPSBjKCd0b3AnLCAncmlnaHQnKSkNCiNrbGlwcHk6OmtsaXBweShjb2xvciA9ICdkYXJrcmVkJykNCiNrbGlwcHk6OmtsaXBweSh0b29sdGlwX21lc3NhZ2UgPSAnQ2xpY2sgdG8gY29weScsIHRvb2x0aXBfc3VjY2VzcyA9ICdEb25lJykNCmBgYA0KDQpMYXN0IGNvbXBpbGVkIG9uIGByIFN5cy50aW1lKClgDQoNCjwhLS0tDQpMYXN0IGNvbXBpbGVkIG9uIGByIGZvcm1hdChTeXMudGltZSgpLCAnJUIsICVZJylgDQotLS0+DQoNCjxicj4NCg0KLS0tLQ0KDQojIERhdGEgDQoNCjxicj4NCg0KIyMgRGF0YSBjb2xsZWN0aW9uDQoNClRoZSBkYXRhIGhhcyBiZWVuIGNvbGxlY3RlZCBhcm91bmQgdGhlIGJlZ2lubmluZyBvZiBPY3RvYmVyIDIwMjIsIHRocm91Z2ggd2ViLXNjcmFwaW5nIG9mIHRoZSBJbnRlcm5ldCBwYWdlcyB3aXRoIHRoZSBTb2Npb2xvZ3kgYW5kIENvbXB1dGluZyBTY2llbmNlIHN0YWZmIG1lbWJlcnMuIFRoZSBkYXRhIGNvbGxlY3RlZCB3ZXJlIHRoZSB0aXRsZXMgYW5kIGZpcnN0IGFuZCBsYXN0IG5hbWVzIG9mIHRoZSBpbmRpdmlkdWFscy4gVGhlbiwgdXNpbmcgYW4gci1zY3JpcHQsIHRoZSAqZ29vZ2xlIHNjaG9sYXIgaWRzKiBvZiBhbGwgc3RhZmYgbWVtYmVycyB3ZXJlIHNjcmFwZWQgZnJvbSB0aGUgSW50ZXJuZXQuIFdpdGggdGhlc2UgaWRzLCBpbmZvcm1hdGlvbiB3YXMgb2J0YWluZWQgYWJvdXQgdGhlIHB1YmxpY2F0aW9ucyBvZiB0aGUgaW5kaXZpZHVhbHMsIGFuZCB0aHVzIHRoZSBzY2hvbGFycyB3aXRoIHdob20gdGhleSBwdWJsaXNoZWQgYW5kIGhvdyBvZnRlbiB0aGV5IHdlcmUgY2l0ZWQuIA0KDQpBcm91bmQgdGhlIHNhbWUgdGltZSwgaW5mb3JtYXRpb24gb24gdGhlICpzZXgqIG9mIHRoZSBpbmRpdmlkdWFscyB3YXMgY29sbGVjdGVkIHRocm91Z2ggYW4gci1zY3JpcHQgdGhhdCBlbnRlcmVkIHRoZSBmaXJzdCBuYW1lcyBvZiBhbGwgc3RhZmYgbWVtYmVycyBpbnRvIHRoZSBNZWVydGVucyBkYXRhYmFzZSAoaHR0cHM6Ly93d3cubWVlcnRlbnMua25hdy5ubC9udmIvKS4gQmFzZWQgb24gdGhlIHNleCBvZiB0aGUgaGlnaGVzdCBudW1iZXIgb2YgaW5kaXZpZHVhbHMgYmVhcmluZyB0aGUgc2FtZSBuYW1lLCBzdGFmZiBtZW1iZXJzIHdlcmUgYXNzaWduZWQgYSBzZXguIEluZm9ybWF0aW9uIG9uIHRoZSAqZXRobmljaXR5KiBvZiBzdGFmZiBtZW1iZXJzIHdhcyBjb2xsZWN0ZWQgaW4gYSBzaW1pbGFyIG1hbm5lci4gVGhlIHN1cm5hbWVzIHdlcmUgZW50ZXJlZCBpbnRvIHRoZSBEdXRjaCBGYW1pbHkgTmFtZXMgRGF0YWJhc2UgKGh0dHBzOi8vd3d3LmNiZ2ZhbWlsaWVuYW1lbi5ubC9uZmIvKS4gRGVwZW5kaW5nIG9uIHdoZXRoZXIgdGhlIHN1cm5hbWUgYXBwZWFycyBpbiB0aGlzIGRhdGFiYXNlLCB0aGUgc3RhZmYgbWVtYmVycyB3ZXJlIGFzc2lnbmVkIGEgRHV0Y2ggb3Igbm9uLUR1dGNoIGV0aG5pY2l0eS4gVGhlICphZ2UqIG9mIHRoZSBpbmRpdmlkdWFscyBpcyByZXByZXNlbnRlZCBieSB0aGUgZmlyc3QgeWVhciBvZiBwdWJsaWNhdGlvbi4gDQoNCjxicj4NCg0KIyMgRGF0YSBkZXNjcmlwdGlvbg0KDQojIyMgTmV0d29yayANCg0KKipTYW1wbGUqKg0KDQpUaGUgc3RhZmYgb2YgdGhlIGRlcGFydG1lbnQgb2YgU29jaW9sb2d5LCByZXByZXNlbnRpbmcgdGhlIHNvY2lhbCBzY2llbmNlcy4gQW5kIHRoZSBzdGFmZiBvZiB0aGUgQ29tcHV0aW5nIFNjaWVuY2UgZGVwYXJ0bWVudCwgcmVwcmVzZW50aW5nIHRoZSBzY2llbnRpZmljIGZpZWxkIG9mIFNURU0uDQoNCioqTm9kZXMqKg0KDQpUaGUgc2NpZW50aXN0cyB3aXRoaW4gdGhlIGFmb3JlbWVudGlvbmVkIGRlcGFydG1lbnRzLg0KDQoqKkVkZ2VzKioNCg0KVGhlIGNvLWF1dGhvcnNoaXBzIG9mIHNjaWVudGlzdHMgd2l0aGluICgxKSB0aGUgU29jaW9sb2d5IGRlcGFydG1lbnQgYW5kICgyKSB0aGUgQ29tcHV0aW5nIFNjaWVuY2UgZGVwYXJ0bWVudC4gDQoNCjxicj4NCg0KIyMjIFZhcmlhYmxlcyANCg0KKipJbmRlcGVuZGVudCB2YXJpYWJsZSoqDQoNCkdlbmRlcjogDQoNCioqRGVwZW5kZW50IHZhcmlhYmxlKioNCg0KTmV0d29yayBzdHJ1Y3R1cmU6ICpjby1hdXRob3JzaGlwIGNvbm5lY3Rpb25zIGFtb25nIG1lbiBhbmQgd29tZW4qIGF0IHRoZSBkaWFkIGxldmVsIHdpdGhpbiB0aGUgZGVwYXJ0bWVudHMgb2YgU29jaW9sb2d5IGFuZCBDb21wdXRpbmcgU2NpZW5jZS4NCg0KDQoqKkNvbnRyb2wgdmFyaWFibGVzKioNCg0KLSBUaGUgKmV0aG5pY2l0eSogb2YgdGhlIHN0YWZmIG1lbWJlcnMgb2YgU29jaW9sb2d5IGFuZCBDb21wdXRpbmcgU2NpZW5jZS4NCg0KLSBUaGUgKmFnZSogb2YgdGhlIHN0YWZmIG1lbWJlcnMgb2YgU29jaW9sb2d5IGFuZCBDb21wdXRpbmcgU2NpZW5jZS4NCg0KPGJyPg0KDQojIyBNZXRob2RzDQoNClRvIGFuc3dlciB0aGUgZmlyc3QgcmVzZWFyY2ggcXVlc3Rpb24sIHRoZSBkZWdyZWUgb2Ygc2V4IHNlZ3JlZ2F0aW9uIHdpbGwgYmUgZGV0ZXJtaW5lZCBmb3IgYm90aCBzdHVkaWVzIGJ5IGNhbGN1bGF0aW5nIHRoZSBkZW5zaXR5IGJldHdlZW4gZ3JvdXBzIGFuZCB3aXRoaW4gZ3JvdXBzIGZvciBlYWNoIHdhdmUuIFRoZSBkZW5zaXR5IHdpbGwgYWxzbyBiZSBjYWxjdWxhdGVkIHNlcGFyYXRlbHkgZm9yIHRoZSBncm91cCBvZiBtZW4gYW5kIHRoZSBncm91cCBvZiB3b21lbiB3aXRoaW4gZWFjaCBzdHVkeS4gVGhlc2UgZGlmZmVyZW50IGRlbnNpdGllcyB3aWxsIGJlIGNvbXBhcmVkIHRvIGRldGVybWluZSB3aGV0aGVyIG1lbiBhcmUgbW9yZSBsaWtlbHkgdG8gd29yayB3aXRoIG1lbiBhbmQvb3Igd29tZW4gbW9yZSBsaWtlbHkgdG8gd29yayB3aXRoIHdvbWVuLCBmb3IgYm90aCB0aGUgU29jaW9sb2d5IHNhbXBsZSBhbmQgdGhlIENvbXB1dGVyIFNjaWVuY2Ugc2FtcGxlLiAgIA0KDQpUbyBhbnN3ZXIgdGhlIHNlY29uZCByZXNlYXJjaCBxdWVzdGlvbiwgYW4gUiBTaWVuYSBtb2RlbCB3aWxsIGJlIGVzdGltYXRlZCB0aGF0IGluY2x1ZGVzIG9ubHkgZWdvLWxldmVsIGdlbmRlciBlZmZlY3RzLiBUaGlzIG1vZGVsIGNhbiBiZSB1c2VkIHRvIGNvbXBhcmUgdGhlIGRpZmZlcmVuY2UgaW4gdGhlIGFwcGxpY2F0aW9uIG9mIHRoZSBnZW5kZXIgaG9tb3BoaWx5IHByaW5jaXBsZSB0byB0aGUgcHVibGljYXRpb24gbmV0d29yayBvZiBtYWxlIGFuZCBmZW1hbGUgc2NpZW50aXN0cywgYmV0d2VlbiBTb2Npb2xvZ3kgYW5kIENvbXB1dGVyIFNjaWVuY2UgYWNyb3NzIHRoZSB0aHJlZSB3YXZlcy4NCg0KVGhlIHRoaXJkIHJlc2VhcmNoIHF1ZXN0aW9uIHdpbGwgYmUgYW5zd2VyZWQgYnkgZXN0aW1hdGluZyBhbiBSIFNpZW5hIG1vZGVsIHRoYXQgaW5jbHVkZXMgYm90aCBlZ28tbGV2ZWwgZ2VuZGVyIGVmZmVjdHMgYW5kIHN0cnVjdHVyYWwgZWZmZWN0cy4gVG8gY29udHJvbCBmb3Igc2V2ZXJhbCBpbmRpdmlkdWFsIGNoYXJhY3RlcmlzdGljcywgYW5vdGhlciBtb2RlbCB3aWxsIGJlIGVzdGltYXRlZCB0aGF0IGFsc28gaW5jbHVkZXMgY292YXJpYXRlIGVmZmVjdHMuIFdpdGggdGhlc2UgbW9kZWxzLCB0aGUgZXh0ZW50IHRvIHdoaWNoIHN0cnVjdHVyYWwgbmV0d29yayBlZmZlY3RzIGFmZmVjdCB0aGUgZGlmZmVyZW5jZSBpbiBnZW5kZXIgaG9tb3BoaWx5IGluIHRoZSBwdWJsaWNhdGlvbiBuZXR3b3JrIG9mIG1hbGUgYW5kIGZlbWFsZSBzY2llbnRpc3RzIGNhbiBiZSBjb21wYXJlZCBiZXR3ZWVuIFNvY2lvbG9neSBhbmQgQ29tcHV0ZXIgU2NpZW5jZSBhY3Jvc3MgdGhlIHRocmVlIHdhdmVzLiANCg0K</div>
 
 
 </div>
@@ -570,7 +597,7 @@ $(document).ready(function () {
 <!-- code folding -->
 <script>
 $(document).ready(function () {
-  window.initializeSourceEmbed("Homeworkw6DATA.Rmd");
+  window.initializeSourceEmbed("Homeworkw7DATA.Rmd");
   window.initializeCodeFolding("show" === "show");
 });
 </script>

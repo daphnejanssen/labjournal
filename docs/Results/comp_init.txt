@@ -6,7 +6,7 @@ Filename is C:\Users\Daphn\Documenten\labjournal\Results\comp_init.txt.
 
 This file contains primary output for SIENA project <<C:\Users\Daphn\Documenten\labjournal\Results\comp_init>>.
 
-Date and time: 17/10/2022 16:41:59 
+Date and time: 21/10/2022 08:54:10 
 
 RSiena version 1.3.0.1 (02 05 2021)
 
@@ -16,7 +16,7 @@ Data input.
 ===========
 
 3 observations,
-115 actors,
+113 actors,
 1 dependent network variables,
 0 dependent bipartite variables,
 0 dependent discrete behavior variables,
@@ -43,25 +43,25 @@ Nodes
  61  62  63  64  65  66  67  68  69  70  71  72  73  74  75 
  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90 
  91  92  93  94  95  96  97  98  99 100 101 102 103 104 105 
-106 107 108 109 110 111 112 113 114 115
+106 107 108 109 110 111 112 113
 out-degrees
-  0   0   0   0   0   0   0   4   0   0   0   2   0   0   3 
-  0   1   1   3   0   0   0   0   0   0   0   0   1   1   0 
-  2   0   1   0   0   0   7   1   5   1   0   0   0   1   0 
-  0   0   3   0   0   1   0   0   0   1   3   5   1   1   1 
-  0   2   1   0   0   0   0   0   0   0   0   0   0   2   1 
-  0   0   0   0   1   0   0   0   1   0   0   0   0   2   0 
-  0   0   0   0   0   3   0   0   0   1   0   0   0   4   4 
-  3   0   0   0   0   0   1   3   0   1
+  0   0   0   0   0   0   4   0   0   0   2   0   0   3   2 
+  1   1   3   0   0   0   0   0   0   0   0   1   0   2   2 
+  1   0   0   0  10   1   5   1   0   0   3   3   0   1   0 
+  3   0   1   1   1   0   0   1   3   5   2   2  13   3   2 
+  1   0   0   0   0   0   0   0   0   0   0   2   2   1   0 
+  0   2   1   0   0   0   2   1   0   1   0   2   0   0   0 
+  0   0   0   3   0   0   0   2   0   0   0   4   7   5   1 
+  1   0   0   0   1   3   2   1
 in-degrees
-  0   0   0   0   0   0   0   2   0   0   0   2   0   0   3 
-  2   1   0   0   0   0   0   0   0   0   0   0   0   0   0 
-  2   2   0   0   0   0   6   0   1   1   0   0   3   2   0 
-  1   0   1   0   1   0   1   0   0   0   1   1   1   1  12 
-  3   1   1   0   0   0   0   0   0   0   0   0   0   2   1 
-  1   0   0   2   1   0   0   0   2   1   0   1   0   1   0 
-  0   0   0   0   0   0   0   0   0   1   0   0   0   2   4 
-  4   1   1   0   0   0   0   0   3   0
+  0   0   0   0   0   0   4   0   0   0   2   0   0   3   2 
+  1   1   3   0   0   0   0   0   0   0   0   1   0   2   2 
+  1   0   0   0  10   1   5   1   0   0   3   3   0   1   0 
+  3   0   1   1   1   0   0   1   3   5   2   2  13   3   2 
+  1   0   0   0   0   0   0   0   0   0   0   2   2   1   0 
+  0   2   1   0   0   0   2   1   0   1   0   2   0   0   0 
+  0   0   0   3   0   0   0   2   0   0   0   4   7   5   1 
+  1   0   0   0   1   3   2   1
 
 No missing data for observation 1.
 
@@ -74,25 +74,25 @@ Nodes
  61  62  63  64  65  66  67  68  69  70  71  72  73  74  75 
  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90 
  91  92  93  94  95  96  97  98  99 100 101 102 103 104 105 
-106 107 108 109 110 111 112 113 114 115
+106 107 108 109 110 111 112 113
 out-degrees
-  0   0   0   0   0   0   0   6   0   0   1   3   0   1   5 
-  0   4   1   3   0   0   0   0   0   0   0   2   2   0   1 
-  4   0   0   3   0   0   7   3   1   1   0   0   0   1   0 
-  0   0   1   3   0   1   1   0   0   0   3   7   0   2   0 
-  1   7   1   0   1   0   0   1   0   0   0   1   1   3   1 
-  1   0   0   3   1   0   2   0   0   0   1   0   0   4   2 
-  0   0   0   2   1   3   0   0   0   1   0   0   0   0   3 
-  6   1   0   0   0   0   1   0   1   0
+  0   0   0   0   0   0   6   0   0   1   5   0   2   5   0 
+  4   1   3   0   0   0   0   0   0   0   2   2   1   4   1 
+  0   3   0   0   7   3   1   1   0   0   2   2   0   4   1 
+  1   3   0   1   1   0   0   0   3   7   0   2  10   5   7 
+  1   0   1   0   0   1   0   0   0   1   1   2   2   4   0 
+  0  12   1   0   2   0   2   1   2   1   0   4   2   0   0 
+  0   2   1   3   0   0   0   1   0   0   0   0   8   8   1 
+  1   0   0   1   1   0   2   0
 in-degrees
-  0   0   0   0   0   0   0   3   0   0   0   5   0   2   4 
-  0   2   0   0   0   0   0   0   0   0   0   2   2   1   0 
-  4   1   0   2   0   0   4   1   0   1   0   0   2   1   0 
-  4   1   0   2   0   1   1   0   0   0   2   4   0   1  10 
-  5   4   1   0   0   0   0   1   0   0   0   0   0   2   2 
-  3   0   0  10   0   0   0   0   2   1   2   1   0   1   0 
-  0   0   0   2   0   0   0   0   0   0   0   0   0   0   6 
-  6   1   1   0   0   1   0   0   2   0
+  0   0   0   0   0   0   6   0   0   1   5   0   2   5   0 
+  4   1   3   0   0   0   0   0   0   0   2   2   1   4   1 
+  0   3   0   0   7   3   1   1   0   0   2   2   0   4   1 
+  1   3   0   1   1   0   0   0   3   7   0   2  10   5   7 
+  1   0   1   0   0   1   0   0   0   1   1   2   2   4   0 
+  0  12   1   0   2   0   2   1   2   1   0   4   2   0   0 
+  0   2   1   3   0   0   0   1   0   0   0   0   8   8   1 
+  1   0   0   1   1   0   2   0
 
 No missing data for observation 2.
 
@@ -105,25 +105,25 @@ Nodes
  61  62  63  64  65  66  67  68  69  70  71  72  73  74  75 
  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90 
  91  92  93  94  95  96  97  98  99 100 101 102 103 104 105 
-106 107 108 109 110 111 112 113 114 115
+106 107 108 109 110 111 112 113
 out-degrees
-  0   2   1   0   2   0   4   7   0   0   0   4   3   4   5 
-  0   7   0   5   5   0   0   0   0   0   3   3   2   1   0 
-  5   1   1   6   0   0   9   9   0   0   0   0   2   1   0 
-  0   0   1   6   0   0   3   1   3   0   7   6   4   3   0 
-  4   7   1   0   2   4   2   2   0   0   0   0   4   7   1 
-  1   0   0   3   2   0   2   2   3   1   1   0   0   5   1 
-  1   0   1   9   0   3   0   1   2   2   3   1   0   0   2 
-  9   0   0   0   0   1   4   3   2   2
+  0   2   1   3   0   4   8   0   0   0   4   4   4   5   0 
+  7   1   5   5   0   0   0   0   3   3   4   2   0   5   3 
+  1   7   1   0   9   9   0   0   0   1   4   4   0   8   0 
+  3   6   0   2   4   2   4   0   7  10   5   5  22  11   8 
+  1   0   2   4   2   2   0   1   0   0   4   7   3   6   0 
+  1   9   2   0   2   3   3   1   1   0   0   5   1   1   1 
+  1   9   0   5   0   1   3   4   3   3   0   0   9  10   0 
+  1   0   0   1   4   3   5   2
 in-degrees
-  0   0   0   0   3   0   1   7   0   0   0   3   4   3   3 
-  0   4   1   0   4   0   0   0   0   3   0   3   1   0   0 
-  4   2   0   5   1   0   6   5   0   0   0   1   4   4   0 
-  8   0   2   4   0   2   1   1   2   0   4   8   3   3  22 
- 11   5   1   0   0   2   2   1   0   1   0   0   4   5   2 
-  5   0   1   8   1   0   0   1   2   0   1   0   0   2   0 
-  0   1   0   4   0   2   0   0   1   3   2   2   0   0   8 
-  8   0   1   0   0   1   0   2   4   1
+  0   2   1   3   0   4   8   0   0   0   4   4   4   5   0 
+  7   1   5   5   0   0   0   0   3   3   4   2   0   5   3 
+  1   7   1   0   9   9   0   0   0   1   4   4   0   8   0 
+  3   6   0   2   4   2   4   0   7  10   5   5  22  11   8 
+  1   0   2   4   2   2   0   1   0   0   4   7   3   6   0 
+  1   9   2   0   2   3   3   1   1   0   0   5   1   1   1 
+  1   9   0   5   0   1   3   4   3   3   0   0   9  10   0 
+  1   0   0   1   4   3   5   2
 
 No missing data for observation 3.
 
@@ -142,15 +142,15 @@ pub_first
 A total of 3 non-changing individual covariates.
 
 Number of missing cases:
-gender          4 	( 3.5 %)
+gender          0 	( 0.0 %)
 dutch           0 	( 0.0 %)
 pub_first       0 	( 0.0 %)
 
 Information about covariates:
               minimum  maximum	  mean  centered 
-gender          0.0     1.0      0.297    Y 
-dutch           0.0     1.0      0.739    Y 
-pub_first    1983.0  2023.0   2009.287    Y 
+gender          0.0     1.0      0.310    Y 
+dutch           0.0     1.0      0.752    Y 
+pub_first    1983.0  2023.0   2009.283    Y 
 The mean values are subtracted from the covariates.
 
 
@@ -171,24 +171,24 @@ Information about changing covariates:
 
               minimum  maximum	  mean  centered 
 pubs                                       Y 
-	period   1     0.0     2.0      1.539 
-	period   2     0.0     2.0      1.757 
-Overall                            1.648 
+	period   1     0.0     2.0      1.531 
+	period   2     0.0     2.0      1.752 
+Overall                            1.642 
 
 The mean value is subtracted from the centered covariate.
 
 
 
 The mean structural dissimilarity value subtracted in the
-balance calculations is         0.0146.
+balance calculations is         0.0227.
 
 For the similarity variable calculated from each actor covariate,
 the mean is subtracted.
 These means are:
-Similarity gender                   :       0.5784 
-Similarity dutch                    :       0.6110 
-Similarity pub_first                :       0.7325 
-Similarity pubs                     :       0.7154 
+Similarity gender                   :       0.5686 
+Similarity dutch                    :       0.6239 
+Similarity pub_first                :       0.7307 
+Similarity pubs                     :       0.7116 
 
 
 
@@ -202,33 +202,39 @@ Change in networks:
 -------------------
 
 For the following statistics, missing values (if any) are not counted.
+All   observed networks are symmetric.
+Therefore, it is assumed that this is an analysis of an non-directed relation.
 
 Network density indicators:
 observation time              1      2      3
-density                    0.006  0.009  0.017
-average degree             0.696  1.017  1.974
-number of ties                80    117    227
+density                    0.010  0.013  0.026
+average degree             1.133  1.504  2.938
+number of ties                64     85    166
 missing fraction           0.000  0.000  0.000
 
-The average degree is 1.229 
+The average degree is 1.858 
 
 
-Tie changes between subsequent observations:
+Edge changes between subsequent observations:
  periods        0 =>  0   0 =>  1   1 =>  0   1 =>  1   Distance Jaccard   Missing
-  1 ==>   2     12956        74        37        43       111     0.279         0 (0%)
-  2 ==>   3     12836       157        47        70       204     0.255         0 (0%)
+  1 ==>   2      6212        52        31        33       166     0.284         0 (0%)
+  2 ==>   3      6126       117        36        49       306     0.243         0 (0%)
+
+The distances reported in the output file for conditional estimation
+ for the network variable refer to the total symmetric adjacency matrix,
+ and therefore are double the distance reported above.)
 
 Directed dyad Counts:
  observation    total    mutual    asymm.     null
-     1.         13110       30       100     12980
-     2.         13110       62       110     12938
-     3.         13110      120       214     12776
+     1.         12656      128         0     12528
+     2.         12656      170         0     12486
+     3.         12656      332         0     12324
 
 Standard values for initial parameter values
 -------------------------------------------------
 
-constant net rate (period 1)            1.9490 
-constant net rate (period 2)            3.5804 
-outdegree (density)                               -1.5286 
+constant net rate (period 1)            2.9674 
+constant net rate (period 2)            5.4670 
+degree (density)                                  -1.5538 
 
 Initialisation of project <<C:\Users\Daphn\Documenten\labjournal\Results\comp_init>> executed succesfully.

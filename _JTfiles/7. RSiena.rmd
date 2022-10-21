@@ -1,0 +1,297 @@
+
+# sociology 
+
+```{r}
+#start with clean workspace 
+rm(list=ls())
+getwd()
+```
+
+# packages
+
+```{r}
+library(data.table) 
+library(tidyverse) 
+require(stringi)
+require(RSiena)
+
+```
+
+# load data
+
+```{r}
+#load dataobjects
+load("./data/descriptives/soc_net_array.RData")
+load("./data/descriptives/soc_df.RData")
+
+```
+
+zorg er voor dat de netwerken symmetrisch zijn
+
+```{r}
+net1 <- net_soc_array[,,1]
+net1 <- net1 + t(net1)
+net1[net1==2] <- 1
+
+net2 <- net_soc_array[,,2]
+net2 <- net2 + t(net2)
+net2[net2==2] <- 1
+
+net3 <- net_soc_array[,,3]
+net3 <- net3 + t(net3)
+net3[net3==2] <- 1
+
+
+net_soc_array <- array(data = c(net1, net2, net3), dim=c(dim(net1),3))
+
+```
+
+
+```{r}
+#dependent
+net <- sienaDependent(net_soc_array)
+```
+
+
+```{r}
+### Step 1: define data
+#gender
+gender <- as.numeric(soc_df$gender=="female")
+gender <- coCovar(gender)
+```
+
+
+```{r, eval=FALSE}
+#ncollabs
+ncollabs <- (soc_df$ncollabs)
+ncollabs <- coCovar(ncollabs)
+
+#pubs: time-varying
+pubsw1 <- pubsw2 <- pubsw3 <- pubsw4 <- NA
+for (i in 1:length(soc_df$gs_id)) {
+  pubsw1[i] <- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) & soc_staff_cit$year>=2010 & soc_staff_cit$year<=2012,])
+  pubsw2[i] <- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) & soc_staff_cit$year>=2013 & soc_staff_cit$year<=2015,])
+  pubsw3[i] <- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) & soc_staff_cit$year>=2016 & soc_staff_cit$year<=2018,])
+  pubsw4[i] <- nrow(soc_staff_cit[(soc_staff_cit$gs_id == soc_df$gs_id[i]) & soc_staff_cit$year>=2019 & soc_staff_cit$year<=2021,])
+}
+
+pub_df <- as.matrix(data.frame(pubsw1, pubsw2, pubsw3, pubsw4))
+pubs <- varCovar(pub_df)
+
+#year first pub
+soc_staff_cit %>% group_by(gs_id) %>%
+  mutate(pub_first = min(year)) %>% 
+  select(c("gs_id", "pub_first")) %>%
+  distinct(gs_id, pub_first, .keep_all = TRUE) -> firstpub_df
+
+soc_df <- left_join(soc_df, firstpub_df)
+
+#if no publication yet, set pub_first op 2023
+soc_df %>% mutate(pub_first = replace_na(pub_first, 2023)) -> soc_df
+
+pub_first <-  coCovar(soc_df$pub_first)
+```
+
+
+```{r}
+mydata <- sienaDataCreate(net, gender)
+```
+
+
+```{r}
+### Step 2: create effects structure
+myeff <- getEffects(mydata)
+#effectsDocumentation(myeff)
+```
+
+
+```{r}
+### Step 3: get initial description
+print01Report(mydata, modelname = "./results/soc_init")
+```
+
+![](results/soc_init.txt){#id .class width=100% height=200px}
+
+optie 1
+
+```{r}
+knitr::incl
+```
+
+
+```{r, eval=FALSE}
+### Step4: specify model
+myeff <- includeEffects(myeff, degPlus) #some publish a lot, some not. (interpretation: talent/luck? )
+myeff <- includeEffects(myeff, transTriads)
+myeff <- includeEffects(myeff, sameX, interaction1 = "gender")
+#myeff <- includeEffects(myeff, egoPlusAltX, interaction1 = "pubs") #if you have many pubs, you will probably publish more per year? 
+myeff <- includeEffects(myeff, absDiffX, interaction1 = "pub_first") #senior publishes with junior
+
+### Step5 estimate
+myAlgorithm <- sienaAlgorithmCreate(projname = "soc_init")
+(ans <- siena07(myAlgorithm, data = mydata, effects = myeff))
+# (the outer parentheses lead to printing the obtained result on the screen) if necessary, estimate
+# further
+(ans <- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans))
+```
+
+
+# computer science (RU)
+
+```{r}
+#start with clean workspace 
+rm(list=ls())
+getwd()
+```
+
+# packages
+
+```{r}
+library(data.table) 
+library(tidyverse) 
+require(stringi)
+require(RSiena)
+
+```
+
+# load data
+
+```{r}
+#load dataobjects
+load("./data/descriptives/cs_net_array.RData")
+load("./data/descriptives/cs_df.RData")
+
+```
+
+zorg er voor dat de netwerken symmetrisch zijn
+
+```{r}
+net1 <- net_cs_array[,,1]
+net1 <- net1 + t(net1)
+net1[net1==2] <- 1
+
+net2 <- net_cs_array[,,2]
+net2 <- net2 + t(net2)
+net2[net2==2] <- 1
+
+net3 <- net_cs_array[,,3]
+net3 <- net3 + t(net3)
+net3[net3==2] <- 1
+
+
+net_cs_array <- array(data = c(net1, net2, net3), dim=c(dim(net1),3))
+
+```
+
+
+```{r}
+#dependent
+net <- sienaDependent(net_cs_array)
+```
+
+gender
+```{r}
+### Step 1: define data
+#gender
+gender <- as.numeric(cs_df$gender=="female")
+gender <- coCovar(gender)
+```
+
+cites per jaar
+
+Let op. de cites zijn al geaggregeerd per jaar. Als je dus publicaties per jaar zou willen tellen, moet je ander bestand gebruiken!! 
+
+```{r}
+load("./data/names_staff_cit_v20221006.RData")
+
+names_staff_cit %>%
+  filter(names_staff_cit$gs_id %in% cs_df$gs_id) -> cs_staff_cit
+
+#duplicates verwijderen
+sel <- (duplicated.data.frame(cs_staff_cit))
+
+cs_staff_cit %>% 
+  filter(!sel) -> cs_staff_cit
+
+
+```
+
+
+```{r, eval=FALSE}
+#cites: time-varying
+citesw1 <- citesw2 <- citesw3 <- NA
+for (i in 1:length(cs_df$gs_id)) {
+  citesw1[i] <- sum(cs_staff_cit[(cs_staff_cit$gs_id == cs_df$gs_id[i]) & cs_staff_cit$year>=2016 & cs_staff_cit$year<=2017,c("cites")])
+  
+  citesw2[i] <- sum(cs_staff_cit[(cs_staff_cit$gs_id == cs_df$gs_id[i]) & cs_staff_cit$year>=2018 & cs_staff_cit$year<=2019,c("cites")])
+  
+  citesw3[i] <- sum(cs_staff_cit[(cs_staff_cit$gs_id == cs_df$gs_id[i]) & cs_staff_cit$year>=2020 & cs_staff_cit$year<=2022,c("cites")])
+}
+
+#given the right-skewed distribution, perhaps better to use log-transformation. 
+#to avoid value -Inf I added .5 to everyone
+cites_df <- log(as.matrix(data.frame(citesw1, citesw2, citesw3)) + .5)
+cites <- varCovar(cites_df)
+```
+
+year first pub
+
+```{r, eval=FALSE}
+#year first pub
+cs_staff_cit %>% group_by(gs_id) %>%
+  mutate(pub_first = min(year)) %>% 
+  select(c("gs_id", "pub_first")) %>%
+  distinct(gs_id, pub_first, .keep_all = TRUE) -> firstpub_df
+
+cs_df <- left_join(cs_df, firstpub_df)
+
+#if no publication yet, set pub_first op 2023
+cs_df %>% mutate(pub_first = replace_na(pub_first, 2023)) -> cs_df
+
+pub_first <-  coCovar(cs_df$pub_first)
+```
+
+
+```{r}
+mydata <- sienaDataCreate(net, gender, cites, pub_first)
+```
+
+
+```{r}
+### Step 2: create effects structure
+myeff <- getEffects(mydata)
+#effectsDocumentation(myeff)
+```
+
+
+```{r}
+### Step 3: get initial description
+print01Report(mydata, modelname = "./results/soc_init")
+```
+
+<!---to show this file in your lab journal use the following code---> 
+
+![](results/soc_init.txt){#id .class width=100% height=200px}
+
+
+
+```{r, eval=FALSE}
+### Step4: specify model
+myeff <- includeEffects(myeff, degPlus) #some publish a lot, some not. (interpretation: talent/luck? )
+myeff <- includeEffects(myeff, transTriads)
+myeff <- includeEffects(myeff, sameX, interaction1 = "gender")
+myeff <- includeEffects(myeff, egoPlusAltX, interaction1 = "cites") #if you have many cites, you will get more collaboration within department 
+myeff <- includeEffects(myeff, egoPlusAltX, interaction1 = "pub_first") #if you are older, you will get more collaboration within department 
+```
+
+
+```{r, eval=FALSE}
+### Step5 estimate
+myAlgorithm <- sienaAlgorithmCreate(projname = "cs_init")
+(ans <- siena07(myAlgorithm, data = mydata, effects = myeff))
+# (the outer parentheses lead to printing the obtained result on the screen) if necessary, estimate
+# further
+(ans <- siena07(myAlgorithm, data = mydata, effects = myeff, prevAns = ans))
+```
+
+
