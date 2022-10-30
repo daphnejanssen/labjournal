@@ -1,0 +1,79 @@
+---
+title: "Theory"
+bibliography: references.bib
+author: "Daphne Janssen"
+---
+
+
+
+```{r, globalsettings, echo=FALSE, warning=FALSE, results='hide'}
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE)
+opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE, warning = FALSE, message = FALSE,comment = "#>", cache=TRUE, class.source=c("test"), class.output=c("test2"))
+options(width = 100)
+rgl::setupKnitr()
+
+
+
+colorize <- function(x, color) {sprintf("<span style='color: %s;'>%s</span>", color, x) }
+
+```
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(position = c('top', 'right'))
+#klippy::klippy(color = 'darkred')
+#klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
+```
+
+Last compiled on `r Sys.time()`
+
+<!---
+Last compiled on `r format(Sys.time(), '%B, %Y')`
+--->
+
+<br>
+
+----
+
+# Theory
+
+<br>
+
+## Hypothesis 1
+
+The gender gap within the STEM research field could possibly be explained by differences in publication networks between male and female scientists. Gender difference in the amount of publications is an important aspect of gender inequality within STEM, but also more broadly within the scientific community. Previous research shows that women publish less scientific articles than men [@mathews2001gender] and that women scientists contribute less to journal articles compared to the proportion they make up of the academic staff [@schucan2011women]. This is problematic because academic publications are closely related to professional recognition and are an indication of a scientist’s scientific contribution [@mathews2001gender]. Moreover, it is known that there are gender differences in scientific collaborations, putting women at a disadvantage [@jadidi2018gender].
+
+An explanation for the difference in copublications, may be provided by the homophily principle. This principle assumes that individuals who have similarities with each other are more likely to interact with each other than individuals who have no similarities with each other [@mcpherson2001birds]. Regarding gender, this implies that men interact more with men and women interact more with women. According to @mcpherson2001birds, this is mainly caused by inbreeding homophily: because there are roughly equal numbers of men and women in the world, the availability of people with whom we can enter into a relationship hardly plays a role, and differences in ties mainly come about through preferences and differences in constraints and resources. 
+
+Gender homophily is visible at the earliest in differences in play patterns between boys and girls [Maccoby, in @mcpherson2001birds, p. 422]. It appears that children are more likely to remedy intransitivity by dropping a friendship with someone of the same sex, rather than entering into a friendship with someone of the opposite sex, [@tuma1979effects]. @mcpherson2001birds argue that these homphily-oriented ways of adapting the structures of relationships result in boys and girls entering gender-segregated social circles. As a result, friendship networks are still relatively gender-segregated in later life, compared to other dimensions of segregation such as age, ethnicity and education). Building on this, it can be argued that inbreeding gender homophily plays an important role in the considerations scientists make regarding the individuals they publish with.
+
+Based on the role that publication networks play in gaining prestige within the scientific community [@kegen2013science; @Collins1] and the expectation that inbreeding gender homophily has a major influence on the structure of scientists’ publication networks, the expectation can be derived that gender segregation in publication will only increase over time. This leads to the first hypothesis:
+
+**H1:** Gender segregation in the publication network increased between 2016 and 2022 within both the sociology department and the computing science department at Radboud University.
+
+<br>
+
+## Hypothesis 2
+
+Although society in general is heterogeneous in terms of gender, in certain areas, such as work or study fields, gender representation is far from equal [@mcpherson2001birds]. As a result, the networks formed in these fields do get influenced by baseline homophily in terms of gender. This influence may manifest itself in the occurrence of more heterogeneous networks among the gender that is underrepresented than among the group that is overrepresented [@mcpherson2001birds]. This pattern is even more strongly found when it comes to ties that have an instrumental function or possess a certain status charge. On top of that, in many work situations, both women and men use ties with men as networking routes to complete certain tasks and obtain information [@mcpherson2001birds].
+
+Based on the foregoing, gender homophily can be expected to play an important role in the development of publication networks of scientists; not only because the preference for co-publishing is expected to go to someone of the same sex, but also because the gender ratio is out of balance in certain research directions and men seem to play a more relevant role within work-related networks. Thus, when not only inbreeding homophily but also baseline homophily is taken into account, specific expectations can be derived for gender homophily within a STEM and a non-STEM study. The sociology department within Radboud University is 50 per cent male and 50 per cent female. In contrast, the computing science department contains about 70 per cent men and 30 per cent women. Based on this, it can be expected that the presence of gender homophily in publication networks is stronger within the computing science department than within the sociology department. The hypothesis that can be derived based on this expectation reads: 
+
+ **H2:** The gender homophily principle applies more strongly to the publication network of the computing science department than to the publication network of the sociology department.
+ 
+<br>
+
+## Hypothesis 3
+
+However, when the recent literature on gender homophily in STEM is reviewed, the findings on whether the homophily principle is more common in publication networks of male scientists than female scientists (or vice versa) are inconsistent.  While some studies find that  male scientists in the field of STEM are more likely to collaborate with men than with women, reducing the chances for women to be signalled [@Collins1], other studies conclude that women practice more gender homophily [@jadidi2018gender]. @ghiasi2015compliance find that engineers predominantly collaborate with men, contributing to scientific structures recognised by male dominance. @jadidi2018gender further find that women are generally less likely to enter into collaborations that will lead to success and are more likely to be embedded in ego networks with structural holes. 
+
+Structural network effects are an important part of social network analysis. The R Siena manual [@RSienaman] defines structural effects as those effects that emanate only from the network itself. Structural effects can explain away other effects, such as homophily effects, and vice versa. The lack of uniformity within current results regarding gender homophily in publication networks of STEM scientists can possibly be explained by the presence of structural network effects. Because publication networks differ in form and content, structural effects and possible homophily effects also differ within these networks. As a result, the degree of gender homophily in publication networks of scientists within a STEM direction may differ from each other. 
+
+Despite the fact that structural network effects may be able to partially explain away the presence of the gender homophily principle, the difference in gender composition between a STEM and non-STEM study seems to be such a large demonstrator of baseline gender homophily that the difference in the application of the gender homophily principle between the computer science department and the sociology department is expected to hold. On this basis, the third and final hypothesis can be derived:
+
+**H3:** When structural network effects are taken into account, the gender homophily principle still applies more strongly to the publication network within the computer Science department than to the  publication network within the sociology department. 
+
+<br>
+
+# References

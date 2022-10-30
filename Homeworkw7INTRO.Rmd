@@ -1,0 +1,74 @@
+---
+title: "Introduction"
+bibliography: references.bib
+author: "Daphne Janssen"
+---
+
+
+
+```{r, globalsettings, echo=FALSE, warning=FALSE, results='hide'}
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE)
+opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE, warning = FALSE, message = FALSE,comment = "#>", cache=TRUE, class.source=c("test"), class.output=c("test2"))
+options(width = 100)
+rgl::setupKnitr()
+
+
+
+colorize <- function(x, color) {sprintf("<span style='color: %s;'>%s</span>", color, x) }
+
+```
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(position = c('top', 'right'))
+#klippy::klippy(color = 'darkred')
+#klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
+```
+
+Last compiled on `r Sys.time()`
+
+<!---
+Last compiled on `r format(Sys.time(), '%B, %Y')`
+--->
+
+<br>
+
+----
+
+# Introduction   
+
+<br>
+
+For a long time, there has been an underrepresentation of women in STEM (science, technology, engineering and mathematics) studies and professions [@STEM]. Men are the figureheads in STEM research and hold most senior positions in STEM occupations. Research shows that men are more likely to be authors of prestigious journals in the STEM field, compared to women [@holman2018gender]. It also appears that STEM journals invite men to submit papers about twice as often, compared to women [@holman2018gender]. On the other hand, women experience more difficulties and inequalities in gaining senior positions and prestige within the scientific community in STEM fields. Previous research shows that women make up the majority of people in junior positions, earn lower salaries, receive fewer grants, are less likely to be promoted and receive fewer resources and funding for their research [@holman2019researchers]. These findings show that the gender gap in STEM has far-reaching implications for gender inequality and that the gap is unlikely to narrow on its own.
+
+From the literature, it appears that networks are a central factor in gender inequality in obtaining leading scientific positions [@kegen2013science] and that co-authorship is highly relevant to promotion and productivity [@Collins1]. Based on this, it can be reasoned that gender inequality within the STEM field stems partly from network characteristics of men and women in STEM. A well-known characteristic that distinguishes networks of men and women is the occurrence of gender homophily in forming ties. The homophily principle reads, “Similarity breeds connection” [@mcpherson2001birds, p. 415]. Applied to gender, this implies that women are more connected to women and men are more connected to men [@mcpherson2001birds]. In terms of publication networks, this would mean that women are more likely to publish with women and thus have more women in their network, while men have more publications with men and thus have more men in their network. 
+
+The fact that men are not only overrepresented within STEM [@STEM], but are also more likely to hold higher positions within STEM research [@holman2018gender] and, according to the homphily principle [@mcpherson2001birds], have more men in their publication networks than women, possibly contributes to the maintenance and possible widening of the gender gap in STEM.
+
+<br>
+
+To get a first impression of gender inequality in terms of publication networks of scientists within a STEM research direction, compared to a non-STEM research direction, it is necessary to acquire more information on the degree of gender segregation within the publication networks of scientists from both research directions. The gap between men and women taking STEM courses is widest in computer sciences and engingeering & technology: 19 percent of students are women, compared to 81 percent who are men [@STEM]. In order to properly compare the influence of an equal representation of men and women within a non-STEM study and an unequal distribution of men and women within a STEM study on gender segregation within publication networks, the sociology department and the computing science department of Radboud University will be compared. The first research question that will be answered within this study is: 
+
+*1) To what extent does gender segregation change in the publication network of male and female scientists at Radboud University within sociology and computing science between 2016 and 2022?*
+
+<br>
+
+Furthermore, this research paper will be devoted to comparing the change in gender inequality over time within the sociology department and the computing science department. To this end, the extent to which the gender homophily principle affects the development of the publication networks of male and female scientists between the two departments will be compared. This gives rise to the second research question:
+
+*2) To what extent is there a difference in the application of the gender homophily principle to the publication network of male and female scientists at Radboud University, between sociology and computing science between 2016 and 2022?*
+
+<br>
+
+To find out more about some specific underlying factors of the development of gender homophily within the publication networks of scientists within the sociology department compared to the publication networks of scientists within the computing science department, with the aim of contributing to a better understanding of gender inequality within STEM, this paper will focus on the impact of personal and structural network characteristics of scientists within both departments. The third and final research question reads:
+
+*3) To what extent do structural network effects influence the difference in gender homophily in the publication network of male and female scientists at Radboud University, between sociology and computing science between 2016 and 2022?*
+
+<br>
+
+By looking at the differences in co-publication patterns between men and women within the sociology and computer science departments, it becomes possible to examine the role of networks in gender inequality within STEM over time. A social network perspective is crucial to thoroughly examine the changing role of ties, specifically the severity of homophily, for the gender gap and resulting gender inequality in the scientific field of STEM. This perspective makes it possible to explore how the specific manifestations of gender homophily surface in ties through networks. I aim to contribute to the current scientific field regarding gender differences in publication networks within STEM, by investigating the extent to which the homophily principle changes over time within, and differs between, the sociology and computing science departments at Radboud university.
+
+<br>
+
+# References
+

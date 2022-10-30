@@ -1,0 +1,1204 @@
+---
+title: "Descriptives"
+#bibliography: references.bib
+author: "Daphne Janssen"
+output: 
+  html_document:
+    code_folding: "hide"
+editor options: 
+  markdown:
+    wrap: 72
+---
+
+
+
+```{r, globalsettings, echo=FALSE, warning=FALSE, results='hide'}
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE)
+opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE, warning = FALSE, message = FALSE,comment = "#>", cache=TRUE, class.source=c("test"), class.output=c("test2"))
+options(width = 100)
+rgl::setupKnitr()
+
+
+
+colorize <- function(x, color) {sprintf("<span style='color: %s;'>%s</span>", color, x) }
+
+```
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(position = c('top', 'right'))
+#klippy::klippy(color = 'darkred')
+#klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
+```
+
+Last compiled on `r Sys.time()`
+
+<!---
+Last compiled on `r format(Sys.time(), '%B, %Y')`
+--->
+
+<br>
+
+----
+
+# Descriptives Computing science staff RU
+
+<br>
+
+## Descriptives variables dataset 
+
+```{r}
+# start with clean workspace 
+rm(list=ls())
+getwd()
+```
+```{r}
+# loading packages
+library(tidyverse)
+```
+
+```{r}
+# loading data
+load("C:\\Users\\Daphn\\Documenten\\pubnets\\data\\names_df2_v20220106.RData")
+
+load("C:\\Users\\Daphn\\Documenten\\pubnets\\data\\names_df_publications_v20221006.RData")
+```
+
+```{r}
+# selecting the sociology sample
+
+# Some gs_id's were deselected (just by eye-balling) because the data scrape was not correct 
+deselect <- c(24,25,34,35)
+
+names_df %>% 
+  filter(affiliation=="Radboud University") %>%
+  filter(field=="sociology") %>% 
+  filter(!(id %in% deselect)) -> soc_df
+
+names_df_publications %>% 
+  filter(gs_id %in% soc_df$gs_id) -> socpub_df
+  
+soc_df %>% 
+  select(c("gs_id", "lastname")) %>%
+  right_join(socpub_df) -> socpub_df
+
+rm(names_df)  
+rm(names_df_publications)  
+rm(deselect)
+```
+
+```{r}
+# Cleaning the names a bit
+soc_df$lastname_pubs <- as.character(str_split(soc_df$lastname, pattern=",", n = 2, simplify = TRUE)[,1]) 
+socpub_df$author <- tolower(socpub_df$author)
+```
+
+```{r}
+# Saving the data in a descriptives folder
+save(soc_df, file="C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\soc_df.RData")
+save(socpub_df, file="C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\socpub_df.RData")
+```
+
+```{r}
+# Adding value labels to the variable 'dutch'
+soc_df$dutch <- factor(soc_df$dutch,
+levels = c(0,1),
+labels = c("non-dutch", "dutch"))
+```
+
+```{r}
+# Frequencies of the variables 'dutch' and 'gender'
+table(soc_df$gender)
+table(soc_df$dutch)
+```
+**Frequencies**: The frequencies of the gender variable show that the male/female distribution within the sociology department is equal. In contrast, the distribution between people of Dutch and non-Dutch origin is much less equal within the sociology department: only 15.6 percent of staff are of non-Dutch origin, compared to 84.4 percent who are of Dutch origin. 
+
+<br>
+
+```{r}
+# Visualisation of the gendercomposition of the three waves
+library(ggplot2)
+
+ggplot(soc_df, aes(factor(gender), fill = factor(gender))) +
+    geom_bar() +ggtitle("The gender composition of the sociology department in 2022")
+```
+**Bar chart of the gender composition**: this bar chart graphically depicts the equal gender distribution within the sociology department.
+
+<br>
+
+```{r}
+# Visualisation of the ethnicitycomposition of the three waves
+library(ggplot2)
+
+socbar <- ggplot2:::ggplot(soc_df, aes(factor(dutch), fill = factor(dutch))) + geom_bar()  +ggtitle("The ethnicity composition of the sociology department in 2022")
+socbar + scale_fill_manual(values=c("#619CFF", "#00BA38"))
+```
+**Bar chart of the ethnicity composition**: this bar chart graphically shows the unequal distribution of having or not having Dutch ancestry within the sociology department.
+
+<br>
+
+
+## Array
+
+### Creating an array
+
+```{r}
+# start with clean workspace 
+rm(list=ls())
+getwd()
+```
+
+```{r}
+# loading packages
+library(data.table) 
+library(tidyverse) 
+require(stringi)
+require(RSiena)
+```
+
+```{r}
+# loading data
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\soc_df.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\socpub_df.RData")
+```
+
+```{r}
+# Network based on publications
+network2016_2017 <- matrix(NA, nrow=nrow(soc_df), ncol=nrow(soc_df))
+network2018_2019 <- matrix(NA, nrow=nrow(soc_df), ncol=nrow(soc_df))
+network2020_2022 <- matrix(NA, nrow=nrow(soc_df), ncol=nrow(soc_df))
+```
+
+```{r}
+#select publications of the corresponding time era
+pubs_sel <- socpub_df %>%
+    filter(year>=2016 & year<=2017)
+
+#fill the matrix
+for (ego in 1: nrow(soc_df)) {
+  name_ego <- soc_df$lastname_pubs[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[pubs_sel$gs_id==soc_df$gs_id[ego],] #selecteer de publicaties van ego
+  for (alter in 1:nrow(soc_df)){
+    name_alter <- soc_df$last_name[alter] #which alter? 
+    network2016_2017[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1)  #did alter publish with ego
+  }
+}
+```
+
+```{r}
+#select publications of the corresponding time era
+pubs_sel <- socpub_df %>%
+    filter(year>=2018 & year<=2019)
+
+#fill the matrix
+for (ego in 1: nrow(soc_df)) {
+  name_ego <- soc_df$lastname_pubs[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[pubs_sel$gs_id==soc_df$gs_id[ego],] #selecteer de publicaties van ego
+  for (alter in 1:nrow(soc_df)){
+    name_alter <- soc_df$last_name[alter] #which alter? 
+    network2018_2019[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1)  #did alter publish with ego
+  }
+}
+```
+
+```{r}
+#select publications of the corresponding time era
+pubs_sel <- socpub_df %>%
+    filter(year>=2020 & year<=2022)
+
+#fill the matrix
+for (ego in 1: nrow(soc_df)) {
+  name_ego <- soc_df$lastname_pubs[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[pubs_sel$gs_id==soc_df$gs_id[ego],] #selecteer de publicaties van ego
+  for (alter in 1:nrow(soc_df)){
+    name_alter <- soc_df$last_name[alter] #which alter? 
+    network2020_2022[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1)  #did alter publish with ego
+  }
+}
+```
+
+```{r}
+# Putting all adjacency matrices in an array 
+net_soc_array <- array(data = c(network2016_2017, network2018_2019, network2020_2022), dim=c(dim(network2020_2022),3))
+```
+
+```{r}
+# Saving the array
+save(net_soc_array, file="C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\soc_net_array.RData")
+```
+
+<br>
+
+### Descriptives based on array
+
+```{r}
+# Start with a clean workspace 
+rm(list=ls())
+getwd()
+```
+
+```{r}
+# Loading packages
+library(data.table) 
+library(tidyverse) 
+require(stringi)
+require(RSiena)
+require(igraph)
+```
+
+```{r}
+# Loading dataobjects
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\soc_net_array.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\soc_df.RData")
+```
+
+```{r}
+# Correcting for publications which are not present for both authors and displaying the degree distribution of of the sociology department's publication network in a histogram.
+net1 <- net_soc_array[,,1]
+net1 <- net1 + t(net1)
+net1[net1==2] <- 1
+diag(net1) <- 0
+degree <- rowSums(net1)
+hist(degree, main="The degree distribution of the sociology department in wave 1")
+
+net2 <- net_soc_array[,,2]
+net2 <- net2 + t(net2)
+net2[net2==2] <- 1
+diag(net2) <- 0
+degree <- rowSums(net2)
+hist(degree, , main="The degree distribution of the sociology department in wave 2")
+
+net3 <- net_soc_array[,,3]
+net3 <- net3 + t(net3)
+net3[net3==2] <- 1
+diag(net3) <- 0
+degree <- rowSums(net3)
+hist(degree, main="The degree distribution of the sociology department in wave 3")
+```
+**Histograms of the degree distributions**: Comparing the histograms with the degree distribution for of the sociology department for all three waves, it appears that the degree distribution becomes less skewed over time. Whereas in wave 1 one individual still has six to seven ties and about 20 indivdiuals have zero to one tie, the largest amount of ties someone has in wave 2 is five to six and some people in wave 2 have four to five ties. In wave 3, fewer people have zero to one tie and the amount of people with two to six ties has increased.In general, the distribution of number of ties becomes more proportional over the years. 
+
+<br>
+
+## Plots
+
+### Creating the plots
+```{r}
+# Creating graphs from adjacency matrices
+net1_g <- igraph::graph_from_adjacency_matrix(net1, mode = c("undirected"))
+net2_g <- igraph::graph_from_adjacency_matrix(net2, mode = c("undirected"))
+net3_g <- igraph::graph_from_adjacency_matrix(net3, mode = c("undirected"))
+
+# Putting the information of net1_g, net2_g and net3_g into a dataframe
+in_network <- data.frame(as_ids(V(net1_g)))
+in_network <- data.frame(as_ids(V(net2_g)))
+in_network <- data.frame(as_ids(V(net3_g)))
+```
+
+```{r}
+# Adding the names and citation data to in_network
+# Giving the first column the name 'number'
+names(in_network)[1] <- "number"
+
+# Creating the object 'ru_nodes' with the names and total cites of the sociology staffmembers
+ru_nodes <- soc_df[, c("name", "total_cites")]
+
+# Adding a new variable to the dataset ru_nodes, called 'number' representing the numbers of the nodes
+ru_nodes$number <- c(1:32)
+
+# Combining in_network with ru_nodes, based on the numbers of the nodes, to eventually sow the names of the computing science staff
+in_network <- left_join(in_network, ru_nodes, by = c("number" = "number"))
+#in_network$vcol <- ifelse(is.na(in_network$total_cites), "#E69F00", "#56B4E9")
+```
+
+```{r}
+# Defining the color of the nodes by gender 
+soc_df$gcol <- ifelse(soc_df$gender == "male", "cyan4", "coral1")
+
+# Adapting the node size to the number of citations
+in_network$total_cites <- as.numeric(in_network$total_cites)
+```
+
+```{r}
+# Plotting the network of wave 1
+
+plot(net1_g,
+     vertex.color = soc_df$gcol,
+     vertex.label = soc_df$name,
+     vertex.size = ifelse(!is.na(in_network$total_cites), log(in_network$total_cites), 2),
+     vertex.frame.color = "gray",  
+     vertex.label.color = "black",  
+     vertex.label.family = "Helvetica", 
+     vertex.label.cex = 0.7,  
+     vertex.label.dist = 0.8,  
+     edge.curved = 0.2,  
+     edge.arrow.size = 0.5)
+title("The publication network of the sociology department of wave 1",cex.main=1.2, col.main="black", family.main="Helvetica")
+
+igraph::degree(net1_g)
+igraph::dyad.census(net1_g)
+igraph::triad.census(net1_g)
+# igraph::edge_density(net1_g) (will be evaluated later on)
+
+sum(igraph::degree(net1_g))
+```
+
+<br>
+
+### Wave 1: interpreting the plot and the descriptives
+
+**Plot**: The plot shows that in wave 1, there were few people who had published with each other. Moreover, the vast majority of publucation ties consisted between men. In 2016 and 2017, only two women had ties with each other compared to 11 ties men had with each other. However, it is important to bear in mind here that most of the members of the sociology department in 2022 did not yet belong to the department in 2016 or 2017. This makes it logical that the amount of ties these people had with each other in 2016 and 2017 is small. Furthermore, the network plot shows that men were cited by far the most often in wave 1. 
+
+**Descriptives**: The interpretation of the plot already shows that the difference in degree between the nodes in the publication network of the sociology department of wave 1 is large: one person has by far the most ties while there are also many persons with no ties. Moreover, in terms of dyad census, there are only 15 dyads who have ties, and 481 dyads who have no ties.  
+
+<br>
+
+```{r}
+# Plotting the network of wave 2
+
+plot(net2_g,
+     vertex.color = soc_df$gcol,
+     vertex.label = soc_df$name,
+     vertex.size = ifelse(!is.na(in_network$total_cites), log(in_network$total_cites), 2),
+     vertex.frame.color = "gray",  
+     vertex.label.color = "black",  
+     vertex.label.family = "Helvetica", 
+     vertex.label.cex = 0.7,  
+     vertex.label.dist = 0.8,  
+     edge.curved = 0.2,  
+     edge.arrow.size = 0.5)
+title("The publication network of the sociology department of wave 2",cex.main=1.2, col.main="black", family.main="Helvetica")
+
+igraph::degree(net2_g)
+igraph::dyad.census(net2_g)
+igraph::triad.census(net2_g)
+# igraph::edge_density(net2_g) (will be evaluated later on)
+
+sum(igraph::degree(net2_g))
+```
+
+<br>
+
+### Wave 2: interpreting the plot and the descriptives
+
+**Plot**: The network plot of wave 2 shows that already some more individuals belonging to the sociology department in 2022 have published with each other in 2018 and 2019. However, the degree of gender segregation seems to have remained almost the same; as many men have a tie with each other in wave 1 as in wave 2, but women no longer have any ties with each other. Furthermore, it appears that men are still predominantly cited most often in wave 2. 
+
+**Descriptives**: The degree of the network of wave 2 seems to have become slightly more evenly distributed: there are no longer any nodes with more than six ties, although there are still many nodes with no ties at all. This is also very subtly reflected in the dyad census values: in wave 2, 17 dyads have a tie and 479 dyads have no tie. 
+
+<br>
+
+```{r}
+# Plotting the network of wave 3
+
+plot(net3_g,
+     vertex.color = soc_df$gcol,
+     vertex.label = soc_df$name,
+     vertex.size = ifelse(!is.na(in_network$total_cites), log(in_network$total_cites), 2),
+     vertex.frame.color = "gray",  
+     vertex.label.color = "black",  
+     vertex.label.family = "Helvetica", 
+     vertex.label.cex = 0.7,  
+     vertex.label.dist = 0.8,  
+     edge.curved = 0.2,  
+     edge.arrow.size = 0.5) 
+title("The publication network of the sociology department of wave 3",cex.main=1.2, col.main="black", family.main="Helvetica")
+
+igraph::degree(net3_g)
+igraph::dyad.census(net3_g)
+igraph::triad.census(net3_g)
+# igraph::edge_density(net3_g) (will be evaluated later on)
+
+sum(igraph::degree(net3_g))
+```
+
+<br>
+
+### Wave 3: interpreting the plot and the descriptives
+
+**Plot**: The network plot shows that gender segregation has changed slightly in wave 3 compared to wave 2. Men and women appear to have started publishing more with each other and some publication links between women now exist again. However, the amount of publication ties between men has remained unchanged. Furthermore, women are slowly catching up in terms of number of citations, but men are still well ahead. 
+
+**Descriptives**: In wave 3, the degree is even more fairly distributed than in wave 2. More people now have at least one or two ties, and several now have six ties. The dyad census is in line with this finding: there are now 28 dyads with publication ties and still 468 dyads without publication ties. 
+
+<br>
+
+### Other descriptives based on plot
+
+```{r}
+# number of nodes.
+vcount(net1_g)
+vcount(net2_g)
+vcount(net3_g)
+```
+
+**Number of nodes**: All networks consist of 32 nodes, or individuals. 
+
+<br>
+
+```{r}
+# number of edges
+ecount(net1_g)
+ecount(net2_g)
+ecount(net3_g)
+```
+
+**Number of edges**: The number of edges increases for each wave.
+
+<br>
+
+```{r}
+# transitivity
+transitivity(net1_g, type = c("localundirected"), isolates = c("NaN", "zero"))
+transitivity(net2_g, type = c("localundirected"), isolates = c("NaN", "zero"))
+transitivity(net3_g, type = c("localundirected"), isolates = c("NaN", "zero"))
+```
+
+**Transitivity**: The number of nodes with a (high) transitivity index increases for each wave. This means that for each wave, the number of nodes with transitive triads, relative to the possible number of nodes with transitive triads, increases.
+
+<br>
+
+```{r}
+# betweenness
+igraph::betweenness(net1_g, directed = FALSE)
+igraph::betweenness(net2_g, directed = FALSE)
+igraph::betweenness(net3_g, directed = FALSE)
+```
+
+**Betweenness**: The amount of nodes that act as bridges increases for each wave.
+
+<br>
+
+```{r}
+# global transitivity
+
+igraph::transitivity(net1_g, type = "global")
+sna::gtrans(net1)
+
+triad_net1 <- data.frame(sna::triad.census(net1))
+
+transitivity_net1 <- (3 * triad_net1$X300)/(triad_net1$X201 + 3 * triad_net1$X300)
+transitivity_net1
+
+igraph::transitivity(net2_g, type = "global")
+sna::gtrans(net2)
+
+triad_net2 <- data.frame(sna::triad.census(net2))
+
+transitivity_net2 <- (3 * triad_net2$X300)/(triad_net2$X201 + 3 * triad_net2$X300)
+transitivity_net2
+
+igraph::transitivity(net3_g, type = "global")
+sna::gtrans(net3)
+
+triad_net3 <- data.frame(sna::triad.census(net3))
+
+transitivity_net3 <- (3 * triad_net3$X300)/(triad_net3$X201 + 3 * triad_net3$X300)
+transitivity_net3
+```
+**Global transitivity**: the global transitivity decreases from wave 1 to wave 2, and increases from wave 2 to wave 3. This means that the ratio between the number of transitive triads and the possible number of transitive triads decreases between wave 1 and wave 2 and increases betwixt wave 2 and wave 3. 
+
+<br>
+
+```{r}
+# Defining functions
+
+# density: observed relations divided by possible relations
+fdensity <- function(x) {
+    # x is your nomination network make sure diagonal cells are NA
+    diag(x) <- NA
+    # take care of RSiena structural zeros, set as missing.
+    x[x == 10] <- NA
+    sum(x == 1, na.rm = T)/(sum(x == 1 | x == 0, na.rm = T))
+}
+
+# calculate intragroup density
+fdensityintra <- function(x, A) {
+    # A is matrix indicating whether nodes in dyad have same node attributes
+    diag(x) <- NA
+    x[x == 10] <- NA
+    diag(A) <- NA
+    sum(x == 1 & A == 1, na.rm = T)/(sum((x == 1 | x == 0) & A == 1, na.rm = T))
+}
+
+# calculate intergroup density
+fdensityinter <- function(x, A) {
+    # A is matrix indicating whether nodes in dyad have same node attributes
+    diag(x) <- NA
+    x[x == 10] <- NA
+    diag(A) <- NA
+    sum(x == 1 & A != 1, na.rm = T)/(sum((x == 1 | x == 0) & A != 1, na.rm = T))
+}
+
+# construct dyadcharacteristic whether nodes are similar/homogenous
+fhomomat <- function(x) {
+    # x is a vector of node-covariate
+    xmat <- matrix(x, nrow = length(x), ncol = length(x))
+    xmatt <- t(xmat)
+    xhomo <- xmat == xmatt
+    return(xhomo)
+}
+```
+
+```{r}
+# Calculating the density for each wave of the sociology data
+fdensity(net1)
+fdensity(net2)
+fdensity(net3)
+
+net_soc_array <- array(data = c(net1, net2, net3), dim=c(dim(net1),3))
+```
+**Density**: As you can see from the results above, the density increases for each wave. This finding is consistent with our expectations: since we took the sociology staff of 2022 as the sample for the web-scraping, it is logical that the number of publication bands increases over time. Each wave brings more people into the RU sociology department that eventually lead to the 2022 sample. When individuals work in the same department, they are more likely to publish together as they encounter each other more often and get to know each other better.  
+
+<br>
+
+## Gender segregation
+
+```{r}
+# Creating a matrix for the same gender 
+gender_m <-  fhomomat(soc_df$gender)
+```
+
+```{r}
+# Calculating intergroup density
+fdensityinter(x=net1, A=gender_m) 
+fdensityinter(x=net2, A=gender_m) 
+fdensityinter(x=net3, A=gender_m) 
+```
+**Intergroup density**: The density between the group of men and the group of women increases over the three waves. This suggests that gender segregation in the sociology department's publication network is decreasing over time. Whether this is really the case can be verified by also observing the intra-group density and the density separately for men and women .
+
+<br>
+
+```{r}
+# Calculating intragroup density (binnen de groepen mannen/vrouwen)
+fdensityintra(x=net1, A=gender_m) 
+fdensityintra(x=net2, A=gender_m) 
+fdensityintra(x=net3, A=gender_m) 
+```
+**Intra-group density**: The calculation of the density within the group of men and the group of women shows interesting results: it seems that over time, publishing with persons of the same sex first decreases and then increases. Whether this is because women publish less with women in wave 2, or whether men publish less with men in wave 2 can be deduced from the calculation of density for men and women separately. Moreover, it appears that intragroup density is higher than overall density and the intergroup density. This suggests that men and women are more likely to publish with someone of the same sex than with someone of a different sex. 
+
+<br>
+
+```{r}
+# Only selecting women
+selectie <- soc_df$gender=="female"
+```
+
+```{r}
+# Calculating the density for men and women seperately (intergroup density)
+fdensity(net1[selectie,selectie])
+fdensity(net2[selectie,selectie])
+fdensity(net3[selectie,selectie])
+
+fdensity(net1[!selectie,!selectie])
+fdensity(net2[!selectie,!selectie])
+fdensity(net3[!selectie,!selectie])
+```
+Calculating the density for all three waves for men and women separately, it appears that there is indeed a difference between men and women in the rate of same-sex publication. While the ties among women first appear to decrease and then increase again, the number of ties among men remains constant across all three waves. This finding could indicate an error in the creation of the networks, but after taking a closer look at the ties in the network plots and using an R command to see if the networks are the same, it really appears that men have the same amount of ties in each wave. In contrast, women have only one tie in wave 1, no ties in wave 2 and two ties in wave 3.
+
+The densities within the groups of men are higher than the general density, which seems to indicate gender segregation in all three waves. In contrast, the densities for the women's groups are lower than the general density, which could mean that women publish more with men than with each other. However, all ties are undirected, so there is no information on who entered into a tie or how much a tie means to both individuals. As a result, we cannot say much about a difference in gender segregation among men and among women. Moreover, one explanation for the gender segregation found among men could be that men have published more with each other than women because they are older and therefore have been part of the sociology department for longer. Whether age actually has an effect on the gender segregation found will be tested through an RSiena model. This will not only examine the role of individual background characteristics, but also of structural network effects in the existing gender segregation.
+
+<br>
+
+```{r}
+net1==net2
+net2==net3
+net1==net3
+```
+
+<br>
+
+
+
+# Descriptives Computing science staff RU
+
+<br>
+
+## Descriptives variables dataset 
+
+```{r}
+# start with clean workspace 
+rm(list=ls())
+getwd()
+```
+
+```{r}
+# loading packages
+library(tidyverse)
+```
+
+```{r}
+# loading data
+load("C:\\Users\\Daphn\\Documenten\\pubnets\\data\\names_df2_v20220106.RData")
+
+load("C:\\Users\\Daphn\\Documenten\\pubnets\\data\\names_df_publications_v20221006.RData")
+```
+
+```{r}
+# selecting the computer science sample
+
+# Some gs_id's were deselected (just by eye-balling) because the data scrape was not correct 
+deselect <- c(52, 95)
+
+names_df %>% 
+  filter(affiliation=="Radboud University") %>%
+  filter(field=="computer science") %>% 
+  filter(!(id %in% deselect)) -> comp_df
+
+names_df_publications %>% 
+  filter(gs_id %in% comp_df$gs_id) -> comppub_df
+  
+comp_df %>% 
+  select(c("gs_id", "lastname")) %>%
+  right_join(comppub_df) -> comppub_df
+
+rm(names_df)  
+rm(names_df_publications)  
+```
+```{r}
+# Assigning the respondents with a missing on the variable 'gender' the value 'female' (based on the photo on their google scholar page). I decided not to fill in the missing values with the values on the variable 'gender2' because the majority of individuals within this study are of Dutch origin. For this reason, it is less reliable to assume the values on the international variable 'gender2'. 
+comp_df$gender[59] <- "female"
+
+comp_df$gender[106] <- "female"
+```
+
+```{r}
+# Retrieving a cross table containing the two gender variables ('gender' and 'gender2')
+
+#install.packages("crosstable")
+require(crosstable)
+
+crosstable(comp_df, gender, by=gender2)
+```
+
+**Cross table gender variables**: This cross table shows the extent to which the variables 'gender' and 'gender2' produce similar results. The number of men and women who have the same value on both variables is 27+78 = 105. The number of incorrect values is 113-105 = 8. 7 people have the value female on the variable "gender" and the value male on the variable "gender2". This is only 8/113*100 = 7.1 per cent of all respondents. 92.9 per cent of all respondents have the same value for both gender variables.  For these respondents, it can be assumed with reasonable certainty that this is the correct value. 
+
+Since the majority of the staff in the computer science department are of Dutch origin, I decided to operationalise the sex of the respondents with the variable 'gender'. Based on the results of the cross tabulation, it can be concluded that this variable is a reliable operationalisation of the sex of the people within the computer science department. 
+
+<br>
+
+```{r}
+# Cleaning the names a bit
+comp_df$lastname_pubs <- as.character(str_split(comp_df$lastname, pattern=",", n = 2, simplify = TRUE)[,1]) 
+comppub_df$author <- tolower(comppub_df$author)
+```
+
+```{r}
+# Saving the data in a descriptives folder
+save(comp_df, file="C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\comp_df.RData")
+save(comppub_df, file="C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\comppub_df.RData")
+```
+
+```{r}
+# Adding value labels to the variable 'dutch'
+comp_df$dutch <- factor(comp_df$dutch,
+levels = c(0,1),
+labels = c("non-dutch", "dutch"))
+```
+
+```{r}
+# Frequencies of the variables 'dutch' and 'gender'
+table(comp_df$gender)
+table(comp_df$dutch)
+```
+
+**Frequencies**: Concerning the ratio of men to women within the computing science department, the frequencies of the gender variable show that it is very unequal: women make up only 31.0 percent of the department, while men make up 69.0 percent. Thus, there are more than twice as many male staff members than female staff members within the computing science department. In contrast, the distribution between people of Dutch and non-Dutch origin is even more uneven. Only 24.8 percent of the computing science department is made up of people of non-Dutch origin. People of Dutch descent are highly over represented at 75.2 percent. 
+
+<br>
+
+```{r}
+# Visualisation of the gendercomposition of the three waves
+library(ggplot2)
+
+ggplot(comp_df, aes(factor(gender), fill = factor(gender))) +
+    geom_bar() +ggtitle("The gender composition of the computing science department in 2022")
+```
+
+**Bar chart of the gender composition**: this bar chart graphically depicts the unequal gender distribution within the computing science department.
+
+<br>
+
+```{r}
+# Visualisation of the ethnicitycomposition of the three waves
+library(ggplot2)
+
+compbar <- ggplot2:::ggplot(comp_df, aes(factor(dutch), fill = factor(dutch))) + geom_bar() +ggtitle("The ethnicity composition of the computing science department in 2022")
+compbar + scale_fill_manual(values=c("#619CFF", "#00BA38"))
+```
+
+**Bar chart of the ethnicity composition**: this bar chart graphically shows the unequal distribution of having or not having Dutch ancestry within the computing science department.
+
+<br>
+
+
+## Array
+
+### Creating an array
+
+```{r}
+# start with clean workspace 
+rm(list=ls())
+getwd()
+```
+
+```{r}
+# loading packages
+library(data.table) 
+library(tidyverse) 
+require(stringi)
+require(RSiena)
+```
+
+```{r}
+# loading data
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\comp_df.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\comppub_df.RData")
+```
+
+```{r}
+# Network based on publications
+network2016_2017 <- matrix(NA, nrow=nrow(comp_df), ncol=nrow(comp_df))
+network2018_2019 <- matrix(NA, nrow=nrow(comp_df), ncol=nrow(comp_df))
+network2020_2022 <- matrix(NA, nrow=nrow(comp_df), ncol=nrow(comp_df))
+```
+
+```{r}
+#select publications of the corresponding time era
+pubs_sel <- comppub_df %>%
+    filter(year>=2016 & year<=2017)
+
+#fill the matrix
+for (ego in 1: nrow(comp_df)) {
+  name_ego <- comp_df$lastname_pubs[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[pubs_sel$gs_id==comp_df$gs_id[ego],] #selecteer de publicaties van ego
+  for (alter in 1:nrow(comp_df)){
+    name_alter <- comp_df$last_name[alter] #which alter? 
+    network2016_2017[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1)  #did alter publish with ego
+  }
+}
+```
+
+```{r}
+#select publications of the corresponding time era
+pubs_sel <- comppub_df %>%
+    filter(year>=2018 & year<=2019)
+
+#fill the matrix
+for (ego in 1: nrow(comp_df)) {
+  name_ego <- comp_df$lastname_pubs[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[pubs_sel$gs_id==comp_df$gs_id[ego],] #selecteer de publicaties van ego
+  for (alter in 1:nrow(comp_df)){
+    name_alter <- comp_df$last_name[alter] #which alter? 
+    network2018_2019[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1)  #did alter publish with ego
+  }
+}
+```
+
+```{r}
+#select publications of the corresponding time era
+pubs_sel <- comppub_df %>%
+    filter(year>=2020 & year<=2022)
+
+#fill the matrix
+for (ego in 1: nrow(comp_df)) {
+  name_ego <- comp_df$lastname_pubs[ego] #which ego? 
+  pubs_sel2 <- pubs_sel[pubs_sel$gs_id==comp_df$gs_id[ego],] #selecteer de publicaties van ego
+  for (alter in 1:nrow(comp_df)){
+    name_alter <- comp_df$last_name[alter] #which alter? 
+    network2020_2022[ego,alter] <- as.numeric(sum(str_detect(pubs_sel2$author, name_alter)) > 1)  #did alter publish with ego
+  }
+}
+```
+
+```{r}
+# Putting all adjacency matrices in an array 
+net_comp_array <- array(data = c(network2016_2017, network2018_2019, network2020_2022), dim=c(dim(network2020_2022),3))
+```
+
+```{r}
+# Saving the array
+save(net_comp_array, file="C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\comp_net_array.RData")
+```
+
+<br>
+
+### Descriptives based on array
+
+```{r}
+# Loading packages
+library(data.table) 
+library(tidyverse) 
+require(stringi)
+require(RSiena)
+require(igraph)
+```
+
+```{r}
+# loading dataobjects
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\comp_net_array.RData")
+load("C:\\Users\\Daphn\\Documenten\\labjournal\\data\\descriptives\\comp_df.RData")
+```
+
+```{r}
+# Correcting for publications which are not present for both authors and displaying the degree distribution of of the publicationnetwork of the computing science department in a histogram.
+compnet1 <- net_comp_array[,,1]
+compnet1 <- compnet1 + t(compnet1)
+compnet1[compnet1==2] <- 1
+diag(compnet1) <- 0
+degree <- rowSums(compnet1)
+hist(degree, main="The degree distribution of the computing science department in wave 1")
+
+compnet2 <- net_comp_array[,,2]
+compnet2 <- compnet2 + t(compnet2)
+compnet2[compnet2==2] <- 1
+diag(compnet2) <- 0
+degree <- rowSums(compnet2)
+hist(degree, main="The degree distribution of the computing science department in wave 2")
+
+compnet3 <- net_comp_array[,,3]
+compnet3 <- compnet3 + t(compnet3)
+compnet3[compnet3==2] <- 1
+diag(compnet3) <- 0
+degree <- rowSums(compnet3)
+hist(degree, main="The degree distribution of the computing science department in wave 3")
+```
+
+**Histograms of the degree distributions**: When the degree distributions within the computing science department across wave 1, wave 2 and wave 3 are compared, it appears that over the years, more and more people own a smaller amount of publication ties. Despite the vast majority having zero to one tie in all three waves, the amount of people with two to eight ties increases slightly in wave 2, compared to wave 1. In wave 3, the amount of people with two to six ties in particular increases compared to wave 2. Wave 3 also shows a slight increase in people with six to 10 ties. On the other hand, in wave 3 a single person has more than 20 ties. Over the years, there is generally an increase in the number of members of the computing science department with a moderate amount of ties. This shows a slight increase in the equality of the distribution of ties. 
+
+
+<br>
+
+## Plots
+
+### Creating the plots
+```{r}
+# Creating graphs from adjacency matrices
+compnet1_g <- igraph::graph_from_adjacency_matrix(compnet1, mode = c("undirected"))
+compnet2_g <- igraph::graph_from_adjacency_matrix(compnet2, mode = c("undirected"))
+compnet3_g <- igraph::graph_from_adjacency_matrix(compnet3, mode = c("undirected"))
+
+# Putting the information of compnet1_g, compnet2_g and compnet3_g into a dataframe
+in_network <- data.frame(as_ids(V(compnet1_g)))
+in_network <- data.frame(as_ids(V(compnet2_g)))
+in_network <- data.frame(as_ids(V(compnet3_g)))
+```
+
+```{r}
+# Adding the names and citation data to in_network
+# Giving the first column the name 'number'
+names(in_network)[1] <- "number"
+
+# Creating the object 'ru_nodes' with the names and total cites of the sociology staffmembers
+ru_nodes <- comp_df[, c("name", "total_cites")]
+
+# Adding a new variable to the dataset ru_nodes, called 'number' representing the numbers of the
+ru_nodes$number <- c(1:113)
+
+# Combining in_network with ru_nodes, based on the numbers of the nodes
+in_network <- left_join(in_network, ru_nodes, by = c(number = "number"))
+#in_network$vcol <- ifelse(is.na(in_network$total_cites), "#E69F00", "#56B4E9")
+```
+
+```{r}
+# Defining the colors of the nodes by gender
+comp_df$gcol <- ifelse(comp_df$gender == "male", "cyan4", "coral1")
+
+# Adapting the node size to the number of citations
+in_network$total_cites <- as.numeric(in_network$total_cites)
+```
+
+```{r}
+# Plotting the network of wave 1
+
+# I removed the name labels from the nodes because the staff names make the plot too cluttered, making it more difficult to derive information from it. 
+
+plot(compnet1_g,
+     vertex.color = comp_df$gcol,
+     vertex.size = ifelse(!is.na(in_network$total_cites), log(in_network$total_cites), 2),
+     vertex.frame.color = "gray", 
+   # vertex.label = in_network$name,
+     vertex.label.color = "black",  
+     vertex.label.family = "Helvetica", 
+     vertex.label.cex = 0.6,  
+     vertex.label.dist = 0.8,  
+     edge.curved = 0.2,  
+     edge.arrow.size = 0.5)
+title("Publication network of the computing science department in wave 1",cex.main=1.2, col.main="black", family.main="Helvetica")
+
+igraph::degree(compnet1_g)
+igraph::dyad.census(compnet1_g)
+igraph::triad.census(compnet1_g)
+# igraph::edge_density(compnet1_g) (will be evaluated later on)
+
+sum(igraph::degree(compnet1_g))
+```
+<br>
+
+### Wave 1: interpreting the plot and the descriptives
+
+**Plot**: The plot shows that in wave 1 there are many nodes that have no publication ties. Moreover, it can be seen from the plot that predominantly men have published with others within the computing science department. It also shows that there are a lot fewer women in the network with a larger number of citations.
+
+**Descriptives**: The differences in the degree for each node are quite large: some nodes have as many as 10 or 13 ties, while a lot of nodes have no ties at all. The finding that a lot of nodes have no ties yet is reflected in the dyad census values: 64 dyads have ties, while 6262 dyads have no ties. 
+
+<br>
+
+```{r}
+# Plotting the network of wave 2
+
+plot(compnet2_g,
+     vertex.color = comp_df$gcol,
+     vertex.size = ifelse(!is.na(in_network$total_cites), log(in_network$total_cites), 2),
+     vertex.frame.color = "gray",  
+   # vertex.label = in_network$name,
+     vertex.label.color = "black",  
+     vertex.label.family = "Helvetica", 
+     vertex.label.cex = 0.6,  
+     vertex.label.dist = 0.8,  
+     edge.curved = 0.2,  
+     edge.arrow.size = 0.5)
+title("Publication network of the computing science department in wave 2",cex.main=1.2, col.main="black", family.main="Helvetica")
+
+igraph::degree(compnet2_g)
+igraph::dyad.census(compnet2_g)
+igraph::triad.census(compnet2_g)
+# igraph::edge_density(compnet2_g) (will be evaluated later on)
+
+sum(igraph::degree(compnet2_g))
+```
+<br>
+
+### Wave 2: interpreting the plot and the descriptives
+
+**plot**: In this plot, more nodes already have ties with each other. Nevertheless, there are also a number of nodes that have no ties. Again, men are overrepresented within the cluster with the most ties and within the individuals with the most citations.
+
+**Descriptives**: Differences in the degree of each node have narrowed as several nodes have formed one or more ties. Nevertheless, a large proportion of nodes still do not possess any ties. The dyad census has changed as a result: now 85 dyads have a tie, while 6243 dyads do not yet possess a tie. 
+
+<br>
+
+```{r}
+# Plotting the network of wave 3
+
+plot(compnet3_g,
+     vertex.color = comp_df$gcol,
+     vertex.size = ifelse(!is.na(in_network$total_cites), log(in_network$total_cites), 2),
+     vertex.frame.color = "gray",  
+   # vertex.label = in_network$name,
+     vertex.label.color = "black",  
+     vertex.label.family = "Helvetica", 
+     vertex.label.cex = 0.6,  
+     vertex.label.dist = 0.8,  
+     edge.curved = 0.2,  
+     edge.arrow.size = 0.5) 
+title("Publication network of the computing science department in wave 3",cex.main=1.2, col.main="black", family.main="Helvetica")
+
+igraph::degree(compnet3_g)
+igraph::dyad.census(compnet3_g)
+igraph::triad.census(compnet3_g)
+# igraph::edge_density(compnet3_g) (will be evaluated later on)
+
+sum(igraph::degree(compnet3_g))
+```
+
+<br>
+
+### Wave 3: Interpreting the plot and the descriptives
+
+**Plot**: The third and final plot consists largely of nodes that have ties with other nodes. The skewed male/female distribution in terms of publication ties seems to have remained somewhat stable, despite many more ties being created. Moreover, the relative amount of men with a large amount of citations seems to have increased. This suggests a reasonable degree of gender segregation within the publication network of the computing science department. 
+
+**Descriptives**: The degree results show that a lot more nodes have more ties: a large number of nodes now have five ties or more. Moreover, there are more nodes with ties than without. The dyad census has changed considerably due to the emergence of new ties: now 166 dyads have ties and 6162 dyads have no ties. 
+
+<br>
+
+### Other descriptives based on plot
+
+```{r}
+# number of nodes
+vcount(compnet1_g)
+vcount(compnet2_g)
+vcount(compnet3_g)
+```
+
+**Number of nodes**: All networks consist of 113 nodes, or individuals. 
+
+<br>
+
+```{r}
+# number of edges
+ecount(compnet1_g)
+ecount(compnet2_g)
+ecount(compnet3_g)
+```
+
+**Number of edges**: The number of edges increases for each wave.
+
+<br>
+
+```{r}
+# transitivity
+transitivity(compnet1_g, type = c("localundirected"), isolates = c("NaN", "zero"))
+transitivity(compnet2_g, type = c("localundirected"), isolates = c("NaN", "zero"))
+transitivity(compnet3_g, type = c("localundirected"), isolates = c("NaN", "zero"))
+```
+
+**Transitivity**: The number of nodes with a (high) transitivity index increases for each wave. This means that for each wave, the number of nodes with transitive triads, relative to the possible number of nodes with transitive triads, increases.
+
+<br>
+
+```{r}
+# betweenness 
+igraph::betweenness(compnet1_g, directed = FALSE)
+igraph::betweenness(compnet2_g, directed = FALSE)
+igraph::betweenness(compnet3_g, directed = FALSE)
+```
+
+**Betweenness**: The amount of nodes that act as bridges increases for each wave.
+
+<br>
+
+```{r}
+# global transitivity 
+igraph::transitivity(compnet1_g, type = "global")
+sna::gtrans(compnet1)
+
+triad_compnet1 <- data.frame(sna::triad.census(compnet1))
+
+transitivity_compnet1 <- (3 * triad_compnet1$X300)/(triad_compnet1$X201 + 3 * triad_compnet1$X300)
+transitivity_compnet1
+
+igraph::transitivity(compnet2_g, type = "global")
+sna::gtrans(compnet2)
+
+triad_compnet2 <- data.frame(sna::triad.census(compnet2))
+
+transitivity_compnet2 <- (3 * triad_compnet2$X300)/(triad_compnet2$X201 + 3 * triad_compnet2$X300)
+transitivity_compnet2
+
+igraph::transitivity(compnet3_g, type = "global")
+sna::gtrans(compnet3)
+
+triad_compnet3 <- data.frame(sna::triad.census(compnet3))
+
+transitivity_compnet3 <- (3 * triad_compnet3$X300)/(triad_compnet3$X201 + 3 * triad_compnet3$X300)
+transitivity_compnet3
+```
+
+**Global transitivity**: the global transitivity increases from wave 1 to wave 2, and decreases from wave 2 to wave 3. This means that the ratio between the number of transitive triads and the possible number of transitive triads increases between wave 1 and wave 2 and decreases betwixt wave 2 and wave 3. 
+
+<br>
+
+```{r}
+# Defining functions
+
+# density: observed relations divided by possible relations
+fdensity <- function(x) {
+    # x is your nomination network make sure diagonal cells are NA
+    diag(x) <- NA
+    # take care of RSiena structural zeros, set as missing.
+    x[x == 10] <- NA
+    sum(x == 1, na.rm = T)/(sum(x == 1 | x == 0, na.rm = T))
+}
+
+# calculate intragroup density
+fdensityintra <- function(x, A) {
+    # A is matrix indicating whether nodes in dyad have same node attributes
+    diag(x) <- NA
+    x[x == 10] <- NA
+    diag(A) <- NA
+    sum(x == 1 & A == 1, na.rm = T)/(sum((x == 1 | x == 0) & A == 1, na.rm = T))
+}
+
+# calculate intragroup density
+fdensityinter <- function(x, A) {
+    # A is matrix indicating whether nodes in dyad have same node attributes
+    diag(x) <- NA
+    x[x == 10] <- NA
+    diag(A) <- NA
+    sum(x == 1 & A != 1, na.rm = T)/(sum((x == 1 | x == 0) & A != 1, na.rm = T))
+}
+
+# construct dyadcharacteristic whether nodes are similar/homogenous
+fhomomat <- function(x) {
+    # x is a vector of node-covariate
+    xmat <- matrix(x, nrow = length(x), ncol = length(x))
+    xmatt <- t(xmat)
+    xhomo <- xmat == xmatt
+    return(xhomo)
+}
+```
+
+```{r}
+# Calculating the density for each wave of the computing science data
+fdensity(compnet1)
+fdensity(compnet2)
+fdensity(compnet3)
+
+net_comp_array <- array(data = c(compnet1, compnet2, compnet3), dim=c(dim(compnet1),3))
+```
+**Density**: The results show that the overall density increases over the waves. This finding is in line with expectations: the original sample includes the 2022 computing science staff, so when only looking at these individuals it makes sense that publication ties within the computing science department increase over time. Over the waves, more and more people become members of the computing science department who are part of the final sample. These individuals are more likely to publish with each other, for example, because they meet more often and get to know each other better. 
+
+<br>
+
+## Gender segregation
+
+```{r}
+# Creating a matrix for the same gender 
+gender_m <-  fhomomat(comp_df$gender)
+```
+
+```{r}
+# Calculating intergroup density
+fdensityinter(x=compnet1, A=gender_m) 
+fdensityinter(x=compnet2, A=gender_m) 
+fdensityinter(x=compnet3, A=gender_m) 
+```
+**Intergroup density**: The above results show that the density between the group of men and the group of women increases over the three waves. From this, it can be inferred that gender segregation within the publication network of computing science decreases over time. However, this should not be stated without considering the intra-group density and the the density for men and women separately. 
+
+<br>
+
+```{r}
+# Calculating intragroup density
+fdensityintra(x=compnet1, A=gender_m) 
+fdensityintra(x=compnet2, A=gender_m) 
+fdensityintra(x=compnet3, A=gender_m) 
+```
+**Intra-group density**: The density determined on the basis of ties within the group of men and within the group of women within the computing science department appears to increase over time. Moreover, the intra-group density is generally slightly higher than the overall density and the inter-group density, but this does not make much difference. Based on these results, it could be argued that there is indeed gender segregation within the publication network of the computing science department; men and women seem to publish more often with someone of the same sex than with someone of a different sex.
+
+<br>
+
+```{r}
+# Only selecting women
+selectie <- comp_df$gender=="female"
+```
+
+```{r}
+# Calculating the density for men and women seperately 
+fdensity(compnet1[selectie,selectie])
+fdensity(compnet2[selectie,selectie])
+fdensity(compnet3[selectie,selectie])
+
+fdensity(compnet1[!selectie,!selectie])
+fdensity(compnet2[!selectie,!selectie])
+fdensity(compnet3[!selectie,!selectie])
+```
+
+When the densities are calculated separately for the group of men and the group of women within the computing science department, new insights emerge: the density within the group of women appears to be higher than the density within the group of men for every wave. This suggests that women within the computing science department publish proportionally more often with each other than men.  
+
+Moreover, the densities within the group of women and within the group of men appear to be slightly higher than the overall density, but not higher than the density between groups. On this basis, it cannot be concluded that there is strong gender segregation within the publication network of the computing science department. Whether this outcome holds when indivdiual characteristics and structural network effects are also taken into account needs to be determined through RSiena models. A key feature of the computing science department, for example, is the fact that it contains more than twice as many men than women. Whether this plays a role for the degree of gender segregation within the computing science department will emerge from the RSiena analyses. 
+
+<br>
+
+# Testing the hypotheses
+
+Hypothesis 1 reads: Gender segregation in the publication network increased between 2016 and 2022 within both the Sociology department and the Computing Science department at Radboud University.
+
+In order to determine whether hypothesis 1 can be confirmed, it is important to briefly review the results on gender segregation in both the sociology department and the computing science department separately. 
+
+The gender segregation within the sociology department seems to be of large magnitude, but it does emerge mainly among men. Moreover, the resulting gender segregation does not seem to increase over time. Within the sociology department, men appear to publish more with each other than with women, but the densities of publication networks among men remain the same across all three waves.
+
+Within the computing science department, gender segregation is less evident. Although the densities for all waves of the men's group and the women's group appear to be increasing, they are not higher than the intergroup densities for all waves. On this basis, it cannot be said that there is strong, increasing, gender segregation.
+
+These findings are not in line with hypothesis 1. Therefore, the hypothesis cannot be confirmed based on this study.
+
+
+
+
+
+

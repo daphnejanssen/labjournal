@@ -2,6 +2,12 @@
 title: "RSiena"
 #bibliography: references.bib
 author: "Daphne Janssen"
+output: 
+  html_document:
+    code_folding: "hide"
+editor options: 
+  markdown:
+    wrap: 72
 ---
 
 

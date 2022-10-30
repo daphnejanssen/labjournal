@@ -49,32 +49,20 @@ getwd()
 ## packages
 ```{r}
 #install.packages("data.table") 
-library(data.table) # mainly for faster data handling
-library(tidyverse) # I assume you already installed this one!
-# install.packages("httr") # we don't need this for now
-# require(httr)
+library(data.table) 
+library(tidyverse) 
 #install.packages("xml2")
 require(xml2)
 #install.packages("rvest")
 require(rvest)
 #install.packages("devtools")
 require(devtools)
-# Note we're doing something different here. We're installing a *latest* version directly from GitHub
-# This is because the released version of this packages contains some errors!
-#devtools::install_github("jkeirstead/scholar") 
-
-
 require(scholar)
-
-#define workdirectory, note the double *backslashes* if you're on windows
-# setwd("/yourpathhere)"
 ```
 
 ## save webpage with staff names 
 
 ```{r}
-# Let's first get the staff page read_html is a function that simply extracts html webpages and
-# puts them in xml format
 soc_staff <- read_html("https://www.ru.nl/sociology/research/staff/")
 
 #head(soc_staff)
@@ -122,8 +110,6 @@ soc_df <- data.frame(cbind(soc_names, soc_experts))
 
 ### delete rows without name info
 ```{r}
-# inspect again, and remove the rows we don't need (check for yourself to be certain!)
-
 delrows <- which(soc_df$soc_names == "Staff:" | soc_df$soc_names == "PhD:" | soc_df$soc_names == "External PhD:" |
     soc_df$soc_names == "Guest researchers:" | soc_df$soc_names == "Other researchers:")
 
@@ -271,7 +257,6 @@ load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_df_s2.RData")
 
 #### affiliation
 ```{r}
-# set affiliation to radboud, comes in handy for querying google scholar
 soc_df$affiliation <- "radboud university"
 ```
 
@@ -338,12 +323,6 @@ get_scholar_id_fix <- function (last_name = "", first_name = "", affiliation = N
 ```
 
 ### scholars id. 
-
-Don't forget to check manually if everything is okay. 
-
-We make an important decisson here. we remove staff members without scholar ids. perhaps a bit strange for our RSiena analysis later. I mean, we can include isolates
-
-YOU MAY NEED TO ADD AN TRYCATCH TO THIS LOOP AS WELL TO AVOID TIME OUT ERRORS, SEE THE NEXT LOOP BELOW
 ```{r, eval=FALSE}
 
 soc_df$gs_id <- ""
@@ -362,7 +341,6 @@ for (i in 1:nrow(soc_df)) {
   }
 
 # remove those without pubs from the df
-# seems we're left with about 34 sociology staff members!
 soc_df_copy <- soc_df #just to also have the data with staff without scholar_id
 soc_df <- soc_df[!soc_df$gs_id == "", ]
 
@@ -381,34 +359,6 @@ load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_df_copy.RData")
 
 
 ## publications and profiles
-
-We save the publications and info of the scholar profiles in new objects. 
-
-This was the original chunck but due to time-out errors I needed to tweak this. 
-```{r}
-# soc_list_profiles <- list()  # first we create an empty list that we then fill up with the for loop
-# soc_list_publications <- list()
-# 
-# for (i in 1:nrow(soc_df)) {
-#     print(i)
-#     time <- runif(1, 0, 1)
-#     Sys.sleep(time)
-# 
-#     # note how you call different elements in a list '[[]]', fill in the i-th element
-#     soc_list_profiles[[i]] <- get_profile(soc_df[i, c("gs_id")])  # Note how we call row i (remember how to call rows in a DF/Matrix) and then the associated scholar id
-#     soc_list_publications[[i]] <- get_publications(soc_df[i, c("gs_id")])
-#     soc_list_publications[[i]][, c("gs_id")] <- soc_df[i, c("gs_id")]  # note that we again attach an id
-#     # so both functions here call the entire profile and pubs for an author, based on google
-#     # scholar ids
-# 
-# }
-# 
-# 
-# #soc_list_publications
-# # Notice how fast the data blow up! The 34 RU sociology scholars publish ~3000 papers
-# soc_df_publications2 <- bind_rows(soc_list_publications)
-```
-
 
 ```{r, eval=FALSE}
 soc_list_profiles <- list()  # first we create an empty list that we then fill up with the for loop
@@ -449,7 +399,6 @@ while (i <= nrow(soc_df)) {
 
 
 ```{r, eval=FALSE}
-# Notice how fast the data blow up! The 34 RU sociology scholars publish ~3000 papers
 soc_df_publications <- bind_rows(soc_list_publications)
 ```
 
@@ -467,14 +416,12 @@ load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_list_profiles.RData")
 
 ### put the info of the profiles in our data set of staff members soc_df
 
-Please note, I got an error with the original script (as in the book) so needed to tweak things a little. 
 ```{r, eval=FALSE}
 soc_profiles_df <- list()
 
 
 for (i in 1:length(soc_list_profiles)) {
-    # soc_profiles_df[[i]] <- data.frame(t(unlist(soc_list_profiles[[i]][1:8]))) #some annyoing
-    # data handling
+    # soc_profiles_df[[i]] <- data.frame(t(unlist(soc_list_profiles[[i]][1:8]))) 
   if (!is.null(soc_list_profiles[[i]])) {
     soc_profiles_df[[i]] <- unlist(soc_list_profiles[[i]][1:8])
     soc_profiles_df[[i]] <- data.frame(soc_profiles_df[[i]])
@@ -487,9 +434,8 @@ for (i in 1:length(soc_list_profiles)) {
 #soc_profiles_df
 
 soc_profiles_df2 <- bind_rows(soc_profiles_df)
-soc_df <- left_join(soc_df, soc_profiles_df2, by = c(gs_id = "id"))  # merge data with soc_df
-soc_df  # notice all the new information we were able to get from the scholar profiles!
-
+soc_df <- left_join(soc_df, soc_profiles_df2, by = c(gs_id = "id"))  
+soc_df  
 ```
 
 
@@ -549,10 +495,6 @@ load("C:\\Users\\Daphn\\Documenten\\labjournal\\Data\\soc_staff_cit.RData")
 ```
 
 ## collaborators
-
-PLEASE NOTE, I AM ONLY COLLECTING INFORMATION ON WHO WORKS TOGETHER WITH WHOM WITHIN THE DEPARTMENT!!!
-
-IF YOU WANT TO COLLECT MORE COLLABORATORS, PLEASE DO SO. bUT THESE WILL NOT BE NODES IN YOUR rSIENA MODEL LATER. tHUS YOU MAY USE THESE TO CONSTRUCT EGO-LEVEL COVARIATES!! 
 
 ### fcolabs
 
@@ -677,7 +619,7 @@ lastname_df <- soc_df_6
 ```
 
 ```{r, eval=FALSE}
-#voorvoegsels correct zetten voor scraper
+# setting prefixes correctly for the scraper
 voorvoegsels <- c("'t ", "d' ", "de ", "de la ", "den ", "del ", "der ", "des ", "el ", "el- ", "in 't ", "la ", "le ", "les ", "op den ", "ten ", "ter ", "tes ", "van ", "van 't ", "van de " , "van der ", "van den ", "von der ", "op den ", "ul ") 
 
 for (i in 1: length(lastname_df$lastname)) {
@@ -689,7 +631,7 @@ for (i in 1: length(lastname_df$lastname)) {
   }
 }
 
-#dubbele namen verwijderen. let op dubbele namen met voorvoegsel worden niet gecleaned. TO DO 
+# removing double names
 for (i in 1: length(lastname_df$lastname)) {
   if (!sum(str_detect(lastname_df$lastname[i], voorvoegsels))>0) {
     lastname_df$lastname[i] <- as.character(str_split(lastname_df$lastname[i], pattern=" ", n = 2, simplify = TRUE)[,1])
@@ -728,7 +670,7 @@ if (!require("rvest", character.only = TRUE)) {
 # }
 ```
 
-hier maken we de links voor de website. 
+# Creating links for the website
 ```{r, eval=FALSE}
 # creating URLs: origin
 lastname_df$name_origin <- ifelse((lastname_df$np==""),
@@ -752,16 +694,14 @@ lastname_df$name_origin <- ifelse((lastname_df$np==""),
                                        "&info=analyse+en+verklaring&operator=eq&taal="))
 ```
 
-hier slaan we alles op
+# Saving everything
 ```{r, eval=FALSE}
 name_originl <- list()
 table_originl <- list()
 time <- 0.1
 ```
 
-## crucical scrape loop
-kom voorlopig geen fouten tegen, toch alles alvast in een trycatch gezet. 
-let op dat ik niet netjes scrape. dus zonder functie 'polite' gezien de kleine aantallen in onze cursus, mag dat wmb wel. 
+## Crucial scrape loop 
 ```{r, eval=FALSE}
 
 for (i in 1:nrow(lastname_df)) {
@@ -782,7 +722,6 @@ for (i in 1:nrow(lastname_df)) {
 }
 ```
 
-en vanaf hier is het eigenlijk alleen maar opschonen. 
 ```{r, eval=FALSE}
 origin_txt <- list()
 for (i in 1:length(name_originl)) {
@@ -808,12 +747,9 @@ for (i in 1:length(origin_ln)) {
 
 # Flatten nested structure of the origin information
 #origin_ln <- rbind(flatten(origin_ln))
-
 ```
 
-
 ```{r, eval=FALSE}
-
 # Detaching the names and origin info for easier data handling
 origin <- unlist(origin_ln)
 
@@ -839,11 +775,7 @@ verklaring <- trimws(verklaring, which = "both")
 kenmerken <- trimws(kenmerken, which = "both")
 sc <- trimws(sc, which = "both")
 vk <- data.frame(cs_df$lastname, verklaring, kenmerken, sc)
-
-
 ```
-
-
 
 ## Separating names with Dutch & unknown origin
 Next, we identify those names for which no additional information was found. This is important to distinguish Dutch names from names with unknown origins.
@@ -946,9 +878,7 @@ vk <- vk %>%
 
 ```
 
-Ik zou alles waar `no_info` op 1 staat of waar `origin4` op "non-Dutch" staat coderen als buitenlands! 
-
-
+<br>
 
 # Datasrcaping Computing science staff RU
 
@@ -963,32 +893,21 @@ getwd()
 ## packages
 ```{r, eval=FALSE}
 #install.packages("data.table") 
-library(data.table) # mainly for faster data handling
-library(tidyverse) # I assume you already installed this one!
-# install.packages("httr") # we don't need this for now
-# require(httr)
+library(data.table) 
+library(tidyverse) 
 #install.packages("xml2")
 require(xml2)
 #install.packages("rvest")
 require(rvest)
 #install.packages("devtools")
 require(devtools)
-# Note we're doing something different here. We're installing a *latest* version directly from GitHub
-# This is because the released version of this packages contains some errors!
-#devtools::install_github("jkeirstead/scholar") 
-
 
 require(scholar)
-
-#define workdirectory, note the double *backslashes* if you're on windows
-# setwd("/yourpathhere)"
 ```
 
 ## save webpage with staff names 
 
 ```{r, eval=FALSE}
-# Let's first get the staff page read_html is a function that simply extracts html webpages and
-# puts them in xml format
 cs_staff <- read_html("https://www.cs.ru.nl/staff/index.html")
 
 #head(soc_staff)
@@ -1005,7 +924,6 @@ cs_staff <- cs_staff %>%
     xml2::xml_find_all("//a") %>%
     rvest::html_text()
 ```
-
 
 ```{r, eval=FALSE}
 Encoding(cs_staff) <- "UTF-8"
@@ -1029,8 +947,6 @@ cs_staff <- cs_staff2
 cs_df <- data.frame(cs_staff)  
 ```
 
-Perhaps, you want to save `cs_df`. 
-
 ## Cleaning the dataset  
 
 ### cleaning names a bit  
@@ -1048,7 +964,6 @@ cs_df$first_name <- tolower(cs_df$first_name)  # everything to lower!
 cs_df$last_name <- tolower(cs_df$last_name)
 ```
 
-Please note I updated below to loose double names
 ```{r, eval=FALSE}
 # trimws looses all spacing before and after (if you specify 'both') a character string
 cs_df$last_name <- trimws(cs_df$last_name, which = c("both"), whitespace = "[ \t\r\n]")
@@ -1065,7 +980,6 @@ cs_df$first_name <- as.character(str_split(cs_df$first_name, pattern="-", n = 2,
 cs_df$last_name
 ```
 
-
 ```{r, eval=FALSE}
 save(cs_df, file="cs_df_s1b.RData")
 ```
@@ -1074,7 +988,6 @@ save(cs_df, file="cs_df_s1b.RData")
 ### adding gender to dataset
 
 #### fgender
-
 
 ```{r, eval=FALSE}
 fgender <- function(firstname_df, me, file=NULL) {
@@ -1157,13 +1070,11 @@ table_list <- list()
 }
 ```
 
-
 #### gender to cs_df
 ```{r, eval=FALSE}
 cs_df %>% mutate(firstname=first_name) -> cs_df
 cs_df$gender <- NA
 ```
-
 
 ```{r, eval=FALSE}
 cs_df$firstname
@@ -1179,17 +1090,10 @@ save(cs_df, file="cs_df_s2b.RData") #genderized last.
 
 #### affiliation
 ```{r, eval=FALSE}
-# set affiliation to radboud, comes in handy for querying google scholar
 cs_df$affiliation <- "radboud university"  
 ```
 
 #### other stuff
-
-to do
-
-## let harvest data from google scholar
-
-### fixing a bug in the get_scholar_id function. 
 
 ```{r, eval=FALSE}
 #require(scholar)
@@ -1250,21 +1154,14 @@ get_scholar_id_fix <- function (last_name = "", first_name = "", affiliation = N
 
 ### scholars id. 
 
-Don't forget to check manually if everything is okay. 
-
-We make an important decisson here. we remove staff members without scholar ids. perhaps a bit strange for our RSiena analysis later. I mean, we can include isolates
-
-YOU MAY NEED TO ADD AN TRYCATCH TO THIS LOOP AS WELL TO AVOID TIME OUT ERRORS, SEE THE NEXT LOOP BELOW
 ```{r, eval=FALSE}
 cs_df$gs_id <- "" #don't make it empty everytime you run scrape! 
 ```
-
 
 ```{r, eval=FALSE}
 time <- .1 # I placed the waiting time outside the loop
 i <- 1 # Our loop iterator is now a variable. This means I can change it within a while loop. Using a for loop you cant change your iterator in the loop itself.
 ```
-
 
 ```{r, eval=FALSE}
 while (i <= nrow(cs_df)) {
@@ -1300,36 +1197,30 @@ while (i <= nrow(cs_df)) {
 }
 ```
 
-
 ```{r, eval=FALSE}
 # remove those without pubs from the df
-# seems we're left with about 34 sociology staff members!
 cs_df_copy <- cs_df #just to also have the data with staff without scholar_id
 cs_df <- cs_df[!cs_df$gs_id == "", ] 
 cs_df <- cs_df[!is.na(cs_df$gs_id), ] 
 ```
 
-
 ```{r, eval=FALSE}
 save(cs_df, file="cs_df_s3.RData")
 save(cs_df_copy, file="cs_df_copy.RData")
-
 ```
 
 ## publications and profiles
 
-We save the publications and info of the scholar profiles in new objects. 
 ```{r, eval=FALSE}
+# Saving the publications and info of the scholar profiles in new objects. 
 soc_list_profiles <- list()  # first we create an empty list that we then fill up with the for loop
 soc_list_publications <- list()
 ```
-
 
 ```{r, eval=FALSE}
 time <- .1 # I placed the waiting time outside the loop
 i <- 1 # Our loop iterator is now a variable. This means I can change it within a while loop. Using a for loop you cant change your iterator in the loop itself.
 ```
-
 
 ```{r, eval=FALSE}
 while (i <= nrow(cs_df)) {
@@ -1364,12 +1255,10 @@ while (i <= nrow(cs_df)) {
 }
 ```
 
-
 ```{r, eval=FALSE}
 cs_df_publications <- bind_rows(soc_list_publications)
 cs_list_profiles <- soc_list_profiles
 ```
-
 
 ```{r, eval=FALSE}
 save(cs_df_publications, file="cs_df_publications.RData")
@@ -1377,10 +1266,8 @@ save(cs_list_profiles, file= "cs_list_profiles.RData")
 ```
 
 
-
 ### put the info of the profiles in our data set of staff members cs_df
 
-Please note, I got an error with the original script (as in the book) so needed to tweak things a little. 
 ```{r, eval=FALSE}
 cs_profiles_df <- list()
 
@@ -1400,31 +1287,25 @@ for (i in 1:length(cs_list_profiles)) {
 #soc_profiles_df
 
 cs_profiles_df2 <- bind_rows(cs_profiles_df)
-cs_df <- left_join(cs_df, cs_profiles_df2, by = c(gs_id = "id"))  # merge data with cs_df
-cs_df  # notice all the new information we were able to get from the scholar profiles!
-
+cs_df <- left_join(cs_df, cs_profiles_df2, by = c(gs_id = "id"))  
+cs_df  
 ```
-
 
 ```{r, eval=FALSE}
 save(cs_df, file="cs_df_s4.RData")
-
 ```
 
 
 ## citation history
 
 ```{r, eval=FALSE}
-# get citation history of a scholar
 cs_staff_cit <- list()
 ```
-
 
 ```{r, eval=FALSE}
 time <- .1 # I placed the waiting time outside the loop
 i <- 1 # Our loop iterator is now a variable. This means I can change it within a while loop. Using a for loop you cant change your iterator in the loop itself.
 ```
-
 
 ```{r, eval=FALSE}
 while (i <= nrow(cs_df)) {
@@ -1455,18 +1336,11 @@ while (i <= nrow(cs_df)) {
 cs_staff_cit <- bind_rows(cs_staff_cit)
 ```
 
-
 ```{r, eval=FALSE}
 save(cs_staff_cit, file="cs_staff_cit.RData")
-
 ```
 
-
 ## collaborators
-
-PLEASE NOTE, I AM ONLY COLLECTING INFORMATION ON WHO WORKS TOGETHER WITH WHOM WITHIN THE DEPARTMENT!!!
-
-IF YOU WANT TO COLLECT MORE COLLABORATORS, PLEASE DO SO. bUT THESE WILL NOT BE NODES IN YOUR rSIENA MODEL LATER. tHUS YOU MAY USE THESE TO CONSTRUCT EGO-LEVEL COVARIATES!! 
 
 ### fcolabs
 
@@ -1513,9 +1387,6 @@ fcollabs <- function(gsid, lookforcollabs) {
   return(profilecollabs1)
 
 }
-
-
-
 ```
 
 ```{r, eval=FALSE}
@@ -1524,12 +1395,10 @@ fcollabs <- function(gsid, lookforcollabs) {
 cs_collabs <- list()
 ```
 
-
 ```{r, eval=FALSE}
 time <- .1 
 i <- 1
 ```
-
 
 ```{r, eval=FALSE}
 while (i <= nrow(cs_df)) {
@@ -1555,7 +1424,6 @@ while (i <= nrow(cs_df)) {
 }
 ```
 
-
 ```{r, eval=FALSE}
 
 for (i in 1:length(cs_collabs)) {
@@ -1565,7 +1433,7 @@ for (i in 1:length(cs_collabs)) {
 cs_collabs2 <- bind_rows(cs_collabs)  # bind rows, get the unique ones!
 cs_collabs_unique <- unique(cs_collabs2[, c("gs_id")]) 
 cs_collabs_unique <- cs_collabs_unique[!is.na(cs_collabs_unique)]
-#save(cs_collabs, file = "addfiles/cs_df_collabs1.RData")  # you notice this takes a while, so we save the data here
+#save(cs_collabs, file = "addfiles/cs_df_collabs1.RData")  
 ```
 
 ```{r, eval=FALSE}
@@ -1573,7 +1441,6 @@ save(cs_collabs, file="cs_collabs.RData")
 save(cs_collabs2, file="cs_collabs2.RData")
 save(cs_collabs_unique, file="cs_collabs_uniques.RData")
 save(cs_df, file="cs_df_s5.RData")
-
 ```
 
 
@@ -1585,13 +1452,8 @@ cs_df %>% mutate(lastname=last_name) -> cs_df
 lastname_df <- cs_df
 ```
 
-We moeten de namen in het juiste format zetten. 
-
-Dus niet "van der meer", maar: "meer, van der". 
-
-Dan verwijder ik dubbele achternamen. 
 ```{r, eval=FALSE}
-#voorvoegsels correct zetten voor scraper
+# Setting prefixes correctly for scraper
 voorvoegsels <- c("'t ", "d' ", "de ", "de la ", "den ", "del ", "der ", "des ", "el ", "el- ", "in 't ", "la ", "le ", "les ", "op den ", "ten ", "ter ", "tes ", "van ", "van 't ", "van de " , "van der ", "van den ", "von der ", "op den ", "ul ") 
 
 for (i in 1: length(lastname_df$lastname)) {
@@ -1603,7 +1465,7 @@ for (i in 1: length(lastname_df$lastname)) {
   }
 }
 
-#dubbele namen verwijderen. let op dubbele namen met voorvoegsel worden niet gecleaned. TO DO 
+# Removing duplicate names
 for (i in 1: length(lastname_df$lastname)) {
   if (!sum(str_detect(lastname_df$lastname[i], voorvoegsels))>0) {
     lastname_df$lastname[i] <- as.character(str_split(lastname_df$lastname[i], pattern=" ", n = 2, simplify = TRUE)[,1])
@@ -1642,7 +1504,6 @@ if (!require("rvest", character.only = TRUE)) {
 # }
 ```
 
-hier maken we de links voor de website. 
 ```{r, eval=FALSE}
 # creating URLs: origin
 lastname_df$name_origin <- ifelse((lastname_df$np==""),
@@ -1666,16 +1527,14 @@ lastname_df$name_origin <- ifelse((lastname_df$np==""),
                                        "&info=analyse+en+verklaring&operator=eq&taal="))
 ```
 
-hier slaan we alles op
 ```{r, eval=FALSE}
+# Saving everything
 name_originl <- list()
 table_originl <- list()
 time <- 0.1
 ```
 
 ## crucical scrape loop
-kom voorlopig geen fouten tegen, toch alles alvast in een trycatch gezet. 
-let op dat ik niet netjes scrape. dus zonder functie 'polite' gezien de kleine aantallen in onze cursus, mag dat wmb wel. 
 ```{r, eval=FALSE}
 for (i in 1:nrow(lastname_df)) {
   print(i)
@@ -1695,13 +1554,11 @@ for (i in 1:nrow(lastname_df)) {
 }
 ```
 
-en vanaf hier is het eigenlijk alleen maar opschonen. 
 ```{r, eval=FALSE}
 origin_txt <- list()
 for (i in 1:length(name_originl)) {
     origin_txt [[i]] <- name_originl[[i]] %>% html_text() %>% as.character()
 }
-
 ```
 
 ```{r, eval=FALSE}
@@ -1721,12 +1578,10 @@ for (i in 1:length(origin_ln)) {
 
 # Flatten nested structure of the origin information
 #origin_ln <- rbind(flatten(origin_ln))
-
 ```
 
 
 ```{r, eval=FALSE}
-
 # Detaching the names and origin info for easier data handling
 origin <- unlist(origin_ln)
 
@@ -1752,11 +1607,7 @@ verklaring <- trimws(verklaring, which = "both")
 kenmerken <- trimws(kenmerken, which = "both")
 sc <- trimws(sc, which = "both")
 vk <- data.frame(cs_df$lastname, verklaring, kenmerken, sc)
-
-
 ```
-
-
 
 ## Separating names with Dutch & unknown origin
 Next, we identify those names for which no additional information was found. This is important to distinguish Dutch names from names with unknown origins.
@@ -1856,10 +1707,5 @@ vk <- vk %>%
 # Finally, the tag "andere taal" was used to distinguish foreign names of unknown origin from known Dutch names. 
 vk <- vk %>%
   mutate(origin4 = ifelse((as.numeric(str_detect(kenmerken, "andere taal"))==1), "non-Dutch", NA))
-
-
 ```
-
-Ik zou alles waar `no_info` op 1 staat of waar `origin4` op "non-Dutch" staat coderen als buitenlands! 
-
 

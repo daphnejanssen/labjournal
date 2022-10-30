@@ -1,0 +1,71 @@
+---
+title: "Conclusion"
+bibliography: references.bib
+author: "Daphne Janssen"
+---
+
+
+
+```{r, globalsettings, echo=FALSE, warning=FALSE, results='hide'}
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE)
+opts_chunk$set(tidy.opts=list(width.cutoff=100),tidy=TRUE, warning = FALSE, message = FALSE,comment = "#>", cache=TRUE, class.source=c("test"), class.output=c("test2"))
+options(width = 100)
+rgl::setupKnitr()
+
+
+
+colorize <- function(x, color) {sprintf("<span style='color: %s;'>%s</span>", color, x) }
+
+```
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(position = c('top', 'right'))
+#klippy::klippy(color = 'darkred')
+#klippy::klippy(tooltip_message = 'Click to copy', tooltip_success = 'Done')
+```
+
+Last compiled on `r Sys.time()`
+
+<!---
+Last compiled on `r format(Sys.time(), '%B, %Y')`
+--->
+
+<br>
+
+----
+
+# Conclusion
+
+The under representation of women in STEM studies and jobs affects the degree of gender inequality within STEM. For example, men are more likely to be the authors of prestigious STEM journals [@holman2018gender] while women within STEM earn lower salaries, are less likely to be promoted and are allocated fewer resources and funding for conducting research [@holman2019researchers]. These gender inequalities are expected to be maintained and reinforced by the networks that female and male scientists within STEM are in. Networks are not only important for achieving higher positions [@kegen2013science], but they also contribute to promotion and productivity [@Collins1]. However, according to the homophily principle [@mcpherson2001birds], women are most likely to publish with women and men are most likely to publish with men. Since there are more men present within STEM than women, and these men are expected to publish mainly with men, the positive effects of co-publishing occur mainly among men. This makes it more difficult for women working within the STEM science field to conduct research, publish and enter the highest positions. In order to determine the actual impact of the homophily principle on the publication networks of men and women, both within a STEM study and a non-STEM study, and thus to compare the impact of gender homophily on gender inequality across the two studies, three different hypotheses were tested. 
+
+Hypothesis 1 could not be confirmed. It was not found that both within the publication networks of the sociology department and the computing science department, gender segregation increased between 2016 and 2022. Although some degree of gender segregation was visible within the sociology department, it did not increase over time. Within the computing science department, almost no gender segregation was visible. This is not in line with the expectation that the positive effects of co-publishing combined with the principle of inbreeding gender homophily would lead to ever-increasing gender segregation within both departments.
+
+Moreover, the results did not constitute confirmation of hypothesis 2: while the results for the sociology department suggest that the gender homophily principle applies reasonably to the publication network, the gender homophily principle does not emerge in the results for the computing science department. On this basis, it cannot be reasoned that the combination of baseline homophily and inbreeding homophily causes gender homophily to be more pronounced within the computing science department than within the sociology department
+
+Furthermore, the results were not in line with hypothesis 3. In part, this is because no evidence of the homophily principle was found within the publication network of the computing science department. Results from the sociology department's publication network that showed the presence of the homophily principle are explained away by structural network effects. This is opposed to the expectation that, despite the inclusion of structural network effects, baseline homophily would remain so strong that the difference in gender homophily between the computing science department and the sociology department would hold. Follow-up research could possibly pay more attention to the mutual influence of gender homophily effects and structural network effects within scientists' publication networks.
+
+<br>
+
+This study made an attempt to map the publication networks of scientists in the same department through a novel data-scraping method and analytical strategy. It has also tried to identify some factors that might underlie the development of these publication networks over time. In doing so, a socially relevant research topic, namely the under representation of women within STEM, has been highlighted. An attempt was made to further identify the underlying factors and consequences of the skewed gender ratio that exists within a specific STEM research direction.
+
+However, a caveat that must be made about this study relates to sample size. Within the analysis, the departments of two studies were compared. The computing science department consisted of 113 staff members, while the sociology department consisted of only 32 staff members. For optimal comparison, it would have been better if the number of staff members for both studies was around the number of staff members of the computing science department. Because there were fewer staff members within the sociology department, there were also fewer individuals included in the publication networks and a smaller amount of ties were included in the analysis. As a result, both the presence of the homophily principle and that of structural network effects could not be tested as thoroughly. This led to a less reliable comparison of the presence of the homophily principle and structural network effects between the sociology department and the computing science department.
+
+It should also be noted that all three included data waves assumed the 2022 gender composition. This is expected to have caused crucial information to be lost on the number of women within the departments from 2016 to 2021 and the ties these women had during this period. In wave 1, relatively many men have ties while women have very few ties. This suggests that men generally stay longer within the same department and may work their way up, while women are more likely to change jobs. Research shows that women within science still have significantly more difficulty moving up the ranks than men [@Nesvarova2021;@MVH2019] and remain professors for a shorter period of time [@Huygen2017]. By excluding women who were part of the departments from 2016 to 2021, an incorrect picture of the development of gender homophily within the publication networks may have been obtained.
+
+Finally, there are also two technical observations to be made about the study. First, during data scraping, more time could have been spent on incorrect values or respondents. During the data scrape of google scholar ids, as well as gender and ethnicity, not all the data was checked for correctness. On the face of it, some respondents were removed from the data and values on the gender variable were replaced, but it cannot be guaranteed that there are no more errors in the dataset. This may have led to a slight bias in the results. For example, if someone is included in the dataset who does not actually study at Radboud University, that person has no publication links within the department. This misses information on a person who may already have some publications with individuals within the department. Depending on the gender of this person, this affects the results on gender segregation and the homophily principle differently. Second, only undirected ties were observed. Although outside the scope of the study, directed links could have provided information on whether the gender homophily principle applies more to men or women within both departments. In this study, however, google sholar publications were used to represent publication networks. These publications only provide information on undirected links. If information could be obtained on which of the two individuals within a dyad is the initiator and possible main contributor to the research, more could be said about the trade-offs that individuals make about whether or not to enter into a tie. Future research may reveal whether this leads to different results in terms of the application of the homophily principle within publication networks.
+
+<br>
+
+Underlying this research is an educational process that runs from a very first introduction to social network analysis and data scrapping, to a first use of RSiena to test hypotheses. During this process, I first of all gained a lot of new knowledge. Knowledge related to recognising and defining the main concepts of social network analysis, such as density and transitivity, but also knowledge concerning the inequalities hidden in the development of publication networks and the consequences this can have for the members of the networks. In terms of density, it was found for both networks that defnsity increased over time; over time, more and more connections arose between the members of the networks, in the form of publications. Transitivity was also found to increase over time for both networks. An increasing amount of staff members started publishing with people who had previously published with the same person. In terms of inequality, there appeared to be a fairly high degree of gender segregation within the publication network within the sociology department. Within the sociology department, men were found to collaborate more with each other than with women. Since publications in general, but especially with other scientists, have positive effects on one's' career within science, this degree of segregation is expected to maintain gender inequality in terms of achieving higher positions. Mapping the specific ways in which gender inequality is hidden within the development of publication networks was done by going through several processes that are all part of social network analysis. This includes not only interpreting and visualising descriptive statistics at the ego, dyad and network levels, but also network visualisations and running various R Siena models.
+
+Furthermore, during the larger research process, I was able to further develop my research attitude. This not only led me to better understand the added value of a social network perspective, but also to face the challenges of developing theories from a social network perspective. The study found that base homophily and inbreeding homophily do not seem to contribute to the degree of gender homophily within publication networks to the expected extent when structural network effects are also taken into account. However, what theoretical reasoning underlies this is not so easy to deduce because many different structural network effects could play a role. Moreover, the sociology section was very small in size and fixed over time, making it unclear whether the homophily effects found are attributable to alternative explanations. This also shows that you face very different challenges when running an R Siena model, compared to, say, an OLS regression. Not only is your own data scrapping much more error-prone than normal data processing, but you are also forced to think completely differently about how to interpret the effects in your models, at what levels the effects occur and exactly how to interpret change over time.
+
+Furthermore, when carrying out a social network analysis, you run into ethical issues that are specifically attributable to the online scrapping of social network data. Basically, the data being scrapped is all already online on social media platforms, such as Facebook, Twitter or Strava, and on google or other websites. But because for social network analysis you are going to create your own database in which you link the data you have extracted from different sources, certain personal data are suddenly much easier to trace back than when everything is scattered across the internet. Moreover, entire networks become visible, allowing data about one person to be traced back through another when interviews are conducted. Another ethical aspect of collecting network data in person is the issue when someone does not want to participate who plays a crucial role in the network under study. All these issues should be addressed from the premise that personal information should be kept secure and people should at all times consent to the collection of the data when done in a personal setting. This implies that data should not be published online and the researcher should not put the interest of the research above the welfare of the respondent.  
+
+All in all, in my opinion, using a social network approach has more advantages than disadvantages. Theory development has a different focus because networks are viewed from many more different perspectives. Scraping data from the internet is much more reliable than questionnaires about ties individuals have with others. Social network analysis offers many opportunities for hypothesis testing that cannot be achieved with multilevel or longitudinal regression. And results are interpreted differently, focusing on ego's consideration of whether or not to create a tie with someone. As a result, network development can be mapped like never before.
+
+<br>
+
+# References

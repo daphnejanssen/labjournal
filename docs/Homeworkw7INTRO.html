@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Daphne Janssen" />
+
+
+<title>Introduction</title>
+
+<script src="site_libs/header-attrs-2.16/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<script src="site_libs/navigation-1.1/sourceembed.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/clipboard-1.7.1/clipboard.min.js"></script>
+<link href="site_libs/primer-tooltips-1.4.0/build.css" rel="stylesheet" />
+<link href="site_libs/klippy-0.0.0.9500/css/klippy.min.css" rel="stylesheet" />
+<script src="site_libs/klippy-0.0.0.9500/js/klippy.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+<style type="text/css">
+#rmd-source-code {
+  display: none;
+}
+</style>
+
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="tweaks.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    My journal
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="lab1.html">Week 1</a>
+    </li>
+    <li>
+      <a href="lab2.html">Week 2</a>
+    </li>
+    <li>
+      <a href="lab3.html">Week 3</a>
+    </li>
+    <li>
+      <a href="lab4.html">Week 4</a>
+    </li>
+    <li>
+      <a href="lab5.html">Week 5</a>
+    </li>
+    <li>
+      <a href="lab6.html">week 6</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Research Question
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="RQWeek1.html">Week 1</a>
+    </li>
+    <li>
+      <a href="RQWeek2.html">Week 2</a>
+    </li>
+    <li>
+      <a href="RQWeek4.html">Week 4</a>
+    </li>
+    <li>
+      <a href="RQWeek6.html">Week 6</a>
+    </li>
+    <li>
+      <a href="RQWeek7.html">Week 7</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Final report
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Homeworkw6INTRO.html">Introduction and Research Question</a>
+    </li>
+    <li>
+      <a href="Homeworkw6THEORY.html">Theory</a>
+    </li>
+    <li>
+      <a href="Homeworkw7DATA.html">Data - Description and methods</a>
+    </li>
+    <li>
+      <a href="Homeworkw4DATASCRAPE.html">Data - Scraping</a>
+    </li>
+    <li>
+      <a href="Homeworkw7DESCRIPTIVES.html">Data - Descriptive statistics</a>
+    </li>
+    <li>
+      <a href="Homeworkw7RSIENA.html">RSiena analysis</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/JochemTolsma/labjournal">
+    <span class="fab fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+<li role="separator" class="divider"></li>
+<li><a id="rmd-download-source" href="#">Download Rmd</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Introduction</h1>
+<h4 class="author">Daphne Janssen</h4>
+
+</div>
+
+
+<script>
+  addClassKlippyTo("pre.r, pre.markdown");
+  addKlippy('right', 'top', 'auto', '1', 'Copy code', 'Copied!');
+</script>
+<p>Last compiled on 2022-10-28 16:10:38</p>
+<!---
+Last compiled on oktober, 2022
+--->
+<p><br></p>
+<hr />
+<div id="introduction" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p><br></p>
+<p>For a long time, there has been an underrepresentation of women in
+STEM (science, technology, engineering and mathematics) studies and
+professions <span class="citation">(STEMWomen 2022)</span>. Men are the
+figureheads in STEM research and hold most senior positions in STEM
+occupations. Research shows that men are more likely to be authors of
+prestigious journals in the STEM field, compared to women <span
+class="citation">(Holman, Stuart-Fox, and Hauser 2018)</span>. It also
+appears that STEM journals invite men to submit papers about twice as
+often, compared to women <span class="citation">(Holman, Stuart-Fox, and
+Hauser 2018)</span>. On the other hand, women experience more
+difficulties and inequalities in gaining senior positions and prestige
+within the scientific community in STEM fields. Previous research shows
+that women make up the majority of people in junior positions, earn
+lower salaries, receive fewer grants, are less likely to be promoted and
+receive fewer resources and funding for their research <span
+class="citation">(Holman and Morandin 2019)</span>. These findings show
+that the gender gap in STEM has far-reaching implications for gender
+inequality and that the gap is unlikely to narrow on its own.</p>
+<p>From the literature, it appears that networks are a central factor in
+gender inequality in obtaining leading scientific positions <span
+class="citation">(Kegen 2013)</span> and that co-authorship is highly
+relevant to promotion and productivity <span class="citation">(Collins
+and Steffen-Fluhr 2019)</span>. Based on this, it can be reasoned that
+gender inequality within the STEM field stems partly from network
+characteristics of men and women in STEM. A well-known characteristic
+that distinguishes networks of men and women is the occurrence of gender
+homophily in forming ties. The homophily principle reads, “Similarity
+breeds connection” <span class="citation">(McPherson, Smith-Lovin, and
+Cook 2001, 415)</span>. Applied to gender, this implies that women are
+more connected to women and men are more connected to men <span
+class="citation">(McPherson, Smith-Lovin, and Cook 2001)</span>. In
+terms of publication networks, this would mean that women are more
+likely to publish with women and thus have more women in their network,
+while men have more publications with men and thus have more men in
+their network.</p>
+<p>The fact that men are not only overrepresented within STEM <span
+class="citation">(STEMWomen 2022)</span>, but are also more likely to
+hold higher positions within STEM research <span
+class="citation">(Holman, Stuart-Fox, and Hauser 2018)</span> and,
+according to the homphily principle <span class="citation">(McPherson,
+Smith-Lovin, and Cook 2001)</span>, have more men in their publication
+networks than women, possibly contributes to the maintenance and
+possible widening of the gender gap in STEM.</p>
+<p><br></p>
+<p>To get a first impression of gender inequality in terms of
+publication networks of scientists within a STEM research direction,
+compared to a non-STEM research direction, it is necessary to acquire
+more information on the degree of gender segregation within the
+publication networks of scientists from both research directions. The
+gap between men and women taking STEM courses is widest in computer
+sciences and engingeering &amp; technology: 19 percent of students are
+women, compared to 81 percent who are men <span
+class="citation">(STEMWomen 2022)</span>. In order to properly compare
+the influence of an equal representation of men and women within a
+non-STEM study and an unequal distribution of men and women within a
+STEM study on gender segregation within publication networks, the
+sociology department and the computing science department of Radboud
+University will be compared. The first research question that will be
+answered within this study is:</p>
+<p><em>1) To what extent does gender segregation change in the
+publication network of male and female scientists at Radboud University
+within sociology and computing science between 2016 and 2022?</em></p>
+<p><br></p>
+<p>Furthermore, this research paper will be devoted to comparing the
+change in gender inequality over time within the sociology department
+and the computing science department. To this end, the extent to which
+the gender homophily principle affects the development of the
+publication networks of male and female scientists between the two
+departments will be compared. This gives rise to the second research
+question:</p>
+<p><em>2) To what extent is there a difference in the application of the
+gender homophily principle to the publication network of male and female
+scientists at Radboud University, between sociology and computing
+science between 2016 and 2022?</em></p>
+<p><br></p>
+<p>To find out more about some specific underlying factors of the
+development of gender homophily within the publication networks of
+scientists within the sociology department compared to the publication
+networks of scientists within the computing science department, with the
+aim of contributing to a better understanding of gender inequality
+within STEM, this paper will focus on the impact of personal and
+structural network characteristics of scientists within both
+departments. The third and final research question reads:</p>
+<p><em>3) To what extent do structural network effects influence the
+difference in gender homophily in the publication network of male and
+female scientists at Radboud University, between sociology and computing
+science between 2016 and 2022?</em></p>
+<p><br></p>
+<p>By looking at the differences in co-publication patterns between men
+and women within the sociology and computer science departments, it
+becomes possible to examine the role of networks in gender inequality
+within STEM over time. A social network perspective is crucial to
+thoroughly examine the changing role of ties, specifically the severity
+of homophily, for the gender gap and resulting gender inequality in the
+scientific field of STEM. This perspective makes it possible to explore
+how the specific manifestations of gender homophily surface in ties
+through networks. I aim to contribute to the current scientific field
+regarding gender differences in publication networks within STEM, by
+investigating the extent to which the homophily principle changes over
+time within, and differs between, the sociology and computing science
+departments at Radboud university.</p>
+<p><br></p>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Collins1" class="csl-entry">
+Collins, Regina, and Nancy Steffen-Fluhr. 2019. <span>“Hidden Patterns:
+Using Social Network Analysis to Track Career Trajectories of Women STEM
+Faculty.”</span> <em>Equality, Diversity and Inclusion: An International
+Journal</em> 38 (2): 265–82. https://doi.org/<a
+href="https://doi.org/10.1108/EDI-09-2017-0183">https://doi.org/10.1108/EDI-09-2017-0183</a>.
+</div>
+<div id="ref-holman2019researchers" class="csl-entry">
+Holman, Luke, and Claire Morandin. 2019. <span>“Researchers Collaborate
+with Same-Gendered Colleagues More Often Than Expected Across the Life
+Sciences.”</span> <em>PloS One</em> 14 (4): e0216128. https://doi.org/<a
+href="https://doi.org/10.1371/journal.pone.0216128">https://doi.org/10.1371/journal.pone.0216128</a>.
+</div>
+<div id="ref-holman2018gender" class="csl-entry">
+Holman, Luke, Devi Stuart-Fox, and Cindy E Hauser. 2018. <span>“The
+Gender Gap in Science: How Long Until Women Are Equally
+Represented?”</span> <em>PLoS Biology</em> 16 (4): e2004956.
+https://doi.org/<a
+href="https://doi.org/10.1371/journal.pbio.2004956">https://doi.org/10.1371/journal.pbio.2004956</a>.
+</div>
+<div id="ref-kegen2013science" class="csl-entry">
+Kegen, Nadine V. 2013. <span>“Science Networks in Cutting-Edge Research
+Institutions: Gender Homophily and Embeddedness in Formal and Informal
+Networks.”</span> <em>Procedia-Social and Behavioral Sciences</em> 79:
+62–81. https://doi.org/<a
+href="https://doi.org/10.1016/j.sbspro.2013.05.057">https://doi.org/10.1016/j.sbspro.2013.05.057</a>.
+</div>
+<div id="ref-mcpherson2001birds" class="csl-entry">
+McPherson, Miller, Lynn Smith-Lovin, and James M Cook. 2001.
+<span>“Birds of a Feather: Homophily in Social Networks.”</span>
+<em>Annual Review of Sociology</em>, 415–44.
+</div>
+<div id="ref-STEM" class="csl-entry">
+STEMWomen. 2022. <span>“Women in STEM Statistics.”</span> Available at
+<a
+href="https://www.stemwomen.com/women-in-stem-percentages-of-women-in-stem-statistics"
+class="uri">https://www.stemwomen.com/women-in-stem-percentages-of-women-in-stem-statistics</a>
+(2022/06/22).
+</div>
+</div>
+</div>
+
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkludHJvZHVjdGlvbiINCmJpYmxpb2dyYXBoeTogcmVmZXJlbmNlcy5iaWINCmF1dGhvcjogIkRhcGhuZSBKYW5zc2VuIg0KLS0tDQoNCg0KDQpgYGB7ciwgZ2xvYmFsc2V0dGluZ3MsIGVjaG89RkFMU0UsIHdhcm5pbmc9RkFMU0UsIHJlc3VsdHM9J2hpZGUnfQ0KbGlicmFyeShrbml0cikNCg0Ka25pdHI6Om9wdHNfY2h1bmskc2V0KGVjaG8gPSBUUlVFKQ0Kb3B0c19jaHVuayRzZXQodGlkeS5vcHRzPWxpc3Qod2lkdGguY3V0b2ZmPTEwMCksdGlkeT1UUlVFLCB3YXJuaW5nID0gRkFMU0UsIG1lc3NhZ2UgPSBGQUxTRSxjb21tZW50ID0gIiM+IiwgY2FjaGU9VFJVRSwgY2xhc3Muc291cmNlPWMoInRlc3QiKSwgY2xhc3Mub3V0cHV0PWMoInRlc3QyIikpDQpvcHRpb25zKHdpZHRoID0gMTAwKQ0KcmdsOjpzZXR1cEtuaXRyKCkNCg0KDQoNCmNvbG9yaXplIDwtIGZ1bmN0aW9uKHgsIGNvbG9yKSB7c3ByaW50ZigiPHNwYW4gc3R5bGU9J2NvbG9yOiAlczsnPiVzPC9zcGFuPiIsIGNvbG9yLCB4KSB9DQoNCmBgYA0KDQpgYGB7ciBrbGlwcHksIGVjaG89RkFMU0UsIGluY2x1ZGU9VFJVRX0NCmtsaXBweTo6a2xpcHB5KHBvc2l0aW9uID0gYygndG9wJywgJ3JpZ2h0JykpDQoja2xpcHB5OjprbGlwcHkoY29sb3IgPSAnZGFya3JlZCcpDQoja2xpcHB5OjprbGlwcHkodG9vbHRpcF9tZXNzYWdlID0gJ0NsaWNrIHRvIGNvcHknLCB0b29sdGlwX3N1Y2Nlc3MgPSAnRG9uZScpDQpgYGANCg0KTGFzdCBjb21waWxlZCBvbiBgciBTeXMudGltZSgpYA0KDQo8IS0tLQ0KTGFzdCBjb21waWxlZCBvbiBgciBmb3JtYXQoU3lzLnRpbWUoKSwgJyVCLCAlWScpYA0KLS0tPg0KDQo8YnI+DQoNCi0tLS0NCg0KIyBJbnRyb2R1Y3Rpb24gICANCg0KPGJyPg0KDQpGb3IgYSBsb25nIHRpbWUsIHRoZXJlIGhhcyBiZWVuIGFuIHVuZGVycmVwcmVzZW50YXRpb24gb2Ygd29tZW4gaW4gU1RFTSAoc2NpZW5jZSwgdGVjaG5vbG9neSwgZW5naW5lZXJpbmcgYW5kIG1hdGhlbWF0aWNzKSBzdHVkaWVzIGFuZCBwcm9mZXNzaW9ucyBbQFNURU1dLiBNZW4gYXJlIHRoZSBmaWd1cmVoZWFkcyBpbiBTVEVNIHJlc2VhcmNoIGFuZCBob2xkIG1vc3Qgc2VuaW9yIHBvc2l0aW9ucyBpbiBTVEVNIG9jY3VwYXRpb25zLiBSZXNlYXJjaCBzaG93cyB0aGF0IG1lbiBhcmUgbW9yZSBsaWtlbHkgdG8gYmUgYXV0aG9ycyBvZiBwcmVzdGlnaW91cyBqb3VybmFscyBpbiB0aGUgU1RFTSBmaWVsZCwgY29tcGFyZWQgdG8gd29tZW4gW0Bob2xtYW4yMDE4Z2VuZGVyXS4gSXQgYWxzbyBhcHBlYXJzIHRoYXQgU1RFTSBqb3VybmFscyBpbnZpdGUgbWVuIHRvIHN1Ym1pdCBwYXBlcnMgYWJvdXQgdHdpY2UgYXMgb2Z0ZW4sIGNvbXBhcmVkIHRvIHdvbWVuIFtAaG9sbWFuMjAxOGdlbmRlcl0uIE9uIHRoZSBvdGhlciBoYW5kLCB3b21lbiBleHBlcmllbmNlIG1vcmUgZGlmZmljdWx0aWVzIGFuZCBpbmVxdWFsaXRpZXMgaW4gZ2FpbmluZyBzZW5pb3IgcG9zaXRpb25zIGFuZCBwcmVzdGlnZSB3aXRoaW4gdGhlIHNjaWVudGlmaWMgY29tbXVuaXR5IGluIFNURU0gZmllbGRzLiBQcmV2aW91cyByZXNlYXJjaCBzaG93cyB0aGF0IHdvbWVuIG1ha2UgdXAgdGhlIG1ham9yaXR5IG9mIHBlb3BsZSBpbiBqdW5pb3IgcG9zaXRpb25zLCBlYXJuIGxvd2VyIHNhbGFyaWVzLCByZWNlaXZlIGZld2VyIGdyYW50cywgYXJlIGxlc3MgbGlrZWx5IHRvIGJlIHByb21vdGVkIGFuZCByZWNlaXZlIGZld2VyIHJlc291cmNlcyBhbmQgZnVuZGluZyBmb3IgdGhlaXIgcmVzZWFyY2ggW0Bob2xtYW4yMDE5cmVzZWFyY2hlcnNdLiBUaGVzZSBmaW5kaW5ncyBzaG93IHRoYXQgdGhlIGdlbmRlciBnYXAgaW4gU1RFTSBoYXMgZmFyLXJlYWNoaW5nIGltcGxpY2F0aW9ucyBmb3IgZ2VuZGVyIGluZXF1YWxpdHkgYW5kIHRoYXQgdGhlIGdhcCBpcyB1bmxpa2VseSB0byBuYXJyb3cgb24gaXRzIG93bi4NCg0KRnJvbSB0aGUgbGl0ZXJhdHVyZSwgaXQgYXBwZWFycyB0aGF0IG5ldHdvcmtzIGFyZSBhIGNlbnRyYWwgZmFjdG9yIGluIGdlbmRlciBpbmVxdWFsaXR5IGluIG9idGFpbmluZyBsZWFkaW5nIHNjaWVudGlmaWMgcG9zaXRpb25zIFtAa2VnZW4yMDEzc2NpZW5jZV0gYW5kIHRoYXQgY28tYXV0aG9yc2hpcCBpcyBoaWdobHkgcmVsZXZhbnQgdG8gcHJvbW90aW9uIGFuZCBwcm9kdWN0aXZpdHkgW0BDb2xsaW5zMV0uIEJhc2VkIG9uIHRoaXMsIGl0IGNhbiBiZSByZWFzb25lZCB0aGF0IGdlbmRlciBpbmVxdWFsaXR5IHdpdGhpbiB0aGUgU1RFTSBmaWVsZCBzdGVtcyBwYXJ0bHkgZnJvbSBuZXR3b3JrIGNoYXJhY3RlcmlzdGljcyBvZiBtZW4gYW5kIHdvbWVuIGluIFNURU0uIEEgd2VsbC1rbm93biBjaGFyYWN0ZXJpc3RpYyB0aGF0IGRpc3Rpbmd1aXNoZXMgbmV0d29ya3Mgb2YgbWVuIGFuZCB3b21lbiBpcyB0aGUgb2NjdXJyZW5jZSBvZiBnZW5kZXIgaG9tb3BoaWx5IGluIGZvcm1pbmcgdGllcy4gVGhlIGhvbW9waGlseSBwcmluY2lwbGUgcmVhZHMsIOKAnFNpbWlsYXJpdHkgYnJlZWRzIGNvbm5lY3Rpb27igJ0gW0BtY3BoZXJzb24yMDAxYmlyZHMsIHAuIDQxNV0uIEFwcGxpZWQgdG8gZ2VuZGVyLCB0aGlzIGltcGxpZXMgdGhhdCB3b21lbiBhcmUgbW9yZSBjb25uZWN0ZWQgdG8gd29tZW4gYW5kIG1lbiBhcmUgbW9yZSBjb25uZWN0ZWQgdG8gbWVuIFtAbWNwaGVyc29uMjAwMWJpcmRzXS4gSW4gdGVybXMgb2YgcHVibGljYXRpb24gbmV0d29ya3MsIHRoaXMgd291bGQgbWVhbiB0aGF0IHdvbWVuIGFyZSBtb3JlIGxpa2VseSB0byBwdWJsaXNoIHdpdGggd29tZW4gYW5kIHRodXMgaGF2ZSBtb3JlIHdvbWVuIGluIHRoZWlyIG5ldHdvcmssIHdoaWxlIG1lbiBoYXZlIG1vcmUgcHVibGljYXRpb25zIHdpdGggbWVuIGFuZCB0aHVzIGhhdmUgbW9yZSBtZW4gaW4gdGhlaXIgbmV0d29yay4gDQoNClRoZSBmYWN0IHRoYXQgbWVuIGFyZSBub3Qgb25seSBvdmVycmVwcmVzZW50ZWQgd2l0aGluIFNURU0gW0BTVEVNXSwgYnV0IGFyZSBhbHNvIG1vcmUgbGlrZWx5IHRvIGhvbGQgaGlnaGVyIHBvc2l0aW9ucyB3aXRoaW4gU1RFTSByZXNlYXJjaCBbQGhvbG1hbjIwMThnZW5kZXJdIGFuZCwgYWNjb3JkaW5nIHRvIHRoZSBob21waGlseSBwcmluY2lwbGUgW0BtY3BoZXJzb24yMDAxYmlyZHNdLCBoYXZlIG1vcmUgbWVuIGluIHRoZWlyIHB1YmxpY2F0aW9uIG5ldHdvcmtzIHRoYW4gd29tZW4sIHBvc3NpYmx5IGNvbnRyaWJ1dGVzIHRvIHRoZSBtYWludGVuYW5jZSBhbmQgcG9zc2libGUgd2lkZW5pbmcgb2YgdGhlIGdlbmRlciBnYXAgaW4gU1RFTS4NCg0KPGJyPg0KDQpUbyBnZXQgYSBmaXJzdCBpbXByZXNzaW9uIG9mIGdlbmRlciBpbmVxdWFsaXR5IGluIHRlcm1zIG9mIHB1YmxpY2F0aW9uIG5ldHdvcmtzIG9mIHNjaWVudGlzdHMgd2l0aGluIGEgU1RFTSByZXNlYXJjaCBkaXJlY3Rpb24sIGNvbXBhcmVkIHRvIGEgbm9uLVNURU0gcmVzZWFyY2ggZGlyZWN0aW9uLCBpdCBpcyBuZWNlc3NhcnkgdG8gYWNxdWlyZSBtb3JlIGluZm9ybWF0aW9uIG9uIHRoZSBkZWdyZWUgb2YgZ2VuZGVyIHNlZ3JlZ2F0aW9uIHdpdGhpbiB0aGUgcHVibGljYXRpb24gbmV0d29ya3Mgb2Ygc2NpZW50aXN0cyBmcm9tIGJvdGggcmVzZWFyY2ggZGlyZWN0aW9ucy4gVGhlIGdhcCBiZXR3ZWVuIG1lbiBhbmQgd29tZW4gdGFraW5nIFNURU0gY291cnNlcyBpcyB3aWRlc3QgaW4gY29tcHV0ZXIgc2NpZW5jZXMgYW5kIGVuZ2luZ2VlcmluZyAmIHRlY2hub2xvZ3k6IDE5IHBlcmNlbnQgb2Ygc3R1ZGVudHMgYXJlIHdvbWVuLCBjb21wYXJlZCB0byA4MSBwZXJjZW50IHdobyBhcmUgbWVuIFtAU1RFTV0uIEluIG9yZGVyIHRvIHByb3Blcmx5IGNvbXBhcmUgdGhlIGluZmx1ZW5jZSBvZiBhbiBlcXVhbCByZXByZXNlbnRhdGlvbiBvZiBtZW4gYW5kIHdvbWVuIHdpdGhpbiBhIG5vbi1TVEVNIHN0dWR5IGFuZCBhbiB1bmVxdWFsIGRpc3RyaWJ1dGlvbiBvZiBtZW4gYW5kIHdvbWVuIHdpdGhpbiBhIFNURU0gc3R1ZHkgb24gZ2VuZGVyIHNlZ3JlZ2F0aW9uIHdpdGhpbiBwdWJsaWNhdGlvbiBuZXR3b3JrcywgdGhlIHNvY2lvbG9neSBkZXBhcnRtZW50IGFuZCB0aGUgY29tcHV0aW5nIHNjaWVuY2UgZGVwYXJ0bWVudCBvZiBSYWRib3VkIFVuaXZlcnNpdHkgd2lsbCBiZSBjb21wYXJlZC4gVGhlIGZpcnN0IHJlc2VhcmNoIHF1ZXN0aW9uIHRoYXQgd2lsbCBiZSBhbnN3ZXJlZCB3aXRoaW4gdGhpcyBzdHVkeSBpczogDQoNCioxKSBUbyB3aGF0IGV4dGVudCBkb2VzIGdlbmRlciBzZWdyZWdhdGlvbiBjaGFuZ2UgaW4gdGhlIHB1YmxpY2F0aW9uIG5ldHdvcmsgb2YgbWFsZSBhbmQgZmVtYWxlIHNjaWVudGlzdHMgYXQgUmFkYm91ZCBVbml2ZXJzaXR5IHdpdGhpbiBzb2Npb2xvZ3kgYW5kIGNvbXB1dGluZyBzY2llbmNlIGJldHdlZW4gMjAxNiBhbmQgMjAyMj8qDQoNCjxicj4NCg0KRnVydGhlcm1vcmUsIHRoaXMgcmVzZWFyY2ggcGFwZXIgd2lsbCBiZSBkZXZvdGVkIHRvIGNvbXBhcmluZyB0aGUgY2hhbmdlIGluIGdlbmRlciBpbmVxdWFsaXR5IG92ZXIgdGltZSB3aXRoaW4gdGhlIHNvY2lvbG9neSBkZXBhcnRtZW50IGFuZCB0aGUgY29tcHV0aW5nIHNjaWVuY2UgZGVwYXJ0bWVudC4gVG8gdGhpcyBlbmQsIHRoZSBleHRlbnQgdG8gd2hpY2ggdGhlIGdlbmRlciBob21vcGhpbHkgcHJpbmNpcGxlIGFmZmVjdHMgdGhlIGRldmVsb3BtZW50IG9mIHRoZSBwdWJsaWNhdGlvbiBuZXR3b3JrcyBvZiBtYWxlIGFuZCBmZW1hbGUgc2NpZW50aXN0cyBiZXR3ZWVuIHRoZSB0d28gZGVwYXJ0bWVudHMgd2lsbCBiZSBjb21wYXJlZC4gVGhpcyBnaXZlcyByaXNlIHRvIHRoZSBzZWNvbmQgcmVzZWFyY2ggcXVlc3Rpb246DQoNCioyKSBUbyB3aGF0IGV4dGVudCBpcyB0aGVyZSBhIGRpZmZlcmVuY2UgaW4gdGhlIGFwcGxpY2F0aW9uIG9mIHRoZSBnZW5kZXIgaG9tb3BoaWx5IHByaW5jaXBsZSB0byB0aGUgcHVibGljYXRpb24gbmV0d29yayBvZiBtYWxlIGFuZCBmZW1hbGUgc2NpZW50aXN0cyBhdCBSYWRib3VkIFVuaXZlcnNpdHksIGJldHdlZW4gc29jaW9sb2d5IGFuZCBjb21wdXRpbmcgc2NpZW5jZSBiZXR3ZWVuIDIwMTYgYW5kIDIwMjI/Kg0KDQo8YnI+DQoNClRvIGZpbmQgb3V0IG1vcmUgYWJvdXQgc29tZSBzcGVjaWZpYyB1bmRlcmx5aW5nIGZhY3RvcnMgb2YgdGhlIGRldmVsb3BtZW50IG9mIGdlbmRlciBob21vcGhpbHkgd2l0aGluIHRoZSBwdWJsaWNhdGlvbiBuZXR3b3JrcyBvZiBzY2llbnRpc3RzIHdpdGhpbiB0aGUgc29jaW9sb2d5IGRlcGFydG1lbnQgY29tcGFyZWQgdG8gdGhlIHB1YmxpY2F0aW9uIG5ldHdvcmtzIG9mIHNjaWVudGlzdHMgd2l0aGluIHRoZSBjb21wdXRpbmcgc2NpZW5jZSBkZXBhcnRtZW50LCB3aXRoIHRoZSBhaW0gb2YgY29udHJpYnV0aW5nIHRvIGEgYmV0dGVyIHVuZGVyc3RhbmRpbmcgb2YgZ2VuZGVyIGluZXF1YWxpdHkgd2l0aGluIFNURU0sIHRoaXMgcGFwZXIgd2lsbCBmb2N1cyBvbiB0aGUgaW1wYWN0IG9mIHBlcnNvbmFsIGFuZCBzdHJ1Y3R1cmFsIG5ldHdvcmsgY2hhcmFjdGVyaXN0aWNzIG9mIHNjaWVudGlzdHMgd2l0aGluIGJvdGggZGVwYXJ0bWVudHMuIFRoZSB0aGlyZCBhbmQgZmluYWwgcmVzZWFyY2ggcXVlc3Rpb24gcmVhZHM6DQoNCiozKSBUbyB3aGF0IGV4dGVudCBkbyBzdHJ1Y3R1cmFsIG5ldHdvcmsgZWZmZWN0cyBpbmZsdWVuY2UgdGhlIGRpZmZlcmVuY2UgaW4gZ2VuZGVyIGhvbW9waGlseSBpbiB0aGUgcHVibGljYXRpb24gbmV0d29yayBvZiBtYWxlIGFuZCBmZW1hbGUgc2NpZW50aXN0cyBhdCBSYWRib3VkIFVuaXZlcnNpdHksIGJldHdlZW4gc29jaW9sb2d5IGFuZCBjb21wdXRpbmcgc2NpZW5jZSBiZXR3ZWVuIDIwMTYgYW5kIDIwMjI/Kg0KDQo8YnI+DQoNCkJ5IGxvb2tpbmcgYXQgdGhlIGRpZmZlcmVuY2VzIGluIGNvLXB1YmxpY2F0aW9uIHBhdHRlcm5zIGJldHdlZW4gbWVuIGFuZCB3b21lbiB3aXRoaW4gdGhlIHNvY2lvbG9neSBhbmQgY29tcHV0ZXIgc2NpZW5jZSBkZXBhcnRtZW50cywgaXQgYmVjb21lcyBwb3NzaWJsZSB0byBleGFtaW5lIHRoZSByb2xlIG9mIG5ldHdvcmtzIGluIGdlbmRlciBpbmVxdWFsaXR5IHdpdGhpbiBTVEVNIG92ZXIgdGltZS4gQSBzb2NpYWwgbmV0d29yayBwZXJzcGVjdGl2ZSBpcyBjcnVjaWFsIHRvIHRob3JvdWdobHkgZXhhbWluZSB0aGUgY2hhbmdpbmcgcm9sZSBvZiB0aWVzLCBzcGVjaWZpY2FsbHkgdGhlIHNldmVyaXR5IG9mIGhvbW9waGlseSwgZm9yIHRoZSBnZW5kZXIgZ2FwIGFuZCByZXN1bHRpbmcgZ2VuZGVyIGluZXF1YWxpdHkgaW4gdGhlIHNjaWVudGlmaWMgZmllbGQgb2YgU1RFTS4gVGhpcyBwZXJzcGVjdGl2ZSBtYWtlcyBpdCBwb3NzaWJsZSB0byBleHBsb3JlIGhvdyB0aGUgc3BlY2lmaWMgbWFuaWZlc3RhdGlvbnMgb2YgZ2VuZGVyIGhvbW9waGlseSBzdXJmYWNlIGluIHRpZXMgdGhyb3VnaCBuZXR3b3Jrcy4gSSBhaW0gdG8gY29udHJpYnV0ZSB0byB0aGUgY3VycmVudCBzY2llbnRpZmljIGZpZWxkIHJlZ2FyZGluZyBnZW5kZXIgZGlmZmVyZW5jZXMgaW4gcHVibGljYXRpb24gbmV0d29ya3Mgd2l0aGluIFNURU0sIGJ5IGludmVzdGlnYXRpbmcgdGhlIGV4dGVudCB0byB3aGljaCB0aGUgaG9tb3BoaWx5IHByaW5jaXBsZSBjaGFuZ2VzIG92ZXIgdGltZSB3aXRoaW4sIGFuZCBkaWZmZXJzIGJldHdlZW4sIHRoZSBzb2Npb2xvZ3kgYW5kIGNvbXB1dGluZyBzY2llbmNlIGRlcGFydG1lbnRzIGF0IFJhZGJvdWQgdW5pdmVyc2l0eS4NCg0KPGJyPg0KDQojIFJlZmVyZW5jZXMNCg0K</div>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeSourceEmbed("Homeworkw7INTRO.Rmd");
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
