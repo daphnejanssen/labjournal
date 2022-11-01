@@ -37,7 +37,7 @@ Last compiled on `r format(Sys.time(), '%B, %Y')`
 ----
 
 
-# Research Question week 2
+# Research Question(s) week 2
 
 <br>
 

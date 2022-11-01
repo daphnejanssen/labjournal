@@ -317,7 +317,10 @@ fdensity(net3)
 
 net_soc_array <- array(data = c(net1, net2, net3), dim=c(dim(net1),3))
 ```
-#### Gender segregation
+
+<br>
+
+### Gender segregation
 
 ```{r}
 # Creating a matrix for the same gender 

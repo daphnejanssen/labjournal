@@ -754,7 +754,7 @@ The undirected covariate gender effect and the covariate-ego × alter gender eff
 
 <br>
 
-# Testing the hypotheses
+# Testing hypothesis 2 and 3
 
 What follows is a brief review of the results and subsequent evaluation of the hypotheses. 
 

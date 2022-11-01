@@ -123,6 +123,8 @@ library(ggplot2)
 ggplot(soc_df, aes(factor(gender), fill = factor(gender))) +
     geom_bar() +ggtitle("The gender composition of the sociology department in 2022")
 ```
+
+
 **Bar chart of the gender composition**: this bar chart graphically depicts the equal gender distribution within the sociology department.
 
 <br>
@@ -134,6 +136,8 @@ library(ggplot2)
 socbar <- ggplot2:::ggplot(soc_df, aes(factor(dutch), fill = factor(dutch))) + geom_bar()  +ggtitle("The ethnicity composition of the sociology department in 2022")
 socbar + scale_fill_manual(values=c("#619CFF", "#00BA38"))
 ```
+
+
 **Bar chart of the ethnicity composition**: this bar chart graphically shows the unequal distribution of having or not having Dutch ancestry within the sociology department.
 
 <br>
@@ -349,7 +353,7 @@ sum(igraph::degree(net1_g))
 
 **Plot**: The plot shows that in wave 1, there were few people who had published with each other. Moreover, the vast majority of publucation ties consisted between men. In 2016 and 2017, only two women had ties with each other compared to 11 ties men had with each other. However, it is important to bear in mind here that most of the members of the sociology department in 2022 did not yet belong to the department in 2016 or 2017. This makes it logical that the amount of ties these people had with each other in 2016 and 2017 is small. Furthermore, the network plot shows that men were cited by far the most often in wave 1. 
 
-**Descriptives**: The interpretation of the plot already shows that the difference in degree between the nodes in the publication network of the sociology department of wave 1 is large: one person has by far the most ties while there are also many persons with no ties. Moreover, in terms of dyad census, there are only 15 dyads who have ties, and 481 dyads who have no ties.  
+**Descriptives**: The interpretation of the plot already shows that the difference in degree between the nodes in the publication network of the sociology department of wave 1 is large: one person has by far the most ties while there are also many persons with no ties. Moreover, in terms of dyad census, there are only 15 dyads who have ties, and 481 dyads who have no ties. Regarding the results for the triad census, wave 1 shows 4546 empty triads present, 384 triads present with a connection between two nodes, 24 situations where two nodes have a connection with the same third node but not with each other and six complete triads. 
 
 <br>
 
@@ -383,7 +387,7 @@ sum(igraph::degree(net2_g))
 
 **Plot**: The network plot of wave 2 shows that already some more individuals belonging to the sociology department in 2022 have published with each other in 2018 and 2019. However, the degree of gender segregation seems to have remained almost the same; as many men have a tie with each other in wave 1 as in wave 2, but women no longer have any ties with each other. Furthermore, it appears that men are still predominantly cited most often in wave 2. 
 
-**Descriptives**: The degree of the network of wave 2 seems to have become slightly more evenly distributed: there are no longer any nodes with more than six ties, although there are still many nodes with no ties at all. This is also very subtly reflected in the dyad census values: in wave 2, 17 dyads have a tie and 479 dyads have no tie. 
+**Descriptives**: The degree of the network of wave 2 seems to have become slightly more evenly distributed: there are no longer any nodes with more than six ties, although there are still many nodes with no ties at all. This is also very subtly reflected in the dyad census values: in wave 2, 17 dyads have a tie and 479 dyads have no tie. Furthermore, in wave 2 there are fewer empty triads, more triads with a connection between two nodes, more situations where two nodes have a connection with the same third node but not with each other, but fewer complete triads than in wave 1.
 
 <br>
 
@@ -417,7 +421,7 @@ sum(igraph::degree(net3_g))
 
 **Plot**: The network plot shows that gender segregation has changed slightly in wave 3 compared to wave 2. Men and women appear to have started publishing more with each other and some publication links between women now exist again. However, the amount of publication ties between men has remained unchanged. Furthermore, women are slowly catching up in terms of number of citations, but men are still well ahead. 
 
-**Descriptives**: In wave 3, the degree is even more fairly distributed than in wave 2. More people now have at least one or two ties, and several now have six ties. The dyad census is in line with this finding: there are now 28 dyads with publication ties and still 468 dyads without publication ties. 
+**Descriptives**: In wave 3, the degree is even more fairly distributed than in wave 2. More people now have at least one or two ties, and several now have six ties. The dyad census is in line with this finding: there are now 28 dyads with publication ties and still 468 dyads without publication ties. Moreover, in wave 3 there are again fewer empty triads, more triads with a connection between two nodes, more situations where two nodes have a connection with the same third node but not with each other, and also more complete triads than in wave 1 and wave 2. 
 
 <br>
 
@@ -712,6 +716,7 @@ ggplot(comp_df, aes(factor(gender), fill = factor(gender))) +
     geom_bar() +ggtitle("The gender composition of the computing science department in 2022")
 ```
 
+
 **Bar chart of the gender composition**: this bar chart graphically depicts the unequal gender distribution within the computing science department.
 
 <br>
@@ -723,6 +728,7 @@ library(ggplot2)
 compbar <- ggplot2:::ggplot(comp_df, aes(factor(dutch), fill = factor(dutch))) + geom_bar() +ggtitle("The ethnicity composition of the computing science department in 2022")
 compbar + scale_fill_manual(values=c("#619CFF", "#00BA38"))
 ```
+
 
 **Bar chart of the ethnicity composition**: this bar chart graphically shows the unequal distribution of having or not having Dutch ancestry within the computing science department.
 
@@ -936,7 +942,7 @@ sum(igraph::degree(compnet1_g))
 
 **Plot**: The plot shows that in wave 1 there are many nodes that have no publication ties. Moreover, it can be seen from the plot that predominantly men have published with others within the computing science department. It also shows that there are a lot fewer women in the network with a larger number of citations.
 
-**Descriptives**: The differences in the degree for each node are quite large: some nodes have as many as 10 or 13 ties, while a lot of nodes have no ties at all. The finding that a lot of nodes have no ties yet is reflected in the dyad census values: 64 dyads have ties, while 6262 dyads have no ties. 
+**Descriptives**: The differences in the degree for each node are quite large: some nodes have as many as 10 or 13 ties, while a lot of nodes have no ties at all. The finding that a lot of nodes have no ties yet is reflected in the dyad census values: 64 dyads have ties, while 6262 dyads have no ties. Regarding the results for the triad census, it appears that there are 227247 empty triads present, there are 6686 triads present with a connection between two nodes, there are 191 situations where two nodes have a connection with the same third node but not with each other and there are 12 complete triads in wave 1. Thus, a lot more triads exist within the first wave of the computing science publication network than within the sociology department's publication network.
 
 <br>
 
@@ -969,7 +975,7 @@ sum(igraph::degree(compnet2_g))
 
 **plot**: In this plot, more nodes already have ties with each other. Nevertheless, there are also a number of nodes that have no ties. Again, men are overrepresented within the cluster with the most ties and within the individuals with the most citations.
 
-**Descriptives**: Differences in the degree of each node have narrowed as several nodes have formed one or more ties. Nevertheless, a large proportion of nodes still do not possess any ties. The dyad census has changed as a result: now 85 dyads have a tie, while 6243 dyads do not yet possess a tie. 
+**Descriptives**: Differences in the degree of each node have narrowed as several nodes have formed one or more ties. Nevertheless, a large proportion of nodes still do not possess any ties. The dyad census has changed as a result: now 85 dyads have a tie, while 6243 dyads do not yet possess a tie. Moreover, in wave 2 there are fewer empty triads, more triads with a connection between two nodes, more situations where two nodes have a connection with the same third node but not with each other and more complete triads than in wave 1.
 
 <br>
 
@@ -1003,7 +1009,7 @@ sum(igraph::degree(compnet3_g))
 
 **Plot**: The third and final plot consists largely of nodes that have ties with other nodes. The skewed male/female distribution in terms of publication ties seems to have remained somewhat stable, despite many more ties being created. Moreover, the relative amount of men with a large amount of citations seems to have increased. This suggests a reasonable degree of gender segregation within the publication network of the computing science department. 
 
-**Descriptives**: The degree results show that a lot more nodes have more ties: a large number of nodes now have five ties or more. Moreover, there are more nodes with ties than without. The dyad census has changed considerably due to the emergence of new ties: now 166 dyads have ties and 6162 dyads have no ties. 
+**Descriptives**: The degree results show that a lot more nodes have more ties: a large number of nodes now have five ties or more. Moreover, there are more nodes with ties than without. The dyad census has changed considerably due to the emergence of new ties: now 166 dyads have ties and 6162 dyads have no ties. Furthermore, in wave 3 there are again fewer empty triads, more triads with a connection between two nodes, many more situations where two nodes have a connection with the same third node but not with each other, and also many more complete triads than in wave 1 and wave 2.
 
 <br>
 
@@ -1185,7 +1191,7 @@ Moreover, the densities within the group of women and within the group of men ap
 
 <br>
 
-# Testing the hypotheses
+# Testing hypothesis 1
 
 Hypothesis 1 reads: Gender segregation in the publication network increased between 2016 and 2022 within both the Sociology department and the Computing Science department at Radboud University.
 

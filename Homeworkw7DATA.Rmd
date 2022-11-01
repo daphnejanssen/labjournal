@@ -56,7 +56,7 @@ Web scrapping of members of university departments to uncover intra-departmental
 
 **Sample**
 
-The staff of Radboud University's Sociology Department, representing the social sciences. And the staff of Radboud University's Department of Computer Science, representing the scientific field of STEM.
+The staff of Radboud University's sociology department, representing the social sciences. And the staff of Radboud University's department of computer science, representing the scientific field of STEM.
 
 <br>
 
@@ -68,7 +68,7 @@ The scientists within the aforementioned departments.
 
 **Edges**
 
-The publications of scientists within the Sociology Department with other scientists within the department, and the publications of scientists within the Computer Science Department with other scientists within the department.
+The publications of scientists within the sociology department with other scientists within the department, and the publications of scientists within the computer science department with other scientists within the department.
 
 <br>
 
@@ -76,21 +76,21 @@ The publications of scientists within the Sociology Department with other scient
 
 **Gender** 
 
-The *gender* of the staff members of Sociology and Computing Science. It is important to mention that this is the gender, as registered in the Dutch names database. This is not equivalent to the gender that individuals attribute to themselves. Gender is how individuals identify themselves, whether male/female/non-binary/intersex or some other interpretation. The variable gender in this study reflects how individuals are registered, often based on the biological sex they were assigned at birth. As mentioned earlier, data on the gender of staff members was collected by entering the names into a Dutch names database. Since the database consists of information on how many individuals with a registered male or female gender were assigned these names and we used this database to assign gender to staff members, the variable gender should be considered an operationalisation of biological gender. 
+The *gender* of the staff members of sociology and computing Science. It is important to mention that this is the gender, as registered in the Dutch names database. This is not equivalent to the gender that individuals attribute to themselves. Gender is how individuals identify themselves, whether male/female/non-binary/intersex or some other interpretation. The variable gender in this study reflects how individuals are registered, often based on the biological sex they were assigned at birth. As mentioned earlier, data on the gender of staff members was collected by entering the names into a Dutch names database [@Meertens]. Since the database consists of information on how many individuals with a registered male or female gender were assigned these names and we used this database to assign gender to staff members, the variable gender should be considered an operationalisation of biological gender. 
 
-The Dutch names database was chosen, as the vast majority of staff members within the sociology department and the computing science department are of Dutch origin. Based on this, it was reasoned that most correct data could be obtained through a names database that included information on the amount of men and women with certain names in the Dutch context. The alternative was an international names database. The information from both databases was included in two different variables in the datasets for the sociology and computing science departments. The percentages of corresponding values on the Dutch and the International gender variable of the computing science data show that it does not matter much which variable is chosen: 92.9 percent of all values (male or female) are the same for both variables.
+The Dutch names database [@Meertens] was chosen, as the vast majority of staff members within the sociology department and the computing science department are of Dutch origin. Based on this, it was reasoned that most correct data could be obtained through a names database that included information on the amount of men and women with certain names in the Dutch context. The alternative was an international names database. The information from both databases was included in two different variables in the datasets for the sociology and computing science departments. The percentages of corresponding values on the Dutch and the International gender variable of the computing science data show that it does not matter much which variable is chosen: 92.9 percent of all values (male or female) are the same for both variables.
 
 <br>
 
 **Ethnicity**
 
-The *ethnicity* of Sociology and Computing Science staff members. Due to data limitations, this variable only contains information on whether or not a staff member has a Dutch background. As a result, important information on the country-specific background of staff members is not included. It is important to take this into account when interpreting the results and arriving at conclusions.
+The *ethnicity* of sociology and computing science staff members. Due to data limitations, this variable only contains information on whether or not a staff member has a Dutch background. As a result, important information on the country-specific background of staff members is not included. It is important to take this into account when interpreting the results and arriving at conclusions.
 
 <br>
 
 **Age**
 
-The *age* of the staff members of Sociology and Computing Science. This variable is operationalised by a variable representing the year in which a staff member published his or her first article. Since the age of first publication, when following the usual study trajectory, is the same, this constitutes a reasonably good operationalisation of the age expected of staff members.  
+The *age* of the staff members of sociology and computing science. This variable is operationalised by a variable representing the year in which a staff member published his or her first article. Since the age of first publication, when following the usual study trajectory, is the same, this constitutes a reasonably good operationalisation of the age expected of staff members.  
 
 <br>
 
@@ -100,9 +100,9 @@ To answer the first research question, the degree of gender segregation will fir
 
 To gain information on the explanations for the change in gender segregation within the two networks, it is important to understand how ego effects, covariate effects and, finally, structural network effects play a role in the emergence of publication ties. These effects will be analysed using the RSiena package [@RSienaman] in R Studio [@RStudio]. RSiena is capable of modelling the change in publication networks due to decisions made by individual actors. A key underlying component of RSiena is the implemented Stochastic Actor Oriented Model (SAOM). Through this model, mini-steps can be made visible; one actor can change one tie at a time. This change takes place based on the evaluation of all ties that the actor currently has or can access. It is most likely that the actor will take that mini-step that will give him or her access to the highest network attractiveness.Using RSiena, it thus becomes possible to determine the extent to which the consideration to publish with someone of the same sex changes within two periods when individual and network-level characteristics are also included. This can help explain the development of gender segregation and the application of the gender homophily principle over the three waves. 
 
-To explain the difference in the application of the homophily principle to the publication network of male and female scientists, between Sociology and Computer Science across the three waves and thus answer the second research question, an R Siena model will be estimated that includes only ego-level gender effects.
+To explain the difference in the application of the homophily principle to the publication network of male and female scientists, between sociology and Computer Science across the three waves and thus answer the second research question, an R Siena model will be estimated that includes only ego-level gender effects.
 
-The third research question will be answered by estimating an R Siena model that includes both ego-level gender effects and structural effects. To control for ethnicity and age, another model will be estimated that also includes these covariate effects. With these models, the extent to which structural network effects affect the difference in gender homophily in the publication network of male and female scientists can be compared between Sociology and Computer Science across the three waves.
+The third research question will be answered by estimating an R Siena model that includes both ego-level gender effects and structural effects. To control for ethnicity and age, another model will be estimated that also includes these covariate effects. With these models, the extent to which structural network effects affect the difference in gender homophily in the publication network of male and female scientists can be compared between sociology and Computer Science across the three waves.
 
 <br>
 
